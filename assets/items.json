@@ -1,0 +1,71 @@
+[
+  {
+    "id": "w_01",
+    "name": "Dagger",
+    "type": "Weapon",
+    "slots": 1,
+    "damage": "1d6",
+    "details": "Light. Can be easily hidden or thrown."
+  },
+  {
+    "id": "w_02",
+    "name": "Longsword",
+    "type": "Weapon",
+    "slots": 1,
+    "damage": "1d8",
+    "details": "Medium weapon. Versatile and reliable."
+  },
+  {
+    "id": "w_03",
+    "name": "Greatsword",
+    "type": "Weapon",
+    "slots": 2,
+    "damage": "1d12",
+    "details": "Heavy, two-handed weapon. Volatile v3 damage rules."
+  },
+  {
+    "id": "a_01",
+    "name": "Shield",
+    "type": "Armor",
+    "slots": 1,
+    "defense": 1,
+    "details": "+1 to defense. Can be splintered to block a single attack entirely."
+  },
+  {
+    "id": "a_02",
+    "name": "Leather Armor",
+    "type": "Armor",
+    "slots": 1,
+    "defense": 11,
+    "details": "Light armor. Flexible and quiet."
+  },
+  {
+    "id": "a_03",
+    "name": "Chainmail",
+    "type": "Armor",
+    "slots": 3,
+    "defense": 14,
+    "details": "Heavy armor. Noisy, rigid protection."
+  },
+  {
+    "id": "g_01",
+    "name": "Rations (5 Days)",
+    "type": "Equipment",
+    "slots": 1,
+    "details": "Preserved foodstuffs for long journeys."
+  },
+  {
+    "id": "g_02",
+    "name": "Rope (50ft)",
+    "type": "Equipment",
+    "slots": 1,
+    "details": "Strong hempen cord with a grappling hook."
+  },
+  {
+    "id": "g_03",
+    "name": "Torches (6)",
+    "type": "Equipment",
+    "slots": 1,
+    "details": "Provides bright illumination for 1 hour per torch."
+  }
+]
