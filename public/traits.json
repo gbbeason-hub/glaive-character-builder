@@ -1,0 +1,72 @@
+{
+  "gender": ["Masculine", "Masculine", "Feminine", "Feminine", "What Is Gender?", 
+    "What Is Gender?"
+  ],
+  "hair": [
+    "Bald", "Braided", "Bristly", "Cropped", "Curly", "Disheveled", "Filthy", 
+    "Frizzy", "Greased", "Limp", "Locks", "Long", "Luxurious", "Mohawk",
+    "Oily", "Ponytail", "Silky", "Topknot", "Wavy", "Wispy"
+  ],
+  "looks": [
+    "Athletic", "Burly", "Elegant", "Elongated", "Gaunt", "Hard", "Hawkish", 
+    "Hulking", "Impish", "Lanky", "Ripped", "Scrawny", "Sharp", "Short", 
+    "Soft", "Square", "Stocky", "Thick", "Towering", "Wide"
+  ],
+
+  "skin": [
+    "Birthmark",
+    "Burned",
+    "Dark",
+    "Freckled",
+    "Oily",
+    "Pale",
+    "Perfect",
+    "Pierced",
+    "Pockmarks",
+    "Radiant",
+    "Rosy",
+    "Rough",
+    "Sallow",
+    "Scarred",
+    "Sunburned",
+    "Tanned",
+    "Tattooed",
+    "Vitiligo",
+    "War Paint",
+    "Weathered"
+  ],
+
+  "speech": [
+    "Blunt",
+    "Booming",
+    "Breathy",
+    "Broken",
+    "Clipped",
+    "Cryptic",
+    "Drawling",
+    "Droning",
+    "Flowery",
+    "Formal",
+    "Gravelly",
+    "Hoarse",
+    "Mumbling",
+    "Precise",
+    "Rambling",
+    "Rapid-fire",
+    "Slow",
+    "Squeaky",
+    "Stuttering",
+    "Whispery"
+  ],
+
+    "bonds": [
+    ["Siblings", "Cousins", "Black sheep / Golden child", "Love triangle", "Former rebels (hunted)", "Spouse"],
+    ["Saved your life", "Reluctant allies", "Oath-bound", "Brains / Brawn", "Guild members", "Traveling companions"],
+    ["Comrades in arms", "Has your back", "Fought on the same side", "Former enemies", "A blood-debt is still owed", "Escaped a prison together"],
+    ["Rivals", "Childhood friends", "Apprenticed together", "Watches out for you", "Mentor / Student", "Past romantic entanglement"],
+    ["Sole survivors", "Shared secret", "Escaped a cult (hunted)", "Former bandits (hunted)", "Each carry ½ a treasure map", "Knows your dark secret. Keep them close"],
+    ["Both carry a curse", "Fought on opposite sides", "Blessed by the same godling", "Two bodies, one soul", "Bonded by a dark ritual", "Indebted to an unscrupulous demon or godling"]
+  ]
+
+
+}

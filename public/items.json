@@ -1,0 +1,450 @@
+[
+  {
+    "id": "w_01",
+    "name": "Dagger",
+    "type": "Weapon",
+    "damage": "1d6",
+    "slots": 0.5,
+    "hands": 1,
+    "cost": 1,
+    "details": "R1 (thrown)*, concealable"
+  },
+  {
+    "id": "w_02",
+    "name": "Hand axe",
+    "type": "Weapon",
+    "damage": "1d6",
+    "slots": 0.5,
+    "hands": 1,
+    "cost": 1,
+    "details": "R1 (thrown)*, concealable"
+  },
+  {
+    "id": "w_03",
+    "name": "Spear",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_04",
+    "name": "Sword",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_05",
+    "name": "Mace",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_06",
+    "name": "Battle Axe",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_07",
+    "name": "Flail",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_08",
+    "name": "Staff",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_09",
+    "name": "War Hammer",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 1,
+    "hands": 1,
+    "cost": 10,
+    "details": "1d10 damage if wielded 2-handed"
+  },
+  {
+    "id": "w_10",
+    "name": "Bec de Corbin",
+    "type": "Weapon",
+    "damage": "1d12",
+    "slots": 2,
+    "hands": 2,
+    "cost": 20,
+    "details": "Knock an enemy prone on a critical hit"
+  },
+  {
+    "id": "w_11",
+    "name": "Maul",
+    "type": "Weapon",
+    "damage": "1d12",
+    "slots": 2,
+    "hands": 2,
+    "cost": 20,
+    "details": "Knock an enemy prone on a critical hit"
+  },
+  {
+    "id": "w_12",
+    "name": "Zweihander",
+    "type": "Weapon",
+    "damage": "1d12",
+    "slots": 2,
+    "hands": 2,
+    "cost": 20,
+    "details": "Knock an enemy prone on a critical hit"
+  },
+  {
+    "id": "w_13",
+    "name": "Greataxe",
+    "type": "Weapon",
+    "damage": "1d12",
+    "slots": 2,
+    "hands": 2,
+    "cost": 20,
+    "details": "Knock an enemy prone on a critical hit"
+  },
+  {
+    "id": "w_14",
+    "name": "Hand crossbow",
+    "type": "Weapon",
+    "damage": "1d4",
+    "slots": 0.5,
+    "hands": 1,
+    "cost": 5,
+    "details": "R1, concealable (includes ammunition)"
+  },
+  {
+    "id": "w_15",
+    "name": "Sling",
+    "type": "Weapon",
+    "damage": "1d4",
+    "slots": 0.5,
+    "hands": 1,
+    "cost": 5,
+    "details": "R1, concealable (includes ammunition)"
+  },
+  {
+    "id": "w_16",
+    "name": "Shortbow",
+    "type": "Weapon",
+    "damage": "1d6",
+    "slots": 1,
+    "hands": 2,
+    "cost": 10,
+    "details": "R2 ranged weapon"
+  },
+  {
+    "id": "w_17",
+    "name": "Warbow",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 2,
+    "hands": 2,
+    "cost": 35,
+    "details": "R3 heavy ranged weapon"
+  },
+  {
+    "id": "w_18",
+    "name": "Crossbow",
+    "type": "Weapon",
+    "damage": "1d8",
+    "slots": 2,
+    "hands": 2,
+    "cost": 35,
+    "details": "R3 heavy mechanics ranged weapon"
+  },
+  {
+    "id": "w_19",
+    "name": "Musket",
+    "type": "Weapon",
+    "damage": "1d10",
+    "slots": 2,
+    "hands": 2,
+    "cost": 100,
+    "details": "R2, AP2^, exchange move to reload, damage explodes**"
+  },
+  {
+    "id": "w_20",
+    "name": "Arquebus",
+    "type": "Weapon",
+    "damage": "1d10",
+    "slots": 2,
+    "hands": 2,
+    "cost": 100,
+    "details": "R2, AP2^, exchange move to reload, damage explodes**"
+  },
+  {
+    "id": "w_21",
+    "name": "Arrows/Bolts (20)",
+    "type": "Ammunition",
+    "damage": "n/a",
+    "slots": 1,
+    "hands": 0,
+    "cost": 10,
+    "details": "3-in-6 chance to recover after an encounter"
+  },
+  {
+    "id": "w_22",
+    "name": "Unarmed Attack",
+    "type": "Weapon",
+    "damage": "1d4",
+    "slots": 0,
+    "hands": 0,
+    "cost": 0,
+    "details": "Natural physical attack form"
+  },
+  {
+    "id": "a_01",
+    "name": "Shield",
+    "type": "Armor",
+    "slots": 1,
+    "defense": 1,
+    "cost": 5,
+    "details": "+1 to defense. Can be splintered to block a single attack entirely."
+  },
+  {
+    "id": "a_02",
+    "name": "Light Armor",
+    "type": "Armor",
+    "slots": 1,
+    "defense": 2,
+    "cost": 25,
+    "details": "Flexible leather or quilted cloth padding."
+  },
+  {
+    "id": "a_03",
+    "name": "Medium Armor",
+    "type": "Armor",
+    "slots": 3,
+    "defense": 4,
+    "cost": 75,
+    "details": "DISADV to stealth, max +2 DEX bonus."
+  },
+  {
+    "id": "a_04",
+    "name": "Heavy Armor",
+    "type": "Armor",
+    "slots": 4,
+    "defense": 6,
+    "cost": 150,
+    "details": "DISADV to stealth, max +0 DEX bonus, heavy plate layers."
+  },
+  {
+    "id": "g_01",
+    "name": "Ball bearings, 100 (bag)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "A bag of 100 metal balls. Useful for creating slipping hazards or checking floors."
+  },
+  {
+    "id": "g_02",
+    "name": "Bear Trap",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 10,
+    "details": "Heavy iron spring trap used to catch or restrain creatures."
+  },
+  {
+    "id": "g_03",
+    "name": "Black Grease",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 1,
+    "details": "Slippery substance used to lubricate gears or create friction-free surfaces."
+  },
+  {
+    "id": "g_04",
+    "name": "Caltrops 20 (bag)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "Bag of 20 four-pointed spikes. Scatters to slow down and damage pursuers."
+  },
+  {
+    "id": "g_05",
+    "name": "Chalk (5 pieces)",
+    "type": "Equipment",
+    "slots": 0.33,
+    "cost": 1,
+    "details": "5 pieces of white chalk. Rounded up to 1 silver piece. Perfect for mapping walls."
+  },
+  {
+    "id": "g_06",
+    "name": "Cook Pot",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 1,
+    "details": "Metal pot for preparing meals over campfires."
+  },
+  {
+    "id": "g_07",
+    "name": "Crowbar",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 2,
+    "details": "Heavy iron bar providing leverage for prying open stuck doors or chests."
+  },
+  {
+    "id": "g_08",
+    "name": "Grapnel Hook",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 10,
+    "details": "Multi-pronged anchor hook used for climbing structures."
+  },
+  {
+    "id": "g_09",
+    "name": "Herbalist's Kit",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 20,
+    "details": "Tools and containers used to gather, store, and process restorative fauna."
+  },
+  {
+    "id": "g_10",
+    "name": "Lens/ Magnifying Glass",
+    "type": "Equipment",
+    "slots": 0.5,
+    "cost": 25,
+    "details": "Polished glass lens to examine small details or spark dry tinder using sunlight."
+  },
+  {
+    "id": "g_11",
+    "name": "Lock-picks",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 10,
+    "details": "Finely crafted tension tools and picks to bypass locking mechanisms."
+  },
+  {
+    "id": "g_12",
+    "name": "Metal file",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "Hardened abrasive tool to grind away lock shackles or thin iron bars over time."
+  },
+  {
+    "id": "g_13",
+    "name": "Mirror (small, steel)",
+    "type": "Equipment",
+    "slots": 0.33,
+    "cost": 10,
+    "details": "Polished steel surface to look around tight dungeon corners safely."
+  },
+  {
+    "id": "g_14",
+    "name": "Oil flask (3)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 10,
+    "details": "3 flasks of combustible lantern fuel. Can be thrown and lit as an improvised weapon."
+  },
+  {
+    "id": "g_15",
+    "name": "Pole (10ft)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "Long wooden staff. Perfect for poking loose ceiling tiles or triggering floor traps."
+  },
+  {
+    "id": "g_16",
+    "name": "Quill & Ink Stick",
+    "type": "Equipment",
+    "slots": 0.5,
+    "cost": 2,
+    "details": "Writing implements used to map dungeons or draft official paperwork."
+  },
+  {
+    "id": "g_17",
+    "name": "Ration",
+    "type": "Equipment",
+    "slots": 0.5,
+    "cost": 5,
+    "details": "One full day's worth of preserved travel food."
+  },
+  {
+    "id": "g_18",
+    "name": "Rope (50ft)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 10,
+    "details": "50 feet of sturdy braided hemp line for climbing or binding captives."
+  },
+  {
+    "id": "g_19",
+    "name": "Sack",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 1,
+    "details": "Large canvas container to transport loose loot back out of dark domains."
+  },
+  {
+    "id": "g_20",
+    "name": "Spike, Iron (10)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "10 heavy wedges used to spike doors shut or secure climbing guide-ropes."
+  },
+  {
+    "id": "g_21",
+    "name": "Spyglass",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 50,
+    "details": "High-magnification telescope optic to scout long distances or watch horizons."
+  },
+  {
+    "id": "g_22",
+    "name": "Tar (Pot)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "Pot of thick, sticky adhesive sealant. Useful for patching hulls or binding items."
+  },
+  {
+    "id": "g_23",
+    "name": "Torches (6)",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 5,
+    "details": "Bundle of 6 fuel-dipped wooden torches. Each burns bright for approximately one hour."
+  },
+  {
+    "id": "g_24",
+    "name": "Water/wineskin",
+    "type": "Equipment",
+    "slots": 1,
+    "cost": 1,
+    "details": "Leather bladder container holding clean drinking liquids."
+  }
+]
