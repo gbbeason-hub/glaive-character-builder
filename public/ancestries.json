@@ -2,101 +2,78 @@
   {
     "id": "construct",
     "name": "Construct",
-    "talentIds": [
-      "anc_construct_main",
-      "anc_gadgets",
-      "anc_secret_compartments",
-      "anc_stone_skin"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_stone_skin"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Stone Skin talent and 1 additional talent."
   },
   {
     "id": "demi_ogre",
     "name": "Demi-Ogre",
-    "talentIds": [
-      "anc_brick_outhouse"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_brick_outhouse"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Brick Outhouse talent and 1 additional talent."
   },
   {
-    "id": "drakken",
-    "name": "Drakken",
-    "talentIds": [
-      "anc_draconic_bloodlines",
-      "anc_elemental_breath",
-      "anc_scales",
-      "anc_the_stare"
-    ],
-    "allowsBonusClassTalent": true
+    "id": "drake",
+    "name": "Drake",
+    "fixedTalentIds": ["anc_draconic_bloodlines"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Draconic Bloodlines talent and 1 additional talent."
   },
   {
     "id": "dwarf",
     "name": "Dwarf",
-    "talentIds": [
-      "anc_greedy",
-      "anc_handy_if_not_handsome",
-      "anc_roots_of_the_mountain",
-      "anc_stone_cunning",
-      "anc_stone_sight"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_greedy"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Greedy talent and 1 additional talent."
   },
   {
     "id": "elf",
     "name": "Elf",
-    "talentIds": [
-      "anc_alert",
-      "anc_glade_and_glen",
-      "anc_star_eyed"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_star_eyed"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Star Eyed talent and 1 additional talent."
   },
   {
     "id": "goblin",
     "name": "Goblin",
-    "talentIds": [
-      "anc_sneaky_git",
-      "anc_suspicious_by_nature",
-      "anc_moon_eyes"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_moon_eyes"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Moon Eyes talent and 1 additional talent."
   },
   {
     "id": "half_foot",
     "name": "Half-Foot",
-    "talentIds": [
-      "anc_danger_sense",
-      "anc_dungeon_gourmand",
-      "anc_luck_of_the_small_folk"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_danger_sense"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Danger Sense talent and 1 additional talent."
+  },
+  {
+    "id": "human",
+    "name": "Human",
+    "fixedTalentIds": [],
+    "bonusTalentCount": 2,
+    "summaryText": "Begin play with any 2 talents."
   },
   {
     "id": "infernal",
     "name": "Infernal",
-    "talentIds": [
-      "anc_hells_child",
-      "anc_prehensile_tail",
-      "anc_read_the_coals"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_hells_child"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Hell's Child talent and 1 additional talent."
   },
   {
     "id": "kobold",
     "name": "Kobold",
-    "talentIds": [
-      "anc_keen_senses",
-      "anc_uncanny"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_uncanny"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Uncanny talent and 1 additional talent."
   },
   {
     "id": "orc",
     "name": "Orc",
-    "talentIds": [
-      "anc_nights_sight",
-      "anc_tough_as_nails"
-    ],
-    "allowsBonusClassTalent": true
+    "fixedTalentIds": ["anc_nights_sight"],
+    "bonusTalentCount": 1,
+    "summaryText": "Begin play with the Night's Sight talent and 1 additional talent."
   }
 ]
