@@ -224,7 +224,7 @@
     "name": "Shield",
     "type": "Armor",
     "slots": 1,
-    "defense": 1,
+    "defense": 2,
     "cost": 5,
     "details": "+1 to defense. Can be splintered to block a single attack entirely."
   },
@@ -250,10 +250,38 @@
     "id": "a_04",
     "name": "Heavy Armor",
     "type": "Armor",
+    "slots": 5,
+    "defense": 6,
+    "cost": 200,
+    "details": "DISADV to stealth, max +0 DEX bonus, heavy plate layers."
+  },
+
+  {
+    "id": "a_05",
+    "name": "Mithril Light Armor",
+    "type": "Armor",
+    "slots": 0,
+    "defense": 2,
+    "cost": 100,
+    "details": "Flexible mithril padding. -1 slot."
+  },
+  {
+    "id": "a_06",
+    "name": "Mithril Medium Armor",
+    "type": "Armor",
+    "slots": 2,
+    "defense": 4,
+    "cost": 300,
+    "details": "No penalty to stealth or swim. -1 slot."
+  },
+  {
+    "id": "a_07",
+    "name": "Mithril Heavy Armor",
+    "type": "Armor",
     "slots": 4,
     "defense": 6,
-    "cost": 150,
-    "details": "DISADV to stealth, max +0 DEX bonus, heavy plate layers."
+    "cost": 800,
+    "details": "No penalty to stealth or swim. -1 slot."
   },
   {
     "id": "g_01",

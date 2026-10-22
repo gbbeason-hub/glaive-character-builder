@@ -1,0 +1,252 @@
+[
+  {
+    "id": "anc_construct_main",
+    "name": "Construct",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "Constructs don’t necessarily consume rations like other PCs, but they do need fuel or spare parts to heal/repair during Short or Long Rests. Treat these as rations."
+  },
+  {
+    "id": "anc_gadgets",
+    "name": "Gadgets",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "You have 3 mundane items from the equipment list (pg. 9) built into your body. They occupy 0 item slots."
+  },
+  {
+    "id": "anc_secret_compartments",
+    "name": "Secret Compartments",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "You have 3 internal item slots. They are concealed, but can be found with a deliberate search.",
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "id": "anc_stone_skin",
+    "name": "Stone Skin",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "Your outer casing functions as medium armor (AC 14, same restrictions). This can be upgraded. Costs 200sp and a week of downtime per additional +1 AC.",
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "ac_unarmored_base",
+        "mode": "override",
+        "value": 14
+      }
+    ]
+  },
+  {
+    "id": "anc_brick_outhouse",
+    "name": "Brick Outhouse",
+    "type": "ancestry",
+    "set": "Demi-Ogre",
+    "description": "You're built hardier than most humanoids. You have ADV on STR saves and gain +2hp per level.",
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "anc_draconic_bloodlines",
+    "name": "Draconic Bloodlines",
+    "type": "ancestry",
+    "set": "Drakken",
+    "description": "You manifest the great wyrms in some physical fashion. Roll 1d4 or choose:\n1. Fangs & Claws. Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage).\n2. Horns. You have really cool horns. Ram, bull, rhino, triceratops, etc. Roll with ADV when attempting to intimidate anyone shorter than your horns.\n3. Tail. ADV on rolls to perform the following combat maneuvers: disarm and trip.\n4. Wings. You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
+  },
+  {
+    "id": "anc_elemental_breath",
+    "name": "Elemental Breath",
+    "type": "ancestry",
+    "set": "Drakken",
+    "description": "[HL] times per Long Rest you can manifest this as an exhalation of destructive energy. Determine the elemental energy type of your breath attack (Acid, Cold, Fire, Lightning, or Poison) and shape: cones hit up to [HL]+2 targets in your zone, or a stream that can hit up to [HL]+1 targets in a line up to 2 zones away. Save vs STR to hit. Your breath inflicts [HL]d6+STR damage. On a failed save you still inflict ½ damage."
+  },
+  {
+    "id": "anc_scales",
+    "name": "Scales",
+    "type": "ancestry",
+    "set": "Drakken",
+    "description": "Reduce incoming physical damage by 2 point. You gain a +2 bonus when making STR saves to resist physical attacks and effects."
+  },
+  {
+    "id": "anc_the_stare",
+    "name": "The Stare, R0",
+    "type": "ancestry",
+    "set": "Drakken",
+    "description": "You have the dead eyes of a coldblooded predator. As an action, save vs WIL to lock eyes with a single creature of [L]HD or less that you can see. They are incapacitated. Save vs WIL each round to maintain. The target creature must have eyes and basic animal intelligence."
+  },
+  {
+    "id": "anc_greedy",
+    "name": "Greedy",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "You can smell when a treasure hoard is nearby. This ability is imprecise. A bag of gold in the next room smells the same as a dragon’s hoard three leagues away."
+  },
+  {
+    "id": "anc_handy_if_not_handsome",
+    "name": "Handy if Not Handsome",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "As long as you have basic tools you can make significant repairs to a single object overnight. You don't need sleep when you work; your obsession is refreshing. You have 3 extra item slots. These are hidden in your beard.",
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "id": "anc_roots_of_the_mountain",
+    "name": "Roots of The Mountain",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "Gain +2hp per Level. As long as one foot is planted firmly on the ground you have ADV on STR saves to resist being knocked prone, shoved, or otherwise moved. You gain ADV on rolls to perform the following combat maneuvers: grapple and shield bash.",
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "anc_stone_cunning",
+    "name": "Stone Cunning",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "By tasting and nibbling the stone of a room you can determine if there are any traps nearby, though not their exact location - ADV to spot traps."
+  },
+  {
+    "id": "anc_stone_sight",
+    "name": "Stone Sight, R2",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "In complete darkness (windowless room, dungeon etc.) dwarves use sonic throat singing, providing them a sort of sonar that lets them see as if it were dimly lit. The ringholds of your people are alive with sonorous music. Moving silently & unseen is impossible when using these vocalizations."
+  },
+  {
+    "id": "anc_alert",
+    "name": "Alert",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "You have ADV on rolls to avoid being surprised when in the wilderness and may add your WIS bonus, in addition to DEX to all initiative rolls."
+  },
+  {
+    "id": "anc_glade_and_glen",
+    "name": "Glade & Glen",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "You are attuned to the living spirits all around you in stoic rock, burbling stream, and wolf's red ripping mouth. You move through the landscape without leaving a trace, and the natural world conspires with you in this. You are sly and wily. Gain +2 to Move Silently & Unseen. When traveling through a wilderness alone or with other elves you cannot be tracked and terrain penalties do not effect you."
+  },
+  {
+    "id": "anc_star_eyed",
+    "name": "Star Eyed",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "Elves treat starlight as sunlight. If you can see the stars, you can see as well as you can during the day. You can do the spooky head turn thing like an owl. You effectively have 360-degree vision. Because the great wodes were once full of magic doors to the fey realms you have ADV when searching for secret doors."
+  },
+  {
+    "id": "anc_sneaky_git",
+    "name": "Sneaky Git!",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You have ADV on rolls to Move Silently and Unseen."
+  },
+  {
+    "id": "anc_suspicious_by_nature",
+    "name": "Suspicious By Nature",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You have ADV on rolls to avoid being surprised."
+  },
+  {
+    "id": "anc_moon_eyes",
+    "name": "Moon Eyes",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You are not penalized when acting in dim light."
+  },
+  {
+    "id": "anc_danger_sense",
+    "name": "Danger Sense",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "You have ADV on rolls to avoid being surprised."
+  },
+  {
+    "id": "anc_dungeon_gourmand",
+    "name": "Dungeon Gourmand",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "Hereditary gourmets, half-foots have a knack for finding edible morsels. When foraging or examining the corpse of a monster, you're able to identify the safest and tastiest portions. You can also \"follow you noses\" to locate kitchens, larders, pantries, and feast-halls -GM’s discretion on the range of this ability."
+  },
+  {
+    "id": "anc_luck_of_the_small_folk",
+    "name": "Luck of the Small Folk",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "Once per Long Rest you may reroll a failed save."
+  },
+  {
+    "id": "anc_hells_child",
+    "name": "Hell’s Child",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "Your demonic bloodlines allow you to sense when creatures from the Nine-Fold Hells are nearby. This registers as a sulfuric burn in your nostrils that varies in intensity with distance and the power of the hellspawn. This ability is imprecise. An imp in the next room smells the same as a demon prince three leagues away."
+  },
+  {
+    "id": "anc_prehensile_tail",
+    "name": "Prehensile Tail",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "Can be used as a crude third arm. It can’t wield a weapon but it can carry things, help open stuck jars, and make melee attacks against anyone who has you in a grapple without DISADV. You have ADV on the combat maneuvers: disarm and trip."
+  },
+  {
+    "id": "anc_read_the_coals",
+    "name": "Read The Coals",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "You can gain insight from mundane fire. As long as the embers are still warm you can create a ghostly illusion that plays back everything that happened within the light of that fire. The ash and embers cannot answer questions or recognize individuals, but if you are looking for something specific, and you have seen it with your own eyes earlier, you can jump directly to that part of the illusion."
+  },
+  {
+    "id": "anc_keen_senses",
+    "name": "Keen Senses",
+    "type": "ancestry",
+    "set": "Kobold",
+    "description": "You have ADV on WIS saves that rely on sight, sound, or smell."
+  },
+  {
+    "id": "anc_uncanny",
+    "name": "Uncanny",
+    "type": "ancestry",
+    "set": "Kobold",
+    "description": "You can sense (but not see) invisible creatures within your zone. This lets you pinpoint their location. You also get a sense of their movements, so if they are moving at all, you can attack them without penalty."
+  },
+  {
+    "id": "anc_nights_sight",
+    "name": "Night’s Sight",
+    "type": "ancestry",
+    "set": "Orc",
+    "description": "Your glowing red eyes allow you to see further in dim lighting. The dim light from torches effectively reaches 1 additional zone for you. Penalties for dim light still apply. You can see the difference between dead bodies and the undead, between ordinary shadows and shadow-monsters. You can see necrotic magic and negative energy whenever they're used."
+  },
+  {
+    "id": "anc_tough_as_nails",
+    "name": "Tough as Nails",
+    "type": "ancestry",
+    "set": "Orc",
+    "description": "Once per Long Rest, when you’re reduced to 0hp but not killed outright, you drop to 1hp instead."
+  }
+]

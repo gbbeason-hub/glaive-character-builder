@@ -31,14 +31,16 @@ The fonts to use in the PDF & web site
 - Amaranth for regular text, including condition names, edited text fields, and generated text for editable fields
 - Rubik Dirt for attribute, hit point, & armor class abbreviated labels
 
-## 🏁 Next Target Step
+## 🏁 Next Target Steps
+- Phase 4 Mihtril: Add mithril armor 
 - Phase 5 Ancestry: Add Ancestry selection with talent
 - Phase 6 Talents: Add space for talents
 - Phase 7 Mutations: Add space for mutations
 - Phase 8 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
 - Phase 9 Magic: Add magic items & spells
-- Phase 10 Conditions: Add conditions (maybe only for PDF print)
-- Phase 11 Fatigue & Encumbrance: Mark fatigue and Encumbrance
-- Phase 12 Pregen All: One button to randomize everything!
-- Phase 13 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
-- Phase 14 PDF cleanup: Better looking front & back layout for character sheet
+- Phase 10 Name: Add name generator
+- Phase 11 Conditions: Add conditions (maybe only for PDF print)
+- Phase 12 Fatigue & Encumbrance: Mark fatigue and Encumbrance
+- Phase 13 Pregen All: One button to randomize everything!
+- Phase 14 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
+- Phase 15 PDF cleanup: Better looking front & back layout for character sheet

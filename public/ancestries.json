@@ -1,0 +1,62 @@
+[
+  {
+    "id": "construct",
+    "name": "Construct",
+    "defaultTalentId": "anc_construct_casing",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "infernal",
+    "name": "Infernal",
+    "defaultTalentId": "anc_infernal_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "kobold",
+    "name": "Kobold",
+    "defaultTalentId": "anc_kobold_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "orc",
+    "name": "Orc",
+    "defaultTalentId": "anc_orc_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "demi_ogre",
+    "name": "Demi-Ogre",
+    "defaultTalentId": "anc_demi_ogre_brick",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "drakken",
+    "name": "Drakken",
+    "defaultTalentId": "anc_drakken_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "dwarf",
+    "name": "Dwarf",
+    "defaultTalentId": "anc_dwarf_roots",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "elf",
+    "name": "Elf",
+    "defaultTalentId": "anc_elf_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "goblin",
+    "name": "Goblin",
+    "defaultTalentId": "anc_goblin_traits",
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "half_foot",
+    "name": "Half-Foot",
+    "defaultTalentId": "anc_half_foot_traits",
+    "allowsBonusClassTalent": true
+  }
+]
