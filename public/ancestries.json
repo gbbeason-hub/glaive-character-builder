@@ -2,61 +2,101 @@
   {
     "id": "construct",
     "name": "Construct",
-    "defaultTalentId": "anc_construct_casing",
-    "allowsBonusClassTalent": true
-  },
-  {
-    "id": "infernal",
-    "name": "Infernal",
-    "defaultTalentId": "anc_infernal_traits",
-    "allowsBonusClassTalent": true
-  },
-  {
-    "id": "kobold",
-    "name": "Kobold",
-    "defaultTalentId": "anc_kobold_traits",
-    "allowsBonusClassTalent": true
-  },
-  {
-    "id": "orc",
-    "name": "Orc",
-    "defaultTalentId": "anc_orc_traits",
+    "talentIds": [
+      "anc_construct_main",
+      "anc_gadgets",
+      "anc_secret_compartments",
+      "anc_stone_skin"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "demi_ogre",
     "name": "Demi-Ogre",
-    "defaultTalentId": "anc_demi_ogre_brick",
+    "talentIds": [
+      "anc_brick_outhouse"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "drakken",
     "name": "Drakken",
-    "defaultTalentId": "anc_drakken_traits",
+    "talentIds": [
+      "anc_draconic_bloodlines",
+      "anc_elemental_breath",
+      "anc_scales",
+      "anc_the_stare"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "dwarf",
     "name": "Dwarf",
-    "defaultTalentId": "anc_dwarf_roots",
+    "talentIds": [
+      "anc_greedy",
+      "anc_handy_if_not_handsome",
+      "anc_roots_of_the_mountain",
+      "anc_stone_cunning",
+      "anc_stone_sight"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "elf",
     "name": "Elf",
-    "defaultTalentId": "anc_elf_traits",
+    "talentIds": [
+      "anc_alert",
+      "anc_glade_and_glen",
+      "anc_star_eyed"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "goblin",
     "name": "Goblin",
-    "defaultTalentId": "anc_goblin_traits",
+    "talentIds": [
+      "anc_sneaky_git",
+      "anc_suspicious_by_nature",
+      "anc_moon_eyes"
+    ],
     "allowsBonusClassTalent": true
   },
   {
     "id": "half_foot",
     "name": "Half-Foot",
-    "defaultTalentId": "anc_half_foot_traits",
+    "talentIds": [
+      "anc_danger_sense",
+      "anc_dungeon_gourmand",
+      "anc_luck_of_the_small_folk"
+    ],
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "infernal",
+    "name": "Infernal",
+    "talentIds": [
+      "anc_hells_child",
+      "anc_prehensile_tail",
+      "anc_read_the_coals"
+    ],
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "kobold",
+    "name": "Kobold",
+    "talentIds": [
+      "anc_keen_senses",
+      "anc_uncanny"
+    ],
+    "allowsBonusClassTalent": true
+  },
+  {
+    "id": "orc",
+    "name": "Orc",
+    "talentIds": [
+      "anc_nights_sight",
+      "anc_tough_as_nails"
+    ],
     "allowsBonusClassTalent": true
   }
 ]
