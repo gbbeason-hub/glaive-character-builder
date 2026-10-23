@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ItemCard } from './ItemCard';
+import { AncestryCard } from './AncestryCard';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -33,6 +34,7 @@ interface CharacterTraits {
 interface BackgroundEntry {
   min: number;
   max: number;
+  name: string;
   text: string;
 }
 
@@ -64,6 +66,12 @@ export function App() {
 
   const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
   const [background, setBackground] = useState<string>('Roll or write a character background...');
+  
+  // Ancestries
+  const [ancestriesCatalog, setAncestriesCatalog] = useState<any[]>([]);
+  const [talentsCatalog, setTalentsCatalog] = useState<any[]>([]);
+  const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
+  const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
 
   // ==========================================
   // 3. ASYNCHRONOUS DATABASE FETCH
@@ -72,12 +80,16 @@ export function App() {
     Promise.all([
       fetch('/items.json').then(res => res.json()),
       fetch('/traits.json').then(res => res.json()),
-      fetch('/backgrounds.json').then(res => res.json())
+      fetch('/backgrounds.json').then(res => res.json()),
+      fetch('/ancestries.json').then(res => res.json()),
+      fetch('/talents.json').then(res => res.json())       
     ])
-    .then(([items, traitsData, backgroundData]) => {
+    .then(([items, traitsData, backgroundData, ancestriesData, talentsData]) => {
       setItemCatalog(items);
       setTraitDatabase(traitsData);
       setBackgroundDatabase(backgroundData);
+      setAncestriesCatalog(ancestriesData);
+      setTalentsCatalog(talentsData);       
     })
     .catch(err => console.error("Error initializing background data layers:", err));
   }, []);
@@ -95,6 +107,7 @@ export function App() {
     .filter(item => item.type === 'Armor' && item.defense)
     .reduce((sum, item) => sum + Number(item.defense), 0);
   const armorClass = 10 + stats.dexterity + armorBonus;
+
   // ==========================================
   // 5. HELPER ACTION FUNCTIONS
   // ==========================================
@@ -160,14 +173,37 @@ export function App() {
     }
   };
 
+  const handleAncestryChange = (ancestryId: string) => {
+    setSelectedAncestryId(ancestryId);
+    const foundAncestry = ancestriesCatalog.find(a => a.id === ancestryId);
+    if (foundAncestry) {
+      if (foundAncestry.fixedTalentIds && foundAncestry.fixedTalentIds.length > 0) {
+        setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
+      } else {
+        setSelectedAncestryTalentId('');
+      }
+    }
+  };
+
   const exportCharacter = () => {
-    const save = { name: characterName, level, stats, silver, traits, bond, background, inventoryIds: inventory.map(i => i.id) };
+    const save = { 
+      name: characterName, 
+      level, 
+      stats, 
+      silver, 
+      traits, 
+      bond, 
+      background, 
+      selectedAncestryId,
+      selectedAncestryTalentId,
+      inventoryIds: inventory.map(i => i.id) 
+    };
     navigator.clipboard.writeText(btoa(JSON.stringify(save)));
     setExportMessage('Character code copied to clipboard!');
     setTimeout(() => setExportMessage(''), 3000);
   };
 
-    const importCharacter = () => {
+  const importCharacter = () => {
     try {
       const decoded = JSON.parse(atob(importString.trim()));
       setCharacterName(decoded.name);
@@ -178,7 +214,9 @@ export function App() {
       setBond(decoded.bond || 'Roll a bond with the PC to your left...');
       setBackground(decoded.background || 'Roll or write a character background...');
       
-      // ✅ FIXED: Explicitly typed '(id: string)' to satisfy strict linting contracts
+      if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
+      if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
+
       setInventory(decoded.inventoryIds.map((id: string) => itemCatalog.find(idMatch => idMatch.id === id)).filter(Boolean));
       importString && setImportString('');
     } catch { 
@@ -190,159 +228,182 @@ export function App() {
   // 6. RENDER INTERFACE STRUCTURAL LAYOUT
   // ==========================================
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '760px', margin: '0 auto' }}>
       
       {/* Interactive App-Only Builder Container View */}
       <div className="builder-interface-view">
-        <h1>Glaive v3 Character Builder</h1>
-        <hr />
+        <h1 style={{ textAlign: 'center' }}>Glaive v3 Character Builder</h1>
+        <hr style={{ marginBottom: '20px' }} />
         
-        {/* 1. Profile Configuration Header Row */}
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-          <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '5px' }}>
-            <label style={{ fontWeight: 'bold' }}>Character Name: </label>
-            <input type="text" value={characterName} onChange={(e) => setCharacterName(e.target.value)} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
-            <label style={{ fontWeight: 'bold' }}>PC Level: </label>
-            <input type="number" min={1} max={20} value={level} onChange={(e) => setLevel(Math.max(1, Number(e.target.value)))} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%' }} />
-          </div>
-        </div>
-
-        {/* Main Two-Column Sheet Interface Split */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
+        {/* Single Column Flow Container */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* LEFT COLUMN: STATS, STATUS, WALLET & BACKUPS */}
-          <div>
-            {/* 2. Attributes Array Dropdowns Matrix */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
+          {/* Profile Header Details */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 12px 0' }}>Character Details</h3>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '13px' }}>Character Name: </label>
+                <input type="text" value={characterName} onChange={(e) => setCharacterName(e.target.value)} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }} />
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '13px' }}>PC Level: </label>
+                <input type="number" min={1} max={20} value={level} onChange={(e) => setLevel(Math.max(1, Number(e.target.value)))} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }} />
+              </div>
+            </div>
+          </div>
+
+          {/* 1. Character Background Card */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Character Background</h3>
+            <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>
+              Select or roll your hero's origins, past training, and formative experiences:
+            </label>
+            
+            <select 
+              value={background} 
+              onChange={e => setBackground(e.target.value)}
+              style={{ width: '100%', padding: '8px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ccc', marginBottom: '10px' }}
+            >
+              <option value="">-- Select a Background --</option>
+              {backgroundDatabase && backgroundDatabase.map((b, idx) => (
+                <option key={idx} value={b.text}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Display full description box if a background is selected */}
+            {background && (
+              <div style={{ fontSize: '14px', color: '#333', backgroundColor: '#f9f9f9', padding: '10px', borderRadius: '6px', border: '1px solid #eee', marginBottom: '10px', lineHeight: '1.4' }}>
+                {background}
+              </div>
+            )}
+
+            <button onClick={rollCharacterBackground} style={{ backgroundColor: '#4a5568', color: '#fff', padding: '8px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', width: '100%', fontWeight: '500' }}>
+              🎲 Roll d100 Character Background
+            </button>
+          </div>
+
+          {/* 2. Attributes Card */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 12px 0' }}>Attributes</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '8px' }}>
               {(Object.keys(stats) as Array<keyof Attributes>).map(s => (
                 <div key={s} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                   <label style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{s}</label>
-                  <select value={stats[s]} onChange={e => handleStatChange(s, Number(e.target.value))} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px' }}>
+                  <select value={stats[s]} onChange={e => handleStatChange(s, Number(e.target.value))}>
                     {dynamicAttributeChoices.map(v => <option key={v} value={v}>+{v}</option>)}
                   </select>
                 </div>
               ))}
             </div>
-
-            {/* 3. User-Editable Character Trait Cards Panel */}
-            <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff' }}>
-              <h3 style={{ margin: '0 0 10px 0' }}>Physical Descriptors</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-                {(Object.keys(traits) as Array<keyof CharacterTraits>).map(t => (
-                  <div key={t} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-                    <label style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: '14px', width: '70px' }}>{t}:</label>
-                    <input 
-                      type="text" 
-                      value={traits[t]} 
-                      onChange={e => handleTraitChange(t, e.target.value)}
-                      style={{ flex: 1, padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} 
-                    />
-                  </div>
-                ))}
-              </div>
-              <button onClick={rollAllTraits} style={{ backgroundColor: '#2b6cb0', color: '#fff', padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', width: '100%' }}>
-                🎲 Randomize All Physical Traits
-              </button>
-            </div>
-            {/* 4. Character Social Bonds Panel */}
-            <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff' }}>
-              <h3 style={{ margin: '0 0 10px 0' }}>Character Bond</h3>
-              <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>
-                Relationship with the Player Character sitting to your left:
-              </label>
-              <textarea 
-                value={bond} 
-                onChange={e => setBond(e.target.value)}
-                style={{ width: '100%', minHeight: '50px', padding: '8px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc', fontFamily: 'sans-serif', fontSize: '14px', marginBottom: '10px', resize: 'vertical' }} 
-              />
-              <button onClick={rollCharacterBond} style={{ backgroundColor: '#718096', color: '#fff', padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', width: '100%' }}>
-                🎲 Roll 2d6 Character Bond Matrix
-              </button>
-            </div>
-
-            {/* 4.5. Character Background Narrative Panel */}
-            <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff' }}>
-              <h3 style={{ margin: '0 0 10px 0' }}>Character Background</h3>
-              <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>
-                Your origins, past training, and formative life experiences:
-              </label>
-              <textarea 
-                value={background} 
-                onChange={e => setBackground(e.target.value)}
-                style={{ width: '100%', minHeight: '70px', padding: '8px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc', fontFamily: 'sans-serif', fontSize: '14px', marginBottom: '10px', resize: 'vertical' }} 
-              />
-              <button onClick={rollCharacterBackground} style={{ backgroundColor: '#4a5568', color: '#fff', padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', width: '100%' }}>
-                🎲 Roll d100 Character Background
-              </button>
-            </div>
-
-            {/* 5. Interactive Starting Silver Panel */}
-            <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff' }}>
-              <label style={{ fontSize: '0.85rem', color: '#666', display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>WALLETS & COINAGE</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                <input 
-                  type="number" 
-                  value={silver} 
-                  onChange={(e) => setSilver(Math.max(0, parseInt(e.target.value) || 0))}
-                  style={{ width: '90px', padding: '6px', fontSize: '16px', fontWeight: 'bold' }} 
-                />
-                <span style={{ fontWeight: 'bold', marginRight: '10px' }}>SP</span>
-                <button onClick={() => adjustSilver(1)} style={{ padding: '4px 8px' }}>+1</button>
-                <button onClick={() => adjustSilver(-1)} style={{ padding: '4px 8px' }}>-1</button>
-                <button onClick={() => adjustSilver(10)} style={{ padding: '4px 8px' }}>+10</button>
-                <button onClick={() => adjustSilver(-10)} style={{ padding: '4px 8px' }}>-10</button>
-              </div>
-              <button onClick={rollStartingSilver} style={{ backgroundColor: '#4A5568', color: '#fff', padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', width: '100%', marginTop: '5px' }}>
-                🎲 Roll Starting Wealth (1d20 Tier Table)
-              </button>
-            </div>
-
-            {/* 6. Character Dynamic Status Dashboard Card */}
-            <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', marginBottom: '20px', backgroundColor: totalSlotsUsed > maxCarryingCapacity ? '#fff0f0' : '#fff' }}>
-              <h3>Character Status</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-                <div><strong>Hit Points:</strong> {hitPoints} HP</div>
-                <div>
-                  <strong>Armor Class:</strong> {armorClass} AC 
-                  {armorBonus > 0 && <span style={{ fontSize: '11px', color: 'green', display: 'block' }}>(+{armorBonus} from gear)</span>}
-                </div>
-              </div>
-              <p style={{ margin: '5px 0 0 0' }}><strong>Burden:</strong> <span style={{ color: totalSlotsUsed > maxCarryingCapacity ? 'red' : 'green', fontWeight: 'bold' }}>{totalSlotsUsed} / {maxCarryingCapacity} Slots</span></p>
-            </div>
-
-            {/* Save / Load Clipboard System */}
-            <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '8px', backgroundColor: '#fafafa', marginBottom: '20px' }}>
-              <h3>Save / Load Tools</h3>
-              <button onClick={exportCharacter} style={{ backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '4px', padding: '10px', fontWeight: 'bold', cursor: 'pointer', width: '100%', marginBottom: '10px' }}>📁 Copy Save Code</button>
-              <button onClick={() => window.print()} style={{ backgroundColor: '#1A202C', color: 'white', border: 'none', borderRadius: '4px', padding: '10px', fontWeight: 'bold', cursor: 'pointer', width: '100%', marginBottom: '10px' }}>🖨️ Export PDF / Print Character Sheet</button>
-              {exportMessage && <p style={{ fontSize: '13px', color: 'green', textAlign: 'center' }}>{exportMessage}</p>}
-              <input type="text" placeholder="Paste save code..." value={importString} onChange={e => setImportString(e.target.value)} style={{ padding: '8px', width: '100%', boxSizing: 'border-box' }} />
-              <button onClick={importCharacter} style={{ backgroundColor: '#555', color: 'white', border: 'none', borderRadius: '4px', padding: '8px', cursor: 'pointer', width: '100%', marginTop: '5px' }}>📥 Load Save Code</button>
-            </div>
           </div>
-          {/* RIGHT COLUMN: EQUIPPED EQUIPMENT & CATEGORIZED CATALOGS */}
+          
+          {/* 3. Ancestry Card */}
           <div>
-            <h3>Equipped Inventory</h3>
+            <AncestryCard 
+              ancestries={ancestriesCatalog}
+              talents={talentsCatalog}
+              selectedAncestryId={selectedAncestryId}
+              selectedAncestryTalentId={selectedAncestryTalentId}
+              onAncestryChange={handleAncestryChange}
+              onAncestryTalentChange={setSelectedAncestryTalentId}
+            />
+          </div>
+
+          {/* [4. Talents Card will go here] */}
+
+          {/* 5. Traits Card */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Traits</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+              {(Object.keys(traits) as Array<keyof CharacterTraits>).map(t => (
+                <div key={t} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+                  <label style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: '14px', width: '70px' }}>{t}:</label>
+                  <input 
+                    type="text" 
+                    value={traits[t]} 
+                    onChange={e => handleTraitChange(t, e.target.value)}
+                    style={{ flex: 1, padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} 
+                  />
+                </div>
+              ))}
+            </div>
+            <button onClick={rollAllTraits} style={{ backgroundColor: '#2b6cb0', color: '#fff', padding: '8px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', width: '100%', fontWeight: '500' }}>
+              🎲 Randomize All Physical Traits
+            </button>
+          </div>
+
+          {/* 6. Character Bond Card */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Character Bond</h3>
+            <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px' }}>
+              Relationship with the Player Character sitting to your left:
+            </label>
+            <textarea 
+              value={bond} 
+              onChange={e => setBond(e.target.value)}
+              style={{ width: '100%', minHeight: '50px', padding: '8px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ccc', fontFamily: 'sans-serif', fontSize: '14px', marginBottom: '10px', resize: 'vertical' }} 
+            />
+            <button onClick={rollCharacterBond} style={{ backgroundColor: '#718096', color: '#fff', padding: '8px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', width: '100%', fontWeight: '500' }}>
+              🎲 Roll 2d6 Character Bond Matrix
+            </button>
+          </div>
+
+          {/* 7. Starting Silver Panel */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <label style={{ fontSize: '0.85rem', color: '#666', display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>WALLETS & COINAGE</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <input 
+                type="number" 
+                value={silver} 
+                onChange={(e) => setSilver(Math.max(0, parseInt(e.target.value) || 0))}
+                style={{ width: '90px', padding: '6px', fontSize: '16px', fontWeight: 'bold' }} 
+              />
+              <span style={{ fontWeight: 'bold', marginRight: '10px' }}>SP</span>
+              <button onClick={() => adjustSilver(1)} style={{ padding: '6px 10px' }}>+1</button>
+              <button onClick={() => adjustSilver(-1)} style={{ padding: '6px 10px' }}>-1</button>
+              <button onClick={() => adjustSilver(10)} style={{ padding: '6px 10px' }}>+10</button>
+              <button onClick={() => adjustSilver(-10)} style={{ padding: '6px 10px' }}>-10</button>
+            </div>
+            <button onClick={rollStartingSilver} style={{ backgroundColor: '#4A5568', color: '#fff', padding: '8px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', width: '100%', fontWeight: '500', marginTop: '5px' }}>
+              🎲 Roll Starting Wealth (1d20 Tier Table)
+            </button>
+          </div>
+
+          {/* 8. Character Dynamic Status Dashboard Card */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: totalSlotsUsed > maxCarryingCapacity ? '#fff0f0' : '#fff' }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Character Status</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div><strong>Hit Points:</strong> {hitPoints} HP</div>
+              <div>
+                <strong>Armor Class:</strong> {armorClass} AC 
+                {armorBonus > 0 && <span style={{ fontSize: '11px', color: 'green', display: 'block' }}>(+{armorBonus} from gear)</span>}
+              </div>
+            </div>
+            <p style={{ margin: '5px 0 0 0' }}><strong>Burden:</strong> <span style={{ color: totalSlotsUsed > maxCarryingCapacity ? 'red' : 'green', fontWeight: 'bold' }}>{totalSlotsUsed} / {maxCarryingCapacity} Slots</span></p>
+          </div>
+
+          {/* 9. Equipped Inventory & Catalogs Section */}
+          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <h3 style={{ margin: '0 0 10px 0' }}>Equipped Inventory</h3>
             
-            {/* Permanent Free Starter Gear Callout Banner */}
             <div style={{ backgroundColor: '#ebf8ff', borderLeft: '4px solid #3182ce', padding: '10px', borderRadius: '4px', marginBottom: '12px', fontSize: '13px', lineHeight: '1.4' }}>
               💼 <strong>Free Starter Gear:</strong> You are permanently equipped with a <em>Backpack</em>, <em>Flint & Steel</em>, worn travel clothing, and tiny trinkets. These items do not consume inventory slots.
             </div>
 
-            <div style={{ border: '1px solid #ddd', minHeight: '80px', padding: '10px', marginBottom: '25px', backgroundColor: '#fafafa' }}>
-              {inventory.length === 0 ? <p style={{ color: '#888', fontStyle: 'italic' }}>No additional items equipped.</p> : inventory.map((item, idx) => (
+            <div style={{ border: '1px solid #ddd', minHeight: '80px', padding: '10px', marginBottom: '20px', backgroundColor: '#fafafa', borderRadius: '6px' }}>
+              {inventory.length === 0 ? <p style={{ color: '#888', fontStyle: 'italic', margin: 0 }}>No additional items equipped.</p> : inventory.map((item, idx) => (
                 <ItemCard key={idx} item={item} buttonText="Drop" buttonColor="#ff4d4d" onButtonClick={() => setInventory(prev => prev.filter((_, i) => i !== idx))} />
               ))}
             </div>
 
-            {/* Categorized Equipment Catalogs Section */}
-            <h3>Equipment Catalog</h3>
+            <h3 style={{ margin: '15px 0 10px 0' }}>Equipment Catalog</h3>
             
             {/* SECTION A: WEAPONS CATALOG LIST */}
             <h4 style={{ margin: '15px 0 5px 0', textTransform: 'uppercase', color: '#4a5568', fontSize: '14px', letterSpacing: '0.5px' }}>⚔️ Weapons</h4>
-            <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', marginBottom: '15px', backgroundColor: '#fff' }}>
+            <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', marginBottom: '15px', backgroundColor: '#fff', borderRadius: '6px' }}>
               {itemCatalog.filter(item => item.type === 'Weapon').length === 0 ? (
                 <p style={{ color: '#888', fontStyle: 'italic', fontSize: '13px' }}>Loading weapons...</p>
               ) : (
@@ -354,7 +415,7 @@ export function App() {
 
             {/* SECTION B: ARMOR CATALOG LIST */}
             <h4 style={{ margin: '15px 0 5px 0', textTransform: 'uppercase', color: '#4a5568', fontSize: '14px', letterSpacing: '0.5px' }}>🛡️ Armor & Shields</h4>
-            <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', marginBottom: '15px', backgroundColor: '#fff' }}>
+            <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', marginBottom: '15px', backgroundColor: '#fff', borderRadius: '6px' }}>
               {itemCatalog.filter(item => item.type === 'Armor').length === 0 ? (
                 <p style={{ color: '#888', fontStyle: 'italic', fontSize: '13px' }}>Loading armor...</p>
               ) : (
@@ -366,7 +427,7 @@ export function App() {
 
             {/* SECTION C: GENERAL GEAR CATALOG LIST */}
             <h4 style={{ margin: '15px 0 5px 0', textTransform: 'uppercase', color: '#4a5568', fontSize: '14px', letterSpacing: '0.5px' }}>🎒 General Equipment</h4>
-            <div style={{ maxHeight: '250px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', backgroundColor: '#fff' }}>
+            <div style={{ maxHeight: '250px', overflowY: 'auto', border: '1px solid #eee', padding: '10px', backgroundColor: '#fff', borderRadius: '6px' }}>
               {itemCatalog.filter(item => item.type === 'Equipment' || item.type === 'Ammunition').length === 0 ? (
                 <p style={{ color: '#888', fontStyle: 'italic', fontSize: '13px' }}>Loading general gear...</p>
               ) : (
@@ -375,13 +436,23 @@ export function App() {
                 ))
               )}
             </div>
-          </div> 
+          </div>
 
-        </div> {/* Closes main split column layout wrapper */}
+          {/* 10. Save / Load Clipboard System */}
+          <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '8px', backgroundColor: '#fafafa' }}>
+            <h3 style={{ margin: '0 0 12px 0' }}>Save / Load Tools</h3>
+            <button onClick={exportCharacter} style={{ backgroundColor: '#008CBA', color: 'white', border: 'none', borderRadius: '6px', padding: '10px', fontWeight: 'bold', cursor: 'pointer', width: '100%', marginBottom: '10px' }}>📁 Copy Save Code</button>
+            <button onClick={() => window.print()} style={{ backgroundColor: '#1A202C', color: 'white', border: 'none', borderRadius: '6px', padding: '10px', fontWeight: 'bold', cursor: 'pointer', width: '100%', marginBottom: '10px' }}>🖨️ Export PDF / Print Character Sheet</button>
+            {exportMessage && <p style={{ fontSize: '13px', color: 'green', textAlign: 'center' }}>{exportMessage}</p>}
+            <input type="text" placeholder="Paste save code..." value={importString} onChange={e => setImportString(e.target.value)} style={{ padding: '8px', width: '100%', boxSizing: 'border-box', marginBottom: '8px', borderRadius: '4px', border: '1px solid #ccc' }} />
+            <button onClick={importCharacter} style={{ backgroundColor: '#555', color: 'white', border: 'none', borderRadius: '6px', padding: '8px', cursor: 'pointer', width: '100%' }}>📥 Load Save Code</button>
+          </div>
+
+        </div> {/* Closes single column flex stack wrapper */}
       </div> {/* Closes builder-interface-view wrapper */}
 
       {/* ========================================================= */}
-      {/* 8. PRINT/PDF EXPORT LAYOUT BLUEPRINT (HIDDEN BY DEFAULT)    */}
+      {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT (HIDDEN BY DEFAULT)     */}
       {/* ========================================================= */}
       <div className="printable-character-sheet">
         {/* Header Block Row */}

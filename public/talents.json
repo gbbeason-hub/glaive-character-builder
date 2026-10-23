@@ -59,31 +59,53 @@
     ]
   },
   {
-    "id": "anc_draconic_bloodlines",
-    "name": "Draconic Bloodlines",
-    "type": "ancestry",
-    "set": "Drakken",
-    "description": "You manifest the great wyrms in some physical fashion. Roll 1d4 or choose:\n1. Fangs & Claws. Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage).\n2. Horns. You have really cool horns. Ram, bull, rhino, triceratops, etc. Roll with ADV when attempting to intimidate anyone shorter than your horns.\n3. Tail. ADV on rolls to perform the following combat maneuvers: disarm and trip.\n4. Wings. You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
-  },
+  "id": "anc_draconic_bloodlines",
+  "name": "Draconic Bloodlines",
+  "type": "ancestry",
+  "set": "Drake",
+  "description": "You manifest the great wyrms in some physical fashion. Choose or roll 1d4:",
+  "subOptions": [
+    {
+      "id": "bloodline_fangs",
+      "name": "1. Fangs & Claws",
+      "description": "Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage)."
+    },
+    {
+      "id": "bloodline_horns",
+      "name": "2. Horns",
+      "description": "You have really cool horns (ram, bull, rhino, etc.). Roll with ADV when attempting to intimidate anyone shorter than your horns."
+    },
+    {
+      "id": "bloodline_tail",
+      "name": "3. Tail",
+      "description": "ADV on rolls to perform the following combat maneuvers: disarm and trip."
+    },
+    {
+      "id": "bloodline_wings",
+      "name": "4. Wings",
+      "description": "You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
+    }
+  ]
+},
   {
     "id": "anc_elemental_breath",
     "name": "Elemental Breath",
     "type": "ancestry",
-    "set": "Drakken",
+    "set": "Drake",
     "description": "[HL] times per Long Rest you can manifest this as an exhalation of destructive energy. Determine the elemental energy type of your breath attack (Acid, Cold, Fire, Lightning, or Poison) and shape: cones hit up to [HL]+2 targets in your zone, or a stream that can hit up to [HL]+1 targets in a line up to 2 zones away. Save vs STR to hit. Your breath inflicts [HL]d6+STR damage. On a failed save you still inflict ½ damage."
   },
   {
     "id": "anc_scales",
     "name": "Scales",
     "type": "ancestry",
-    "set": "Drakken",
+    "set": "Drake",
     "description": "Reduce incoming physical damage by 2 point. You gain a +2 bonus when making STR saves to resist physical attacks and effects."
   },
   {
     "id": "anc_the_stare",
     "name": "The Stare, R0",
     "type": "ancestry",
-    "set": "Drakken",
+    "set": "Drake",
     "description": "You have the dead eyes of a coldblooded predator. As an action, save vs WIL to lock eyes with a single creature of [L]HD or less that you can see. They are incapacitated. Save vs WIL each round to maintain. The target creature must have eyes and basic animal intelligence."
   },
   {
