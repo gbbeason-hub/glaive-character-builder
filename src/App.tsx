@@ -6,10 +6,10 @@ import { TalentsCard } from './TalentsCard';
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
 // ==========================================
-interface Attributes {
+interface Abilities {
   strength: number;
   dexterity: number;
-  constitution: number;
+  willpower: number;
   wisdom: number;
 }
 
@@ -39,13 +39,22 @@ interface BackgroundEntry {
   text: string;
 }
 
+// Map of concise attribute descriptions
+const attributeDescriptions: Record<keyof Abilities, string> = {
+  strength: 'Melee attacks, physical saves, & bonus to most weapon damage',
+  dexterity: 'delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
+  willpower: 'resolve, stubbornness, mental endurance, & use to wield & resist magic.',
+  wisdom: 'ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.'
+  
+};
+
 export function App() {
   // ==========================================
   // 2. APPLICATION REACT STATE STORAGE
   // ==========================================
   const [characterName, setCharacterName] = useState('Glaive Hero');
   const [level, setLevel] = useState(1);
-  const [stats, setStats] = useState<Attributes>({ strength: 3, dexterity: 2, constitution: 1, wisdom: 0 });
+  const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
   const [silver, setSilver] = useState<number>(50);
 
   const [itemCatalog, setItemCatalog] = useState<Item[]>([]);
@@ -132,7 +141,7 @@ export function App() {
   // ==========================================
   // 5. HELPER ACTION FUNCTIONS
   // ==========================================
-  const handleStatChange = (statName: keyof Attributes, value: number) => {
+  const handleStatChange = (statName: keyof Abilities, value: number) => {
     setStats(prev => ({ ...prev, [statName]: value }));
   };
 
@@ -302,23 +311,51 @@ export function App() {
               ))}
             </select>
 
+            {background && (
+              <div className="description-box">
+                {background}
+              </div>
+            )}
+
             <button type="button" onClick={rollCharacterBackground} className="btn-primary full-width">
               🎲 Roll d100 Character Background
             </button>
           </div>
 
-          {/* 2. Attributes Card */}
+          {/* 2. Abilities Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Attributes</h3>
+            <h3 className="panel-heading">Abilities</h3>
+            <div className="instruction-block">
+              <p className="instruction-text">
+                At Level 1, distribute these starting bonuses across your abilities:
+              </p>
+              <div className="bonus-badge-group">
+                <span className="bonus-badge">+3</span>
+                <span className="bonus-badge">+2</span>
+                <span className="bonus-badge">+1</span>
+                <span className="bonus-badge">+0</span>
+              </div>
+              <p className="instruction-subtext">(Maximum ability bonus is +5)</p>
+            </div>
+
             <div className="attributes-grid">
-              {(Object.keys(stats) as Array<keyof Attributes>).map(s => (
-                <div key={s} className="attribute-field">
-                  <label className="attribute-label">{s}</label>
-                  <select value={stats[s]} onChange={e => handleStatChange(s, Number(e.target.value))}>
-                    {dynamicAttributeChoices.map(v => <option key={v} value={v}>+{v}</option>)}
-                  </select>
-                </div>
-              ))}
+              {(Object.keys(stats) as Array<keyof Abilities>).map((s) => {
+                const statKey = s as keyof Abilities;
+                return (
+                  <div key={statKey} className="attribute-field">
+                    <label className="attribute-label">{statKey}</label>
+                    <span className="attribute-desc">{attributeDescriptions[statKey]}</span>
+                    <select 
+                      value={stats[statKey]} 
+                      onChange={e => handleStatChange(statKey, Number(e.target.value))}
+                    >
+                      {dynamicAttributeChoices.map(v => (
+                        <option key={v} value={v}>+{v}</option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -349,26 +386,38 @@ export function App() {
           {/* 5. Traits Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Traits</h3>
-            <div className="traits-stack">
+            
+            <div className="traits-grid">
               {(Object.keys(traits) as Array<keyof CharacterTraits>).map(t => (
-                <div key={t} className="trait-row">
-                  <label className="trait-label">{t}:</label>
-                  <input
-                    type="text"
+                <div key={t} className="form-group">
+                  <label className="field-label uppercase-label">{t}</label>
+                  <select
                     value={traits[t]}
                     onChange={e => handleTraitChange(t, e.target.value)}
-                  />
+                    className="form-select-spacing"
+                  >
+                    {traitDatabase && traitDatabase[t] ? (
+                      traitDatabase[t].map((optionValue: string, idx: number) => (
+                        <option key={idx} value={optionValue}>
+                          {optionValue}
+                        </option>
+                      ))
+                    ) : (
+                      <option value={traits[t]}>{traits[t]}</option>
+                    )}
+                  </select>
                 </div>
               ))}
             </div>
-            <button type="button" onClick={rollAllTraits} className="btn-primary full-width">
+
+            <button type="button" onClick={rollAllTraits} className="btn-primary full-width mt-3">
               🎲 Randomize All Physical Traits
             </button>
           </div>
 
           {/* 6. Character Bond Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Character Bond</h3>
+            <h3 className="panel-heading">Bond</h3>
             <p className="instruction-text">
               Relationship with the Player Character sitting to your left:
             </p>
@@ -524,8 +573,8 @@ export function App() {
             </button>
           </div>
 
-        </div> {/* Closes card stack */}
-      </div> {/* Closes builder-interface-view */}
+        </div>
+      </div>
 
       {/* ========================================================= */}
       {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT                         */}
@@ -547,7 +596,7 @@ export function App() {
               <div className="print-stat-item"><b>HP:</b> {hitPoints}</div>
               <div className="print-stat-item"><b>DEX:</b> +{stats.dexterity}</div>
               <div className="print-stat-item"><b>AC:</b> {armorClass}</div>
-              <div className="print-stat-item"><b>CON:</b> +{stats.constitution}</div>
+              <div className="print-stat-item"><b>WIL:</b> +{stats.willpower}</div>
               <div className="print-stat-item"><b>Level:</b> {level}</div>
               <div className="print-stat-item"><b>WIS:</b> +{stats.wisdom}</div>
               <div className="print-stat-item"><b>XP:</b> ——</div>

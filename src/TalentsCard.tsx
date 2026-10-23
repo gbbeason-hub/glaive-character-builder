@@ -38,13 +38,13 @@ export function TalentsCard({
 
   return (
     <div className="talents-card">
-      {/* Header & Status */}
-      <div className="talents-header-row">
-        <h3>Character Talents</h3>
-        <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
-          {filledCount} / {maxTalentSlots} Slots Filled
-        </span>
-      </div>
+  {/* Header & Status */}
+  <div className="talents-header-row">
+    <h3 className="panel-heading">Talents</h3>
+    <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
+      {filledCount} / {maxTalentSlots} Slots Filled
+    </span>
+  </div>
 
       {/* Instructions */}
       <p className="talents-instructions">

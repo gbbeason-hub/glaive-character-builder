@@ -87,7 +87,7 @@ export function AncestryCard({
 
   return (
     <div className="card-panel">
-      <h3 className="panel-heading underline">Ancestry</h3>
+      <h3 className="panel-heading">Ancestry</h3>
 
       {/* Row 1: Ancestry Select & Summary */}
       <div className="form-group">
