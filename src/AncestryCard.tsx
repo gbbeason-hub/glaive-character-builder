@@ -86,14 +86,12 @@ export function AncestryCard({
   };
 
   return (
-    <div style={{ border: '1px solid var(--border)', padding: '20px', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff', textAlign: 'left', boxShadow: 'var(--shadow)' }}>
-      <h3 style={{ margin: '0 0 16px 0', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>Ancestry</h3>
+    <div className="card-panel">
+      <h3 className="panel-heading underline">Ancestry</h3>
 
-      {/* Row 1: Ancestry Select & Summary stacked */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
-          Choose Ancestry
-        </label>
+      {/* Row 1: Ancestry Select & Summary */}
+      <div className="form-group">
+        <label className="field-label">Choose Ancestry</label>
         <select
           value={selectedAncestryId}
           onChange={(e) => onAncestryChange(e.target.value)}
@@ -104,17 +102,13 @@ export function AncestryCard({
             </option>
           ))}
         </select>
-        <div style={{ fontSize: '14px', color: '#555', marginTop: '6px', lineHeight: '1.4' }}>
-          {currentAncestry?.summaryText}
-        </div>
+        <p className="card-description">{currentAncestry?.summaryText}</p>
       </div>
 
       {/* Row 2: Ancestry Talent Select & Description (Hidden for Humans) */}
       {selectedAncestryId !== 'human' && (
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
-            Ancestry Talent
-          </label>
+        <div className="form-group">
+          <label className="field-label">Ancestry Talent</label>
           <select
             value={selectedAncestryTalentId}
             onChange={(e) => onAncestryTalentChange(e.target.value)}
@@ -129,18 +123,16 @@ export function AncestryCard({
               ))
             )}
           </select>
-          <div style={{ fontSize: '14px', color: '#555', marginTop: '6px', lineHeight: '1.4' }}>
+          <p className="card-description">
             {currentTalent ? currentTalent.description : 'No talent selected.'}
-          </div>
+          </p>
         </div>
       )}
 
       {/* Row 3: Sub-Option Selector stacked (Hidden for Humans) */}
       {selectedAncestryId !== 'human' && currentTalent?.subOptions && currentTalent.subOptions.length > 0 && (
-        <div style={{ marginBottom: '16px', padding: '14px', backgroundColor: 'var(--bg)', borderRadius: '6px', border: '1px solid var(--border)' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
-            {currentTalent.name} Choice
-          </label>
+        <div className="sub-option-panel">
+          <label className="field-label">{currentTalent.name} Choice</label>
           <select
             value={activeSubOptionId}
             onChange={(e) => handleSubOptionSelect(e.target.value)}
@@ -151,17 +143,14 @@ export function AncestryCard({
               </option>
             ))}
           </select>
-          <div style={{ fontSize: '14px', color: '#444', marginTop: '6px', lineHeight: '1.4', fontWeight: '500' }}>
+          <p className="sub-option-description">
             {currentSubOption ? currentSubOption.description : 'Select an option.'}
-          </div>
+          </p>
         </div>
       )}
 
-      <div>
-        <button
-          onClick={handleRollAncestry}
-          style={{ backgroundColor: 'var(--accent)', color: '#fff', padding: '8px 14px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '500' }}
-        >
+      <div className="card-actions">
+        <button type="button" onClick={handleRollAncestry} className="btn-primary">
           🎲 Roll Ancestry
         </button>
       </div>

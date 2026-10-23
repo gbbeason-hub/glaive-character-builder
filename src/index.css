@@ -14,13 +14,18 @@
   --accent-border: rgba(74, 85, 104, 0.4);
   --shadow: rgba(0, 0, 0, 0.05) 0 4px 6px -1px, rgba(0, 0, 0, 0.03) 0 2px 4px -1px;
 
-  /* Typography Stacks */
-  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --heading: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* Font Families */
+  --font-label: 'Lilita One', cursive, system-ui, sans-serif;
+  --font-body: 'Amaranth', sans-serif;
+  --font-display: 'Rubik Dirt', display, system-ui, sans-serif;
+
+  /* Typography Stacks mapped to application UI */
+  --sans: var(--font-body);
+  --heading: var(--font-label);
   --mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
 
   /* Base Body Font Settings */
-  font: 16px/150% var(--sans);
+  font: 16px/150% var(--font-body);
   letter-spacing: 0.15px;
   color-scheme: light;
   color: var(--text);
@@ -51,52 +56,131 @@ body {
 }
 
 /* ==========================================================================
-   3. TYPOGRAPHY
+   3. TYPOGRAPHY & FONT MAPPINGS
    ========================================================================== */
-h1, h2, h3, h4 {
-  font-family: var(--heading);
-  font-weight: 600;
+
+/* 1) Main Title */
+h1, .main-title {
+  font-family: var(--font-label); /* Lilita One */
+  font-size: 32px;
+  letter-spacing: 0.5px;
+  color: var(--text-h);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* 2) Panel Headings */
+h2, .panel-heading {
+  font-family: var(--font-label); /* Lilita One */
+  font-size: 22px;
+  font-weight: 400;
   color: var(--text-h);
   margin-top: 0;
-}
-
-h1 {
-  font-size: 32px;
-  letter-spacing: -0.5px;
-  margin-bottom: 16px;
-}
-
-h2 {
-  font-size: 22px;
   margin-bottom: 12px;
 }
 
 h3 {
+  font-family: var(--font-label); /* Lilita One */
   font-size: 18px;
+  font-weight: 400;
+  margin-top: 0;
   margin-bottom: 8px;
 }
 
-p {
+/* 3) Field Labels - Prominent & stacked block layout */
+label, .field-label {
+  font-family: var(--font-body); /* Amaranth */
+  font-weight: 700; /* Bold */
+  font-size: 16px;
+  color: var(--text-h);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* 6) Attribute / HP / AC Labels */
+.attribute-label, .vital-label {
+  font-family: var(--font-label); /* Lilita One */
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-h);
+  letter-spacing: 0.3px;
+}
+
+/* 4) Field Values, Inputs, Selects & Options */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  font-family: var(--font-body); /* Amaranth */
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--text-h);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Explicitly force dropdown menu items to inherit font */
+select option {
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+/* Placeholder styling */
+input::placeholder,
+textarea::placeholder {
+  font-family: var(--font-body);
+  font-style: normal;
+  color: #718096;
+}
+
+/* 5) Instructions, Card Subtext, & Trait Descriptions */
+p,
+.instruction-text,
+.talents-instructions,
+.card-description,
+.ancestry-description {
+  font-family: var(--font-body); /* Amaranth */
+  font-size: 14px;
+  color: #555555;
+  line-height: 1.4;
   margin: 0 0 8px 0;
 }
 
-code {
-  font-family: var(--mono);
+.instruction-text,
+.talents-instructions {
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+/* 7) Button Styling */
+button, .btn-primary {
+  font-family: var(--font-body); /* Amaranth */
+  font-weight: 700;
   font-size: 14px;
-  padding: 2px 6px;
-  background: var(--code-bg);
-  border-radius: 4px;
+  color: #ffffff;
+  background-color: var(--accent, #4a5568);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+button:hover {
+  background-color: #364152;
 }
 
 /* ==========================================================================
    4. FORM ELEMENTS & CUSTOM SELECT DROPDOWNS
    ========================================================================== */
+
 select {
   width: 100%;
   display: block;
-  padding: 8px 36px 8px 12px; /* 36px right padding guarantees the arrow never touches text or border */
-  font-size: 15px;
-  font-family: inherit;
+  padding: 8px 36px 8px 12px; /* 36px right padding guarantees arrow space */
+  font-size: 14px;
+  font-family: var(--font-body);
   color: var(--text-h);
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -108,15 +192,18 @@ select {
   -moz-appearance: none;
   appearance: none;
 
-  /* Clean URL-encoded SVG vector arrow positioned 12px from the right edge */
+  /* Clean URL-encoded SVG vector arrow */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='292.4' height='292.4'%3E%3Cpath fill='%23444444' d='M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.8 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.5-12.8z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 10px auto;
   cursor: pointer;
-}
+}  
 
-select:focus {
+select:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent-bg);
@@ -125,13 +212,11 @@ select:focus {
 /* ==========================================================================
    5. PRINT ENGINE OVERRIDES (@media print)
    ========================================================================== */
-/* Hide the printable sheet container from web desktop views */
 .printable-character-sheet {
   display: none !important;
 }
 
 @media print {
-  /* Reset background and colors for physical paper printing */
   :root {
     color-scheme: light !important;
     background: #fff !important;
@@ -145,14 +230,12 @@ select:focus {
     font-family: 'Georgia', 'Times New Roman', serif !important;
   }
 
-  /* Hide interactive web UI controls when printing */
   .builder-interface-view,
   button {
     display: none !important;
     visibility: hidden !important;
   }
 
-  /* Reset single-column web layout wrapper for full-page print bounds */
   #root {
     display: block !important;
     border: none !important;
@@ -163,7 +246,6 @@ select:focus {
     padding: 0 !important;
   }
 
-  /* Display physical print character sheet layout */
   .printable-character-sheet {
     display: block !important;
     visibility: visible !important;
@@ -176,13 +258,11 @@ select:focus {
     background-color: #fff !important;
   }
 
-  /* Preserve high contrast borders and lines */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Standard US Letter Page Margins */
   @page {
     size: letter;
     margin: 1.2cm;
@@ -285,7 +365,7 @@ select:focus {
 
 .talent-select {
   width: 100%;
-  margin-bottom: 0; /* Updated dynamically via margin utility or spacing */
+  margin-bottom: 0;
 }
 
 .talent-select.has-selection {
@@ -306,3 +386,404 @@ select:focus {
   color: var(--text-h);
 }
 
+/* ==========================================================================
+   7. GENERAL CARD & APP COMPONENT LAYOUTS
+   ========================================================================== */
+.card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-panel {
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.panel-heading {
+  margin: 0 0 12px 0;
+}
+
+.panel-heading.underline {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.section-spacer {
+  margin-top: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.form-group.flex-2 { flex: 2; }
+.form-group.flex-1 { flex: 1; }
+
+.form-row-two-col {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.form-select-spacing {
+  margin-bottom: 12px;
+}
+
+.description-box {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-h);
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.sub-option-panel {
+  margin-bottom: 16px;
+  padding: 14px;
+  background-color: var(--bg);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.sub-option-description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-h);
+  margin-top: 6px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.card-actions {
+  margin-top: 12px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
+
+/* Attributes Grid */
+.attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  background-color: var(--bg);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.attribute-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.attribute-label {
+  text-transform: capitalize;
+}
+
+/* Traits & Bond */
+.traits-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trait-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.trait-label {
+  text-transform: capitalize;
+  width: 70px;
+}
+
+.bond-textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin-bottom: 12px;
+  resize: vertical;
+}
+
+/* Wallet Controls */
+.field-label-small {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #666;
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.wallet-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.silver-input {
+  width: 90px;
+  padding: 6px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.currency-label {
+  font-family: var(--font-label);
+  margin-right: 10px;
+}
+
+.btn-stepper {
+  padding: 6px 10px;
+  font-family: var(--font-body);
+  font-weight: bold;
+  background-color: var(--bg);
+  color: var(--text-h);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Status Dashboard */
+.status-card.overencumbered {
+  background-color: #fff0f0;
+}
+
+.status-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-family: var(--font-body);
+}
+
+.armor-bonus-subtext {
+  font-size: 12px;
+  color: #2e7d32;
+  display: block;
+}
+
+.burden-text {
+  margin: 5px 0 0 0;
+  font-family: var(--font-body);
+}
+
+.burden-badge.normal {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.burden-badge.exceeded {
+  color: #c62828;
+  font-weight: bold;
+}
+
+/* Inventory & Catalog */
+.starter-gear-notice {
+  background-color: #ebf8ff;
+  border-left: 4px solid #3182ce;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.inventory-drop-zone {
+  border: 1px solid var(--border);
+  min-height: 80px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  border-radius: 6px;
+}
+
+.empty-inventory-text {
+  color: #888;
+  font-style: italic;
+  margin: 0;
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+
+.catalog-section-header {
+  margin: 15px 0 6px 0;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-family: var(--font-label);
+}
+
+.catalog-scroll-box {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.catalog-scroll-box.short { max-height: 150px; }
+.catalog-scroll-box.tall { max-height: 250px; }
+
+/* Item Card Specifics */
+.item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: #fff;
+  margin-bottom: 8px;
+}
+
+.item-card-info { flex: 1; }
+
+.item-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-card-title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.item-card-type-badge {
+  font-size: 11px;
+  color: #666;
+  background-color: #eee;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+}
+
+.item-card-details {
+  font-size: 13px;
+  color: #555;
+  margin-top: 4px;
+  font-family: var(--font-body);
+}
+
+.item-card-stat {
+  font-size: 12px;
+  font-weight: bold;
+  font-family: var(--font-body);
+  margin-top: 2px;
+}
+
+.item-card-stat.damage { color: #2b6cb0; }
+.item-card-stat.defense { color: #2e7d32; }
+
+.item-card-actions {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.item-card-slots {
+  font-size: 13px;
+  font-weight: bold;
+  color: #444;
+  font-family: var(--font-body);
+}
+
+.item-card-button {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  color: #fff;
+}
+
+/* Save / Load */
+.save-load-panel {
+  background-color: #fafafa;
+}
+
+.btn-dark {
+  background-color: #1a202c;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #555;
+  color: #fff;
+}
+
+.success-message {
+  font-size: 13px;
+  color: #2e7d32;
+  text-align: center;
+  font-family: var(--font-body);
+  margin-bottom: 8px;
+}
+
+.import-input {
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: var(--font-body);
+}
+
+/* Print Utilities */
+.print-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+.print-header-field { border-bottom: 2px solid #000; padding-bottom: 2px; }
+.print-label { font-weight: bold; font-size: 18px; }
+.print-silver-width { width: 150px; margin-left: 20px; }
+.print-grid { display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 30px; }
+.print-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+.print-stat-item { border-bottom: 2px solid #000; padding-bottom: 2px; }
+.print-traits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; margin-bottom: 25px; font-size: 14px; }
+.print-traits-grid .span-2 { grid-column: span 2; }
+.print-narrative-block { margin-bottom: 25px; font-size: 14px; }
+.print-section-title { margin: 0 0 10px 0; border-bottom: 2px solid #000; padding-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.print-no-weapons { color: #666; font-style: italic; margin-bottom: 20px; font-size: 13px; }
+.print-weapons-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.print-weapon-row { padding: 6px; border-bottom: 1px dashed #000; font-size: 13px; }
+.print-inventory-grid { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid #000; border-radius: 4px; font-size: 13px; }
+.print-inventory-slot { display: flex; border-bottom: 1px solid #000; padding: 5px; min-height: 24px; align-items: center; }
+.print-inventory-slot.border-right { border-right: 1px solid #000; }
+.print-inventory-slot.locked { background-color: #f0f0f0; }
+.print-slot-number { font-weight: bold; width: 22px; color: #666; }
+.strike-through { text-decoration: line-through; color: #999; }
+.underline { text-decoration: underline; }
