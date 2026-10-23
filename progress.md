@@ -12,12 +12,15 @@ To build a lightweight, fully client-side character generator and digital workbo
 1. `public/items.json`: Completed master item array containing categorized Weapon (`w_`), Armor (`a_`), Ammunition, and Gear (`g_`) datasets with exact slot weights and silver piece costs.
 2. `public/traits.json`: 1d6 and 1d20 array tables handling text descriptors for Gender, Hair, Looks, Skin, and Speech. Includes a 6x6 multidimensional array matrix for Social Bonds.
 3. `public/backgrounds.json`: Compact d100 database mapping narrative origin strings utilizing explicit mathematical `min` and `max` numeric boundaries.
+4. `public/ancestries.json`: Master ancestry definitions (Construct, Demi-Ogre, Drake, Dwarf, Elf, Goblin, Half-Foot, Human, Infernal, Kobold, Orc) with associated inherent talents.
+5. `public/talents.json`: Archetype and Ancestry talent list complete with mechanical rules text.
 
 ## 📐 Implemented Rule Equations (Derived Real-Time Stats)
 - Max Attribute Dropdowns: Dynamically capped via `Math.min(5, level + 2)`.
 - Vital Gauges: `HP = 10 + STR`. `AC = 10 + DEX + Sum of equipped armor defense keys`.
 - Encumbrance Burden: JavaScript array reducer sums item slot weights against `10 + STR`. Changes color layout state to a bright warning box if exceeded.
 - Tiered Starting Purse: 1d20 look-up table driving dice pools (0 SP / 2d6x10 SP / 3d6x10 SP).
+- Economy Sync: Equipping/purchasing catalog items checks active silver balance and automatically deducts total .cost.
 
 ## 🚀 Layout Split & Print Engine Integration
 - Left column displays state controllers, text fields, d20/d100 randomizers, and save/load utilities.
@@ -31,16 +34,20 @@ The fonts to use in the PDF & web site
 - Amaranth for regular text, including condition names, edited text fields, and generated text for editable fields
 - Rubik Dirt for attribute, hit point, & armor class abbreviated labels
 
+
 ## 🏁 Next Target Steps
-- Phase 4 Mihtril: Add mithril armor 
-- Phase 5 Ancestry: Add Ancestry selection with talent
-- Phase 6 Talents: Add space for talents
-- Phase 7 Mutations: Add space for mutations
-- Phase 8 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
-- Phase 9 Magic: Add magic items & spells
-- Phase 10 Name: Add name generator
-- Phase 11 Conditions: Add conditions (maybe only for PDF print)
-- Phase 12 Fatigue & Encumbrance: Mark fatigue and Encumbrance
-- Phase 13 Pregen All: One button to randomize everything!
-- Phase 14 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
-- Phase 15 PDF cleanup: Better looking front & back layout for character sheet
+- [DONE] Phase 4 Mihtril: Add mithril armor 
+- [DONE] Phase 5 Ancestry: Add Ancestry selection with talent
+- [DONE] Phase 6 Columns: Convert from 2 column layout to 1 column. Reorder first 5 cards. 
+- [WIP] Phase 7 Talents: Add space for talents with controls for how many to show, how to control for hiding selected talents, how to add talent dropdowns with advancement, how to cap the max # of talents
+- [WIP] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
+- [NEW] Phase 9 Ability Max: Add logic for controlling maximum value of ability scores 
+- [NEW] Phase 10 Mutations: Add space for mutations
+- [NEW] Phase 11 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
+- [NEW] Phase 12 Magic: Add magic items & spells
+- [NEW] Phase 13 Name: Add name generator
+- [NEW] Phase 14 Conditions: Add conditions (maybe only for PDF print)
+- [NEW] Phase 15 Fatigue & Encumbrance: Mark fatigue and Encumbrance
+- [NEW] Phase 16 Pregen All: One button to randomize everything!
+- [NEW] Phase 17 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
+- [NEW] Phase 18 PDF cleanup: Better looking front & back layout for character sheet

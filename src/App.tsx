@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ItemCard } from './ItemCard';
 import { AncestryCard } from './AncestryCard';
+import { TalentsCard } from './TalentsCard';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -73,6 +74,7 @@ export function App() {
   const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
   const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
 
+  const [selectedTalentId, setSelectedTalentId] = useState<string>('');
   // ==========================================
   // 3. ASYNCHRONOUS DATABASE FETCH
   // ==========================================
@@ -239,19 +241,34 @@ export function App() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* Profile Header Details */}
-          <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
-            <h3 style={{ margin: '0 0 12px 0' }}>Character Details</h3>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <label style={{ fontWeight: 'bold', fontSize: '13px' }}>Character Name: </label>
-                <input type="text" value={characterName} onChange={(e) => setCharacterName(e.target.value)} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }} />
-              </div>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <label style={{ fontWeight: 'bold', fontSize: '13px' }}>PC Level: </label>
-                <input type="number" min={1} max={20} value={level} onChange={(e) => setLevel(Math.max(1, Number(e.target.value)))} style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }} />
-              </div>
-            </div>
-          </div>
+<div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
+  <h3 style={{ margin: '0 0 12px 0' }}>Character Details</h3>
+  <div style={{ display: 'flex', gap: '20px' }}>
+    <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+      <label style={{ fontWeight: 'bold', fontSize: '13px' }}>Character Name: </label>
+      <input 
+        type="text" 
+        value={characterName} 
+        onChange={(e) => setCharacterName(e.target.value)} 
+        style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }} 
+      />
+    </div>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+      <label style={{ fontWeight: 'bold', fontSize: '13px' }}>PC Level: </label>
+      <select 
+        value={level} 
+        onChange={(e) => setLevel(Number(e.target.value))} 
+        style={{ padding: '8px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc', width: '100%', boxSizing: 'border-box' }}
+      >
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((lvl) => (
+          <option key={lvl} value={lvl}>
+            Level {lvl}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+</div>
 
           {/* 1. Character Background Card */}
           <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
@@ -312,7 +329,13 @@ export function App() {
             />
           </div>
 
-          {/* [4. Talents Card will go here] */}
+
+          {/* 4. Talents Card */}
+          <TalentsCard
+            talents={talentsCatalog}
+            selectedTalentId={selectedTalentId}
+            onTalentChange={setSelectedTalentId}
+          />
 
           {/* 5. Traits Card */}
           <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>
