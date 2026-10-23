@@ -828,6 +828,32 @@ textarea:focus {
   line-height: 1.2;
 }
 
+/* ==========================================
+   10. LEVEL BONUS BADGE & PANEL HEADINGS
+   ========================================== */
+.panel-heading-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.panel-heading-row .panel-heading {
+  margin-bottom: 0;
+}
+
+.level-bonus-badge {
+  background-color: #d97706; /* Warm amber warning/notification color */
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
+}
+
 /* Print Utilities */
 .print-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
 .print-header-field { border-bottom: 2px solid #000; padding-bottom: 2px; }

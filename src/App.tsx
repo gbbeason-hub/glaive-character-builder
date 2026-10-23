@@ -39,13 +39,17 @@ interface BackgroundEntry {
   text: string;
 }
 
+interface NameDatabase {
+  names: string[];
+  sobriquets: string[];
+}
+
 // Map of concise attribute descriptions
 const attributeDescriptions: Record<keyof Abilities, string> = {
   strength: 'Melee attacks, physical saves, & bonus to most weapon damage',
   dexterity: 'delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
   willpower: 'resolve, stubbornness, mental endurance, & use to wield & resist magic.',
   wisdom: 'ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.'
-  
 };
 
 export function App() {
@@ -63,6 +67,7 @@ export function App() {
   const [exportMessage, setExportMessage] = useState('');
 
   const [traitDatabase, setTraitDatabase] = useState<any>(null);
+  const [nameDatabase, setNameDatabase] = useState<NameDatabase | null>(null);
 
   const [traits, setTraits] = useState<CharacterTraits>({
     gender: 'Masculine',
@@ -112,14 +117,16 @@ export function App() {
       fetch('/traits.json').then(res => res.json()),
       fetch('/backgrounds.json').then(res => res.json()),
       fetch('/ancestries.json').then(res => res.json()),
-      fetch('/talents.json').then(res => res.json())
+      fetch('/talents.json').then(res => res.json()),
+      fetch('/names.json').then(res => res.json())
     ])
-      .then(([items, traitsData, backgroundData, ancestriesData, talentsData]) => {
+      .then(([items, traitsData, backgroundData, ancestriesData, talentsData, namesData]) => {
         setItemCatalog(items);
         setTraitDatabase(traitsData);
         setBackgroundDatabase(backgroundData);
         setAncestriesCatalog(ancestriesData);
         setTalentsCatalog(talentsData);
+        setNameDatabase(namesData);
       })
       .catch(err => console.error("Error initializing background data layers:", err));
   }, []);
@@ -137,6 +144,10 @@ export function App() {
     .filter(item => item.type === 'Armor' && item.defense)
     .reduce((sum, item) => sum + Number(item.defense), 0);
   const armorClass = 10 + stats.dexterity + armorBonus;
+
+  const expectedTotalPoints = 6 + (level - 1);
+  const spentPoints = stats.strength + stats.dexterity + stats.willpower + stats.wisdom;
+  const unspentPoints = expectedTotalPoints - spentPoints;
 
   // ==========================================
   // 5. HELPER ACTION FUNCTIONS
@@ -167,6 +178,41 @@ export function App() {
     }
 
     setSilver(totalSilver);
+  };
+
+  const rollRandomAbilities = () => {
+    const values = [3, 2, 1, 0];
+    for (let i = values.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [values[i], values[j]] = [values[j], values[i]];
+    }
+    setStats({
+      strength: values[0],
+      dexterity: values[1],
+      willpower: values[2],
+      wisdom: values[3]
+    });
+  };
+
+  const rollRandomName = () => {
+    if (!nameDatabase) return;
+    const { names, sobriquets } = nameDatabase;
+    const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+
+    const useSobriquet = Math.random() < 0.5;
+
+    if (useSobriquet) {
+      const firstName = getRandom(names);
+      const sobriquet = getRandom(sobriquets);
+      setCharacterName(`${firstName} the ${sobriquet}`);
+    } else {
+      const firstName = getRandom(names);
+      let lastName = getRandom(names);
+      while (lastName === firstName) {
+        lastName = getRandom(names);
+      }
+      setCharacterName(`${firstName} ${lastName}`);
+    }
   };
 
   const rollAllTraits = () => {
@@ -268,15 +314,23 @@ export function App() {
             <h3 className="panel-heading">Character Details</h3>
             <div className="form-row-two-col">
               <div className="form-group flex-2">
-                <label className="field-label">Character Name:</label>
+                <label className="field-label">Name</label>
                 <input
                   type="text"
                   value={characterName}
                   onChange={(e) => setCharacterName(e.target.value)}
+                  className="mb-2"
                 />
+                <button 
+                  type="button" 
+                  onClick={rollRandomName} 
+                  className="btn-primary full-width"
+                >
+                  🎲 Roll Name
+                </button>
               </div>
               <div className="form-group flex-1">
-                <label className="field-label">PC Level:</label>
+                <label className="field-label">PC Level</label>
                 <select
                   value={level}
                   onChange={(e) => setLevel(Number(e.target.value))}
@@ -293,7 +347,7 @@ export function App() {
 
           {/* 1. Character Background Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Character Background</h3>
+            <h3 className="panel-heading">Background</h3>
             <p className="instruction-text">
               Select or roll your hero's origins, past training, and formative experiences:
             </p>
@@ -324,7 +378,14 @@ export function App() {
 
           {/* 2. Abilities Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Abilities</h3>
+            <div className="panel-heading-row">
+              <h3 className="panel-heading">Abilities</h3>
+              {unspentPoints > 0 && (
+                <span className="level-bonus-badge">
+                  {unspentPoints} {unspentPoints === 1 ? 'Point' : 'Points'} Available
+                </span>
+              )}
+            </div>
             <div className="instruction-block">
               <p className="instruction-text">
                 At Level 1, distribute these starting bonuses across your abilities:
@@ -335,7 +396,7 @@ export function App() {
                 <span className="bonus-badge">+1</span>
                 <span className="bonus-badge">+0</span>
               </div>
-              <p className="instruction-subtext">(Maximum ability bonus is +5)</p>
+              <p className="instruction-subtext">(Maximum ability score is +5)</p>
             </div>
 
             <div className="attributes-grid">
@@ -357,6 +418,10 @@ export function App() {
                 );
               })}
             </div>
+
+            <button type="button" onClick={rollRandomAbilities} className="btn-primary full-width mt-3">
+              🎲 Roll Ability Scores
+            </button>
           </div>
 
           {/* 3. Ancestry Card */}
@@ -411,7 +476,7 @@ export function App() {
             </div>
 
             <button type="button" onClick={rollAllTraits} className="btn-primary full-width mt-3">
-              🎲 Randomize All Physical Traits
+              🎲 Roll All Physical Traits
             </button>
           </div>
 
@@ -427,7 +492,7 @@ export function App() {
               className="bond-textarea"
             />
             <button type="button" onClick={rollCharacterBond} className="btn-primary full-width">
-              🎲 Roll 2d6 Character Bond Matrix
+              🎲 Roll Character Bond
             </button>
           </div>
 
@@ -448,7 +513,7 @@ export function App() {
               <button type="button" onClick={() => adjustSilver(-10)} className="btn-stepper">-10</button>
             </div>
             <button type="button" onClick={rollStartingSilver} className="btn-primary full-width">
-              🎲 Roll Starting Wealth (1d20 Tier Table)
+              🎲 Roll Starting Wealth
             </button>
           </div>
 

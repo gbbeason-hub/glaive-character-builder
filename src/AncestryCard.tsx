@@ -150,9 +150,9 @@ export function AncestryCard({
       )}
 
       <div className="card-actions">
-        <button type="button" onClick={handleRollAncestry} className="btn-primary">
-          🎲 Roll Ancestry
-        </button>
+        <button type="button" onClick={handleRollAncestry} className="btn-primary full-width">
+  🎲 Roll Ancestry
+</button>
       </div>
     </div>
   );
