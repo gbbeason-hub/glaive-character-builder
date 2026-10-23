@@ -52,5 +52,5 @@ The fonts to use in the PDF & web site
 - [NEW] Phase 14 Conditions: Add conditions (maybe only for PDF print)
 - [NEW] Phase 15 Fatigue & Encumbrance: Mark fatigue and Encumbrance
 - [NEW] Phase 16 Pregen All: One button to randomize everything!
-- [NEW] Phase 17 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
+- [DONE] Phase 17 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
 - [NEW] Phase 18 PDF cleanup: Better looking front & back layout for character sheet
