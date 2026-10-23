@@ -53,9 +53,9 @@ export function AncestryCard({
   const currentAncestry = ancestries.find((a) => a.id === selectedAncestryId) || ancestries[0];
   const currentTalent = talents.find((t) => t.id === selectedAncestryTalentId);
 
-  const availableAncestryTalents = currentAncestry?.id === 'human'
-    ? talents
-    : talents.filter((t) => t.set?.toLowerCase() === currentAncestry?.name?.toLowerCase());
+  const availableAncestryTalents = talents.filter(
+    (t) => t.set?.toLowerCase() === currentAncestry?.name?.toLowerCase()
+  );
 
   const [internalSubOptionId, setInternalSubOptionId] = useState<string>('');
   const activeSubOptionId = selectedSubOptionId ?? internalSubOptionId;
@@ -109,32 +109,34 @@ export function AncestryCard({
         </div>
       </div>
 
-      {/* Row 2: Ancestry Talent Select & Description stacked */}
-      <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
-          Ancestry Talent
-        </label>
-        <select
-          value={selectedAncestryTalentId}
-          onChange={(e) => onAncestryTalentChange(e.target.value)}
-        >
-          {availableAncestryTalents.length === 0 ? (
-            <option value="">None</option>
-          ) : (
-            availableAncestryTalents.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))
-          )}
-        </select>
-        <div style={{ fontSize: '14px', color: '#555', marginTop: '6px', lineHeight: '1.4' }}>
-          {currentTalent ? currentTalent.description : 'No talent selected.'}
+      {/* Row 2: Ancestry Talent Select & Description (Hidden for Humans) */}
+      {selectedAncestryId !== 'human' && (
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
+            Ancestry Talent
+          </label>
+          <select
+            value={selectedAncestryTalentId}
+            onChange={(e) => onAncestryTalentChange(e.target.value)}
+          >
+            {availableAncestryTalents.length === 0 ? (
+              <option value="">None</option>
+            ) : (
+              availableAncestryTalents.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))
+            )}
+          </select>
+          <div style={{ fontSize: '14px', color: '#555', marginTop: '6px', lineHeight: '1.4' }}>
+            {currentTalent ? currentTalent.description : 'No talent selected.'}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Row 3: Sub-Option Selector stacked */}
-      {currentTalent?.subOptions && currentTalent.subOptions.length > 0 && (
+      {/* Row 3: Sub-Option Selector stacked (Hidden for Humans) */}
+      {selectedAncestryId !== 'human' && currentTalent?.subOptions && currentTalent.subOptions.length > 0 && (
         <div style={{ marginBottom: '16px', padding: '14px', backgroundColor: 'var(--bg)', borderRadius: '6px', border: '1px solid var(--border)' }}>
           <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-h)' }}>
             {currentTalent.name} Choice

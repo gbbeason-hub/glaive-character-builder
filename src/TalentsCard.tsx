@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface Talent {
   id: string;
   name: string;
@@ -11,64 +9,97 @@ export interface Talent {
 
 interface TalentsCardProps {
   talents: Talent[];
-  selectedTalentId: string;
-  onTalentChange: (talentId: string) => void;
+  selectedTalents: string[];
+  maxTalentSlots: number;
+  onTalentChange: (index: number, val: string) => void;
 }
 
-export const TalentsCard: React.FC<TalentsCardProps> = ({
+export function TalentsCard({
   talents,
-  selectedTalentId,
+  selectedTalents,
+  maxTalentSlots,
   onTalentChange,
-}) => {
-  const selectedTalent = talents.find((t) => t.id === selectedTalentId);
+}: TalentsCardProps) {
+  const filledCount = selectedTalents.filter(Boolean).length;
+  const isFull = filledCount === maxTalentSlots && maxTalentSlots > 0;
 
-  const handleRollTalent = () => {
-    if (!talents || talents.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * talents.length);
-    onTalentChange(talents[randomIndex].id);
+  const rollTalent = (idx: number) => {
+    if (!talents.length) return;
+    
+    const availablePool = talents.filter((t) => {
+      if (t.repeatable || t.id === selectedTalents[idx]) return true;
+      return !selectedTalents.some((selectedId, i) => i !== idx && selectedId === t.id);
+    });
+
+    if (!availablePool.length) return;
+    const rand = availablePool[Math.floor(Math.random() * availablePool.length)];
+    onTalentChange(idx, rand.id);
   };
 
   return (
-    <div className="bg-white border border-gray-300 p-5 rounded-lg shadow-sm font-sans max-w-xl text-gray-800">
-      <h3 className="text-lg font-bold uppercase tracking-wide mb-2 text-gray-900 font-[Lalita_One]">
-        Character Talents
-      </h3>
-      <p className="text-xs text-gray-600 mb-4 font-[Amaranth]">
+    <div className="talents-card">
+      {/* Header & Status */}
+      <div className="talents-header-row">
+        <h3>Character Talents</h3>
+        <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
+          {filledCount} / {maxTalentSlots} Slots Filled
+        </span>
+      </div>
+
+      {/* Instructions */}
+      <p className="talents-instructions">
         Select or roll additional heroic talents, veteran tricks, or uncanny aptitudes:
       </p>
 
-      {/* Dropdown Selection */}
-      <div className="mb-4">
-        <select
-          value={selectedTalentId}
-          onChange={(e) => onTalentChange(e.target.value)}
-          className="w-full bg-white border border-gray-400 px-3 py-2 rounded shadow-sm text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-gray-600"
-        >
-          <option value="">-- Select a Talent --</option>
-          {talents.map((t) => (
-            <option key={t.id} value={t.id}>
-              [{t.set}] {t.name} {t.repeatable ? '(Repeatable)' : ''}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Slots Stack */}
+      <div className="talents-slots-stack">
+        {Array.from({ length: maxTalentSlots }).map((_, index) => {
+          const currentId = selectedTalents[index] || '';
+          const selected = talents.find((t) => t.id === currentId);
 
-      {/* Description Preview Box */}
-      {selectedTalent && (
-        <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md border border-gray-200 mb-4 leading-snug font-[Amaranth]">
-          <strong className="text-gray-900">{selectedTalent.name}:</strong> {selectedTalent.description}
-        </div>
-      )}
+          return (
+            <div key={index} className="talent-slot-item">
+              {/* Slot Row */}
+              <div className="talent-slot-row">
+                <label className="talent-slot-label">Talent Slot {index + 1}</label>
+                <button 
+                  type="button" 
+                  onClick={() => rollTalent(index)} 
+                  className="talent-roll-btn"
+                >
+                  🎲 Roll Random
+                </button>
+              </div>
 
-      {/* Random Roll Button */}
-      <div>
-        <button
-          onClick={handleRollTalent}
-          className="bg-zinc-700 hover:bg-zinc-800 text-white font-medium px-4 py-2 rounded shadow transition-colors text-sm font-[Amaranth]"
-        >
-          🎲 Roll Random Talent
-        </button>
+              {/* Dropdown */}
+              <select
+                value={currentId}
+                onChange={(e) => onTalentChange(index, e.target.value)}
+                className={`talent-select ${selected ? 'has-selection' : ''}`}
+              >
+                <option value="">-- Select a Talent --</option>
+                {talents
+                  .filter((t) => {
+                    if (t.repeatable || t.id === currentId) return true;
+                    return !selectedTalents.some((selectedId, idx) => idx !== index && selectedId === t.id);
+                  })
+                  .map((t) => (
+                    <option key={t.id} value={t.id}>
+                      [{t.set}] {t.name} {t.repeatable ? '(Repeatable)' : ''}
+                    </option>
+                  ))}
+              </select>
+
+              {/* Description */}
+              {selected && (
+                <div className="talent-description-box">
+                  <strong>{selected.name}:</strong> {selected.description}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
-};
+}

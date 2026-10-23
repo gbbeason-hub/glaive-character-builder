@@ -39,9 +39,12 @@ The fonts to use in the PDF & web site
 - [DONE] Phase 4 Mihtril: Add mithril armor 
 - [DONE] Phase 5 Ancestry: Add Ancestry selection with talent
 - [DONE] Phase 6 Columns: Convert from 2 column layout to 1 column. Reorder first 5 cards. 
-- [WIP] Phase 7 Talents: Add space for talents with controls for how many to show, how to control for hiding selected talents, how to add talent dropdowns with advancement, how to cap the max # of talents
-- [WIP] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
-- [NEW] Phase 9 Ability Max: Add logic for controlling maximum value of ability scores 
+- [DONE] Phase 7a Talents: Implemented slot count logic, advanced slot controls, selection tracking, deduplication filters, and slot caps.
+- [DONE] Phase 7b Talents: Refactored all inline styling out of `TalentsCard.tsx` and moved clean class rules over to `index.css`.
+- [NEW] Phase 7c Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
+
+- [DONE] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
+- [DONE] Phase 9 Ability Max: Add logic for controlling maximum value of ability scores 
 - [NEW] Phase 10 Mutations: Add space for mutations
 - [NEW] Phase 11 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
 - [NEW] Phase 12 Magic: Add magic items & spells

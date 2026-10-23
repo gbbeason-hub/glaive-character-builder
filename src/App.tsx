@@ -74,7 +74,27 @@ export function App() {
   const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
   const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
 
-  const [selectedTalentId, setSelectedTalentId] = useState<string>('');
+  const [selectedTalents, setSelectedTalents] = useState<string[]>(['']);
+  const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
+
+  // Agnostic sync logic: calculates max talent slots based on Ancestry and Level
+  useEffect(() => {
+  const isHuman = selectedAncestryId === 'human';
+  const baseTalents = isHuman ? 2 : 1;
+  const calculatedMax = Math.min(6, baseTalents + (level - 1));
+  
+  setMaxTalentSlots(calculatedMax);
+
+  // Resize the selectedTalents array safely without throwing out existing choices
+  setSelectedTalents(prev => {
+    if (prev.length < calculatedMax) {
+      return [...prev, ...Array(calculatedMax - prev.length).fill('')];
+    } else {
+      return prev.slice(0, calculatedMax);
+    }
+  });
+}, [selectedAncestryId, level]);
+
   // ==========================================
   // 3. ASYNCHRONOUS DATABASE FETCH
   // ==========================================
@@ -103,7 +123,7 @@ export function App() {
   const dynamicAttributeChoices = Array.from({ length: maxStatBonus + 1 }, (_, i) => maxStatBonus - i);
   const totalSlotsUsed = inventory.reduce((total, item) => total + item.slots, 0);
   const maxCarryingCapacity = 10 + stats.strength;
-  const hitPoints = 10 + stats.strength; 
+  const hitPoints = 10 + stats.strength + ((level - 1) * 5);
   
   const armorBonus = inventory
     .filter(item => item.type === 'Armor' && item.defense)
@@ -188,42 +208,44 @@ export function App() {
   };
 
   const exportCharacter = () => {
-    const save = { 
-      name: characterName, 
-      level, 
-      stats, 
-      silver, 
-      traits, 
-      bond, 
-      background, 
-      selectedAncestryId,
-      selectedAncestryTalentId,
-      inventoryIds: inventory.map(i => i.id) 
-    };
-    navigator.clipboard.writeText(btoa(JSON.stringify(save)));
-    setExportMessage('Character code copied to clipboard!');
-    setTimeout(() => setExportMessage(''), 3000);
+  const save = { 
+    name: characterName, 
+    level, 
+    stats, 
+    silver, 
+    traits, 
+    bond, 
+    background, 
+    selectedAncestryId,
+    selectedAncestryTalentId,
+    selectedTalents, // <-- Updated from selectedTalentId
+    inventoryIds: inventory.map(i => i.id) 
   };
+  navigator.clipboard.writeText(btoa(JSON.stringify(save)));
+  setExportMessage('Character code copied to clipboard!');
+  setTimeout(() => setExportMessage(''), 3000);
+};
 
   const importCharacter = () => {
     try {
-      const decoded = JSON.parse(atob(importString.trim()));
-      setCharacterName(decoded.name);
-      setLevel(decoded.level || 1);
-      setStats(decoded.stats);
-      setSilver(decoded.silver ?? 50); 
-      setTraits(decoded.traits || { gender: 'Masculine', hair: 'Bald', looks: 'Athletic', skin: 'Pale', speech: 'Formal' });
-      setBond(decoded.bond || 'Roll a bond with the PC to your left...');
-      setBackground(decoded.background || 'Roll or write a character background...');
-      
-      if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
-      if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
+  const decoded = JSON.parse(atob(importString.trim()));
+  setCharacterName(decoded.name);
+  setLevel(decoded.level || 1);
+  setStats(decoded.stats);
+  setSilver(decoded.silver ?? 50); 
+  setTraits(decoded.traits || { gender: 'Masculine', hair: 'Bald', looks: 'Athletic', skin: 'Pale', speech: 'Formal' });
+  setBond(decoded.bond || 'Roll a bond with the PC to your left...');
+  setBackground(decoded.background || 'Roll or write a character background...');
+  
+  if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
+  if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
+  if (decoded.selectedTalents) setSelectedTalents(decoded.selectedTalents); // <-- Added for multi-talents
 
-      setInventory(decoded.inventoryIds.map((id: string) => itemCatalog.find(idMatch => idMatch.id === id)).filter(Boolean));
-      importString && setImportString('');
-    } catch { 
-      alert('Error loading character code.'); 
-    }
+  setInventory(decoded.inventoryIds.map((id: string) => itemCatalog.find(idMatch => idMatch.id === id)).filter(Boolean));
+  importString && setImportString('');
+} catch { 
+  alert('Error loading character code.'); 
+}
   };
 
   // ==========================================
@@ -331,11 +353,18 @@ export function App() {
 
 
           {/* 4. Talents Card */}
-          <TalentsCard
-            talents={talentsCatalog}
-            selectedTalentId={selectedTalentId}
-            onTalentChange={setSelectedTalentId}
-          />
+<TalentsCard
+  talents={talentsCatalog}
+  selectedTalents={selectedTalents}
+  maxTalentSlots={maxTalentSlots}
+  onTalentChange={(index, val) => {
+    setSelectedTalents(prev => {
+      const next = [...prev];
+      next[index] = val;
+      return next;
+    });
+  }}
+/>
 
           {/* 5. Traits Card */}
           <div style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: '#fff' }}>

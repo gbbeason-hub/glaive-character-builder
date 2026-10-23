@@ -188,3 +188,121 @@ select:focus {
     margin: 1.2cm;
   }
 }
+
+/* ==========================================================================
+   6. TALENTS CARD STYLES
+   ========================================================================== */
+.talents-card {
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.talents-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.talents-header-row h3 {
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.talents-status-badge {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.talents-status-badge.full {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+
+.talents-status-badge.incomplete {
+  color: #c62828;
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+}
+
+.talents-instructions {
+  font-size: 13px;
+  color: #555;
+  font-style: italic;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.talents-slots-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.talent-slot-item {
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.talent-slot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.talent-slot-label {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--text-h);
+}
+
+.talent-roll-btn {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.talent-roll-btn:hover {
+  opacity: 0.9;
+}
+
+.talent-select {
+  width: 100%;
+  margin-bottom: 0; /* Updated dynamically via margin utility or spacing */
+}
+
+.talent-select.has-selection {
+  margin-bottom: 10px;
+}
+
+.talent-description-box {
+  font-size: 13px;
+  color: #333;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  line-height: 1.4;
+}
+
+.talent-description-box strong {
+  color: var(--text-h);
+}
+
