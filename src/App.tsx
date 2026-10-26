@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ItemCard } from './ItemCard';
 import { AncestryCard } from './AncestryCard';
 import { TalentsCard } from './TalentsCard';
+import { SilverAndGearCard } from './SilverAndGearCard';
+import type { InventoryItem } from './SilverAndGearCard';
+import { ItemShopModal } from './ItemShopModal';
+import type { CatalogItem } from './ItemShopModal';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -11,17 +14,6 @@ interface Abilities {
   dexterity: number;
   willpower: number;
   wisdom: number;
-}
-
-interface Item {
-  id: string;
-  name: string;
-  type: string;
-  slots: number;
-  damage?: string;
-  defense?: number;
-  cost?: number;
-  details: string;
 }
 
 interface CharacterTraits {
@@ -59,10 +51,20 @@ export function App() {
   const [characterName, setCharacterName] = useState('Glaive Hero');
   const [level, setLevel] = useState(1);
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
+  
+  // Currency States
   const [silver, setSilver] = useState<number>(50);
+  const [copper, setCopper] = useState<number>(0);
+  const [hasRolledSilver, setHasRolledSilver] = useState<boolean>(false);
 
-  const [itemCatalog, setItemCatalog] = useState<Item[]>([]);
-  const [inventory, setInventory] = useState<Item[]>([]);
+  // Inventory & Shop States
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [freeGearText, setFreeGearText] = useState<string>('Backpack, Flint & Steel, worn travel clothing, tiny trinkets');
+  
+  // Modal State
+  const [isShopOpen, setIsShopOpen] = useState<boolean>(false);
+  const [shopCategory, setShopCategory] = useState<'Weapon' | 'Armor' | 'Equipment' | 'Magic' | null>(null);
+
   const [importString, setImportString] = useState('');
   const [exportMessage, setExportMessage] = useState('');
 
@@ -82,7 +84,7 @@ export function App() {
   const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
   const [background, setBackground] = useState<string>('');
 
-  // Ancestries
+  // Ancestries & Talents
   const [ancestriesCatalog, setAncestriesCatalog] = useState<any[]>([]);
   const [talentsCatalog, setTalentsCatalog] = useState<any[]>([]);
   const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
@@ -113,15 +115,13 @@ export function App() {
   // ==========================================
   useEffect(() => {
     Promise.all([
-      fetch('/items.json').then(res => res.json()),
       fetch('/traits.json').then(res => res.json()),
       fetch('/backgrounds.json').then(res => res.json()),
       fetch('/ancestries.json').then(res => res.json()),
       fetch('/talents.json').then(res => res.json()),
       fetch('/names.json').then(res => res.json())
     ])
-      .then(([items, traitsData, backgroundData, ancestriesData, talentsData, namesData]) => {
-        setItemCatalog(items);
+      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData]) => {
         setTraitDatabase(traitsData);
         setBackgroundDatabase(backgroundData);
         setAncestriesCatalog(ancestriesData);
@@ -136,13 +136,14 @@ export function App() {
   // ==========================================
   const maxStatBonus = Math.min(5, level + 2);
   const dynamicAttributeChoices = Array.from({ length: maxStatBonus + 1 }, (_, i) => maxStatBonus - i);
-  const totalSlotsUsed = inventory.reduce((total, item) => total + item.slots, 0);
+  
+  const totalUsedSlots = inventory.reduce((total, item) => total + (item.slots * item.quantity), 0);
   const maxCarryingCapacity = 10 + stats.strength;
   const hitPoints = 10 + stats.strength + ((level - 1) * 5);
 
   const armorBonus = inventory
-    .filter(item => item.type === 'Armor' && item.defense)
-    .reduce((sum, item) => sum + Number(item.defense), 0);
+    .filter(item => item.type === 'Armor')
+    .reduce((sum, item) => sum + (item.quantity * 2), 0); // Simplified AC calculation from inventory
   const armorClass = 10 + stats.dexterity + armorBonus;
 
   const expectedTotalPoints = 6 + (level - 1);
@@ -154,14 +155,6 @@ export function App() {
   // ==========================================
   const handleStatChange = (statName: keyof Abilities, value: number) => {
     setStats(prev => ({ ...prev, [statName]: value }));
-  };
-
-  const adjustSilver = (amount: number) => {
-    setSilver(prev => Math.max(0, prev + amount));
-  };
-
-  const handleTraitChange = (traitName: keyof CharacterTraits, value: string) => {
-    setTraits(prev => ({ ...prev, [traitName]: value }));
   };
 
   const rollStartingSilver = () => {
@@ -178,6 +171,76 @@ export function App() {
     }
 
     setSilver(totalSilver);
+    setHasRolledSilver(true);
+  };
+
+  // --- SHOP & INVENTORY TRANSACTIONS ---
+  const handleBuyItem = (catalogItem: CatalogItem) => {
+    const totalCopperWealth = silver * 10 + copper;
+    const itemCostInCopper = catalogItem.cost_sp * 10 + catalogItem.cost_cp;
+
+    if (totalCopperWealth < itemCostInCopper) return;
+
+    // Deduct Wealth
+    let newCopper = copper - catalogItem.cost_cp;
+    let newSilver = silver - catalogItem.cost_sp;
+    if (newCopper < 0) {
+      newSilver -= 1;
+      newCopper += 10;
+    }
+
+    setSilver(Math.max(0, newSilver));
+    setCopper(Math.max(0, newCopper));
+
+    // Update Inventory Quantities
+    setInventory(prev => {
+      const existingIndex = prev.findIndex(i => i.id === catalogItem.id);
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + 1
+        };
+        return updated;
+      } else {
+        return [
+          ...prev,
+          {
+            id: catalogItem.id,
+            name: catalogItem.name,
+            type: catalogItem.type,
+            slots: catalogItem.slots,
+            cost_sp: catalogItem.cost_sp,
+            cost_cp: catalogItem.cost_cp,
+            details: catalogItem.details,
+            quantity: 1
+          }
+        ];
+      }
+    });
+  };
+
+  const handleSellItem = (itemId: string) => {
+    const itemToSell = inventory.find(i => i.id === itemId);
+    if (!itemToSell) return;
+
+    // Refund 100% of cost (or adjust if partial refund desired)
+    const refundSp = itemToSell.cost_sp;
+    const refundCp = itemToSell.cost_cp;
+
+    setSilver(prev => prev + refundSp);
+    setCopper(prev => prev + refundCp);
+
+    setInventory(prev => {
+      const existing = prev.find(i => i.id === itemId);
+      if (!existing) return prev;
+
+      if (existing.quantity > 1) {
+        return prev.map(i => i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i);
+      } else {
+        return prev.filter(i => i.id !== itemId);
+      }
+    });
   };
 
   const rollRandomAbilities = () => {
@@ -198,20 +261,15 @@ export function App() {
     if (!nameDatabase) return;
     const { names, sobriquets } = nameDatabase;
     const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-
     const useSobriquet = Math.random() < 0.5;
 
     if (useSobriquet) {
-      const firstName = getRandom(names);
-      const sobriquet = getRandom(sobriquets);
-      setCharacterName(`${firstName} the ${sobriquet}`);
+      setCharacterName(`${getRandom(names)} the ${getRandom(sobriquets)}`);
     } else {
-      const firstName = getRandom(names);
-      let lastName = getRandom(names);
-      while (lastName === firstName) {
-        lastName = getRandom(names);
-      }
-      setCharacterName(`${firstName} ${lastName}`);
+      let first = getRandom(names);
+      let last = getRandom(names);
+      while (last === first) last = getRandom(names);
+      setCharacterName(`${first} ${last}`);
     }
   };
 
@@ -230,29 +288,23 @@ export function App() {
 
   const rollCharacterBond = () => {
     if (!traitDatabase || !traitDatabase.bonds) return;
-    const rollColumn = Math.floor(Math.random() * 6);
-    const rollRow = Math.floor(Math.random() * 6);
-    setBond(traitDatabase.bonds[rollColumn][rollRow]);
+    setBond(traitDatabase.bonds[Math.floor(Math.random() * 6)][Math.floor(Math.random() * 6)]);
   };
 
   const rollCharacterBackground = () => {
     if (!backgroundDatabase) return;
     const roll = Math.floor(Math.random() * 100) + 1;
     const match = backgroundDatabase.find(b => roll >= b.min && roll <= b.max);
-    if (match) {
-      setBackground(match.text);
-    }
+    if (match) setBackground(match.text);
   };
 
   const handleAncestryChange = (ancestryId: string) => {
     setSelectedAncestryId(ancestryId);
     const foundAncestry = ancestriesCatalog.find(a => a.id === ancestryId);
-    if (foundAncestry) {
-      if (foundAncestry.fixedTalentIds && foundAncestry.fixedTalentIds.length > 0) {
-        setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
-      } else {
-        setSelectedAncestryTalentId('');
-      }
+    if (foundAncestry && foundAncestry.fixedTalentIds?.length > 0) {
+      setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
+    } else {
+      setSelectedAncestryTalentId('');
     }
   };
 
@@ -262,13 +314,15 @@ export function App() {
       level,
       stats,
       silver,
+      copper,
       traits,
       bond,
       background,
       selectedAncestryId,
       selectedAncestryTalentId,
       selectedTalents,
-      inventoryIds: inventory.map(i => i.id)
+      freeGearText,
+      inventory
     };
     navigator.clipboard.writeText(btoa(JSON.stringify(save)));
     setExportMessage('Character code copied to clipboard!');
@@ -282,16 +336,19 @@ export function App() {
       setLevel(decoded.level || 1);
       setStats(decoded.stats);
       setSilver(decoded.silver ?? 50);
-      setTraits(decoded.traits || { gender: 'Masculine', hair: 'Bald', looks: 'Athletic', skin: 'Pale', speech: 'Formal' });
-      setBond(decoded.bond || 'Roll a bond with the PC to your left...');
-      setBackground(decoded.background || decoded.backgroundText || '');
+      setCopper(decoded.copper ?? 0);
+      setHasRolledSilver(true);
+      setTraits(decoded.traits || traits);
+      setBond(decoded.bond || bond);
+      setBackground(decoded.background || '');
+      setFreeGearText(decoded.freeGearText || freeGearText);
 
       if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
       if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
       if (decoded.selectedTalents) setSelectedTalents(decoded.selectedTalents);
+      if (decoded.inventory) setInventory(decoded.inventory);
 
-      setInventory(decoded.inventoryIds.map((id: string) => itemCatalog.find(idMatch => idMatch.id === id)).filter(Boolean));
-      importString && setImportString('');
+      setImportString('');
     } catch {
       alert('Error loading character code.');
     }
@@ -302,11 +359,9 @@ export function App() {
   // ==========================================
   return (
     <div className="app-container">
-      {/* Interactive App-Only Builder Container View */}
       <div className="builder-interface-view">
         <h1 className="main-title">Glaive v3 Character Builder</h1>
 
-        {/* Single Column Flow Container */}
         <div className="card-stack">
 
           {/* Profile Header Details */}
@@ -321,24 +376,15 @@ export function App() {
                   onChange={(e) => setCharacterName(e.target.value)}
                   className="mb-2"
                 />
-                <button 
-                  type="button" 
-                  onClick={rollRandomName} 
-                  className="btn-primary full-width"
-                >
+                <button type="button" onClick={rollRandomName} className="btn-primary full-width">
                   🎲 Roll Name
                 </button>
               </div>
               <div className="form-group flex-1">
                 <label className="field-label">PC Level</label>
-                <select
-                  value={level}
-                  onChange={(e) => setLevel(Number(e.target.value))}
-                >
+                <select value={level} onChange={(e) => setLevel(Number(e.target.value))}>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((lvl) => (
-                    <option key={lvl} value={lvl}>
-                      Level {lvl}
-                    </option>
+                    <option key={lvl} value={lvl}>Level {lvl}</option>
                   ))}
                 </select>
               </div>
@@ -348,10 +394,7 @@ export function App() {
           {/* 1. Character Background Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Background</h3>
-            <p className="instruction-text">
-              Select or roll your hero's origins, past training, and formative experiences:
-            </p>
-
+            <p className="instruction-text">Select or roll your hero's origins and formative experiences:</p>
             <select
               value={background}
               onChange={e => setBackground(e.target.value)}
@@ -359,20 +402,12 @@ export function App() {
             >
               <option value="">-- Select a Background --</option>
               {backgroundDatabase && backgroundDatabase.map((b, idx) => (
-                <option key={idx} value={b.text}>
-                  {b.name}
-                </option>
+                <option key={idx} value={b.text}>{b.name}</option>
               ))}
             </select>
-
-            {background && (
-              <div className="description-box">
-                {background}
-              </div>
-            )}
-
+            {background && <div className="description-box">{background}</div>}
             <button type="button" onClick={rollCharacterBackground} className="btn-primary full-width">
-              🎲 Roll d100 Character Background
+              🎲 Roll Character Background
             </button>
           </div>
 
@@ -387,38 +422,28 @@ export function App() {
               )}
             </div>
             <div className="instruction-block">
-              <p className="instruction-text">
-                At Level 1, distribute these starting bonuses across your abilities:
-              </p>
+              <p className="instruction-text">At Level 1, distribute starting bonuses:</p>
               <div className="bonus-badge-group">
                 <span className="bonus-badge">+3</span>
                 <span className="bonus-badge">+2</span>
                 <span className="bonus-badge">+1</span>
                 <span className="bonus-badge">+0</span>
               </div>
-              <p className="instruction-subtext">(Maximum ability score is +5)</p>
             </div>
 
             <div className="attributes-grid">
-              {(Object.keys(stats) as Array<keyof Abilities>).map((s) => {
-                const statKey = s as keyof Abilities;
-                return (
-                  <div key={statKey} className="attribute-field">
-                    <label className="attribute-label">{statKey}</label>
-                    <span className="attribute-desc">{attributeDescriptions[statKey]}</span>
-                    <select 
-                      value={stats[statKey]} 
-                      onChange={e => handleStatChange(statKey, Number(e.target.value))}
-                    >
-                      {dynamicAttributeChoices.map(v => (
-                        <option key={v} value={v}>+{v}</option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              })}
+              {(Object.keys(stats) as Array<keyof Abilities>).map((s) => (
+                <div key={s} className="attribute-field">
+                  <label className="attribute-label">{s}</label>
+                  <span className="attribute-desc">{attributeDescriptions[s]}</span>
+                  <select value={stats[s]} onChange={e => handleStatChange(s, Number(e.target.value))}>
+                    {dynamicAttributeChoices.map(v => (
+                      <option key={v} value={v}>+{v}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </div>
-
             <button type="button" onClick={rollRandomAbilities} className="btn-primary full-width mt-3">
               🎲 Roll Ability Scores
             </button>
@@ -451,21 +476,18 @@ export function App() {
           {/* 5. Traits Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Traits</h3>
-            
             <div className="traits-grid">
               {(Object.keys(traits) as Array<keyof CharacterTraits>).map(t => (
                 <div key={t} className="form-group">
                   <label className="field-label uppercase-label">{t}</label>
                   <select
                     value={traits[t]}
-                    onChange={e => handleTraitChange(t, e.target.value)}
+                    onChange={e => setTraits(prev => ({ ...prev, [t]: e.target.value }))}
                     className="form-select-spacing"
                   >
                     {traitDatabase && traitDatabase[t] ? (
-                      traitDatabase[t].map((optionValue: string, idx: number) => (
-                        <option key={idx} value={optionValue}>
-                          {optionValue}
-                        </option>
+                      traitDatabase[t].map((val: string, idx: number) => (
+                        <option key={idx} value={val}>{val}</option>
                       ))
                     ) : (
                       <option value={traits[t]}>{traits[t]}</option>
@@ -474,7 +496,6 @@ export function App() {
                 </div>
               ))}
             </div>
-
             <button type="button" onClick={rollAllTraits} className="btn-primary full-width mt-3">
               🎲 Roll All Physical Traits
             </button>
@@ -483,9 +504,7 @@ export function App() {
           {/* 6. Character Bond Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Bond</h3>
-            <p className="instruction-text">
-              Relationship with the Player Character sitting to your left:
-            </p>
+            <p className="instruction-text">Relationship with PC to your left:</p>
             <textarea
               value={bond}
               onChange={e => setBond(e.target.value)}
@@ -496,127 +515,43 @@ export function App() {
             </button>
           </div>
 
-          {/* 7. Starting Silver Panel */}
-          <div className="card-panel">
-            <label className="field-label-small">WALLETS & COINAGE</label>
-            <div className="wallet-row">
-              <input
-                type="number"
-                value={silver}
-                onChange={(e) => setSilver(Math.max(0, parseInt(e.target.value) || 0))}
-                className="silver-input"
-              />
-              <span className="currency-label">SP</span>
-              <button type="button" onClick={() => adjustSilver(1)} className="btn-stepper">+1</button>
-              <button type="button" onClick={() => adjustSilver(-1)} className="btn-stepper">-1</button>
-              <button type="button" onClick={() => adjustSilver(10)} className="btn-stepper">+10</button>
-              <button type="button" onClick={() => adjustSilver(-10)} className="btn-stepper">-10</button>
-            </div>
-            <button type="button" onClick={rollStartingSilver} className="btn-primary full-width">
-              🎲 Roll Starting Wealth
-            </button>
-          </div>
+          {/* 7. Silver & Gear Card */}
+          <SilverAndGearCard
+            silver={silver}
+            copper={copper}
+            onUpdateSilver={setSilver}
+            onUpdateCopper={setCopper}
+            hasRolledSilver={hasRolledSilver}
+            onRollStartingSilver={rollStartingSilver}
+            freeGearText={freeGearText}
+            onUpdateFreeGear={setFreeGearText}
+            inventory={inventory}
+            maxSlots={maxCarryingCapacity}
+            onOpenShop={(category) => {
+              setShopCategory(category);
+              setIsShopOpen(true);
+            }}
+            onSellItem={handleSellItem}
+          />
 
           {/* 8. Character Dynamic Status Dashboard Card */}
-          <div className={`card-panel status-card ${totalSlotsUsed > maxCarryingCapacity ? 'overencumbered' : ''}`}>
+          <div className={`card-panel status-card ${totalUsedSlots > maxCarryingCapacity ? 'overencumbered' : ''}`}>
             <h3 className="panel-heading">Character Status</h3>
             <div className="status-grid">
               <div><strong className="vital-label">Hit Points:</strong> {hitPoints} HP</div>
               <div>
                 <strong className="vital-label">Armor Class:</strong> {armorClass} AC
-                {armorBonus > 0 && <span className="armor-bonus-subtext">(+{armorBonus} from gear)</span>}
               </div>
             </div>
             <p className="burden-text">
               <strong>Burden:</strong>{' '}
-              <span className={`burden-badge ${totalSlotsUsed > maxCarryingCapacity ? 'exceeded' : 'normal'}`}>
-                {totalSlotsUsed} / {maxCarryingCapacity} Slots
+              <span className={`burden-badge ${totalUsedSlots > maxCarryingCapacity ? 'exceeded' : 'normal'}`}>
+                {totalUsedSlots} / {maxCarryingCapacity} Slots
               </span>
             </p>
           </div>
 
-          {/* 9. Equipped Inventory & Catalogs Section */}
-          <div className="card-panel">
-            <h3 className="panel-heading">Equipped Inventory</h3>
-
-            <div className="starter-gear-notice">
-              💼 <strong>Free Starter Gear:</strong> You are permanently equipped with a <em>Backpack</em>, <em>Flint & Steel</em>, worn travel clothing, and tiny trinkets. These items do not consume inventory slots.
-            </div>
-
-            <div className="inventory-drop-zone">
-              {inventory.length === 0 ? (
-                <p className="empty-inventory-text">No additional items equipped.</p>
-              ) : (
-                inventory.map((item, idx) => (
-                  <ItemCard
-                    key={idx}
-                    item={item}
-                    buttonText="Drop"
-                    buttonColor="#c62828"
-                    onButtonClick={() => setInventory(prev => prev.filter((_, i) => i !== idx))}
-                  />
-                ))
-              )}
-            </div>
-
-            <h3 className="panel-heading section-spacer">Equipment Catalog</h3>
-
-            {/* SECTION A: WEAPONS CATALOG LIST */}
-            <h4 className="catalog-section-header">⚔️ Weapons</h4>
-            <div className="catalog-scroll-box">
-              {itemCatalog.filter(item => item.type === 'Weapon').length === 0 ? (
-                <p className="empty-inventory-text">Loading weapons...</p>
-              ) : (
-                itemCatalog.filter(item => item.type === 'Weapon').map((item, index) => (
-                  <ItemCard
-                    key={`weapon-${item.id}-${index}`}
-                    item={item}
-                    buttonText="Equip"
-                    buttonColor="#2e7d32"
-                    onButtonClick={() => setInventory(prev => [...prev, item])}
-                  />
-                ))
-              )}
-            </div>
-
-            {/* SECTION B: ARMOR CATALOG LIST */}
-            <h4 className="catalog-section-header">🛡️ Armor & Shields</h4>
-            <div className="catalog-scroll-box short">
-              {itemCatalog.filter(item => item.type === 'Armor').length === 0 ? (
-                <p className="empty-inventory-text">Loading armor...</p>
-              ) : (
-                itemCatalog.filter(item => item.type === 'Armor').map((item, index) => (
-                  <ItemCard
-                    key={`armor-${item.id}-${index}`}
-                    item={item}
-                    buttonText="Equip"
-                    buttonColor="#2e7d32"
-                    onButtonClick={() => setInventory(prev => [...prev, item])}
-                  />
-                ))
-              )}
-            </div>
-
-            {/* SECTION C: GENERAL GEAR CATALOG LIST */}
-            <h4 className="catalog-section-header">🎒 General Equipment</h4>
-            <div className="catalog-scroll-box tall">
-              {itemCatalog.filter(item => item.type === 'Equipment' || item.type === 'Ammunition').length === 0 ? (
-                <p className="empty-inventory-text">Loading general gear...</p>
-              ) : (
-                itemCatalog.filter(item => item.type === 'Equipment' || item.type === 'Ammunition').map((item, index) => (
-                  <ItemCard
-                    key={`gear-${item.id}-${index}`}
-                    item={item}
-                    buttonText="Equip"
-                    buttonColor="#2e7d32"
-                    onButtonClick={() => setInventory(prev => [...prev, item])}
-                  />
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* 10. Save / Load Clipboard System */}
+          {/* 9. Save / Load Clipboard System */}
           <div className="card-panel save-load-panel">
             <h3 className="panel-heading">Save / Load Tools</h3>
             <button type="button" onClick={exportCharacter} className="btn-primary full-width mb-2">
@@ -641,16 +576,28 @@ export function App() {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT                         */}
-      {/* ========================================================= */}
+      {/* Reusable Item Shop Modal */}
+      <ItemShopModal
+        isOpen={isShopOpen}
+        categoryType={shopCategory}
+        onClose={() => setIsShopOpen(false)}
+        silver={silver}
+        copper={copper}
+        usedSlots={totalUsedSlots}
+        maxSlots={maxCarryingCapacity}
+        inventory={inventory}
+        onBuyItem={handleBuyItem}
+        onSellItem={handleSellItem}
+      />
+
+      {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT */}
       <div className="printable-character-sheet">
         <div className="print-header-row">
           <div className="print-header-field flex-1">
             <span className="print-label">Name:</span> <span>{characterName}</span>
           </div>
           <div className="print-header-field print-silver-width">
-            <span className="print-label">Silver:</span> <span>{silver}</span>
+            <span className="print-label">Silver:</span> <span>{silver} sp {copper} cp</span>
           </div>
         </div>
 
@@ -684,14 +631,12 @@ export function App() {
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
             {inventory.filter(i => i.type === 'Weapon').length === 0 ? (
-              <div className="print-no-weapons">
-                No weapons equipped. Unarmed Strike: 1d4 damage.
-              </div>
+              <div className="print-no-weapons">No weapons equipped. Unarmed Strike: 1d4 damage.</div>
             ) : (
               <div className="print-weapons-list">
                 {inventory.filter(i => i.type === 'Weapon').map((w, idx) => (
                   <div key={idx} className="print-weapon-row">
-                    ⚔️ <strong>{w.name}</strong> — Damage: <span className="underline">{w.damage || '1d6'}</span> | Tags: <em>{w.details}</em>
+                    ⚔️ <strong>{w.name} ({w.quantity})</strong> — Slots: {w.slots * w.quantity}
                   </div>
                 ))}
               </div>
@@ -708,7 +653,7 @@ export function App() {
                   >
                     <span className="print-slot-number">{i + 1}</span>
                     <span className={i >= maxCarryingCapacity ? 'strike-through' : ''}>
-                      {item ? `${item.name} (${item.slots} slot)` : i >= maxCarryingCapacity ? '[Locked Slot]' : ''}
+                      {item ? `${item.name} (x${item.quantity})` : i >= maxCarryingCapacity ? '[Locked Slot]' : ''}
                     </span>
                   </div>
                 );

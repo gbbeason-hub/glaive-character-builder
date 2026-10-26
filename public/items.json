@@ -6,7 +6,8 @@
     "damage": "1d6",
     "slots": 0.5,
     "hands": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "R1 (thrown)*, concealable"
   },
   {
@@ -16,7 +17,8 @@
     "damage": "1d6",
     "slots": 0.5,
     "hands": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "R1 (thrown)*, concealable"
   },
   {
@@ -26,7 +28,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -36,7 +39,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -46,7 +50,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -56,7 +61,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -66,7 +72,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -76,7 +83,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -86,7 +94,8 @@
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "1d10 damage if wielded 2-handed"
   },
   {
@@ -96,7 +105,8 @@
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
-    "cost": 20,
+    "cost_sp": 20,
+    "cost_cp": 0,
     "details": "Knock an enemy prone on a critical hit"
   },
   {
@@ -106,7 +116,8 @@
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
-    "cost": 20,
+    "cost_sp": 20,
+    "cost_cp": 0,
     "details": "Knock an enemy prone on a critical hit"
   },
   {
@@ -116,7 +127,8 @@
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
-    "cost": 20,
+    "cost_sp": 20,
+    "cost_cp": 0,
     "details": "Knock an enemy prone on a critical hit"
   },
   {
@@ -126,7 +138,8 @@
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
-    "cost": 20,
+    "cost_sp": 20,
+    "cost_cp": 0,
     "details": "Knock an enemy prone on a critical hit"
   },
   {
@@ -136,7 +149,8 @@
     "damage": "1d4",
     "slots": 0.5,
     "hands": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "R1, concealable (includes ammunition)"
   },
   {
@@ -146,7 +160,8 @@
     "damage": "1d4",
     "slots": 0.5,
     "hands": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "R1, concealable (includes ammunition)"
   },
   {
@@ -156,7 +171,8 @@
     "damage": "1d6",
     "slots": 1,
     "hands": 2,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "R2 ranged weapon"
   },
   {
@@ -166,7 +182,8 @@
     "damage": "1d8",
     "slots": 2,
     "hands": 2,
-    "cost": 35,
+    "cost_sp": 35,
+    "cost_cp": 0,
     "details": "R3 heavy ranged weapon"
   },
   {
@@ -176,7 +193,8 @@
     "damage": "1d8",
     "slots": 2,
     "hands": 2,
-    "cost": 35,
+    "cost_sp": 35,
+    "cost_cp": 0,
     "details": "R3 heavy mechanics ranged weapon"
   },
   {
@@ -186,7 +204,8 @@
     "damage": "1d10",
     "slots": 2,
     "hands": 2,
-    "cost": 100,
+    "cost_sp": 100,
+    "cost_cp": 0,
     "details": "R2, AP2^, exchange move to reload, damage explodes**"
   },
   {
@@ -196,7 +215,8 @@
     "damage": "1d10",
     "slots": 2,
     "hands": 2,
-    "cost": 100,
+    "cost_sp": 100,
+    "cost_cp": 0,
     "details": "R2, AP2^, exchange move to reload, damage explodes**"
   },
   {
@@ -206,7 +226,8 @@
     "damage": "n/a",
     "slots": 1,
     "hands": 0,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "3-in-6 chance to recover after an encounter"
   },
   {
@@ -216,7 +237,8 @@
     "damage": "1d4",
     "slots": 0,
     "hands": 0,
-    "cost": 0,
+    "cost_sp": 0,
+    "cost_cp": 0,
     "details": "Natural physical attack form"
   },
   {
@@ -225,8 +247,9 @@
     "type": "Armor",
     "slots": 1,
     "defense": 2,
-    "cost": 5,
-    "details": "+1 to defense. Can be splintered to block a single attack entirely."
+    "cost_sp": 5,
+    "cost_cp": 0,
+    "details": "Requires 1 free hand. Can be splintered to block a single attack entirely."
   },
   {
     "id": "a_02",
@@ -234,7 +257,8 @@
     "type": "Armor",
     "slots": 1,
     "defense": 2,
-    "cost": 25,
+    "cost_sp": 25,
+    "cost_cp": 0,
     "details": "Flexible leather or quilted cloth padding."
   },
   {
@@ -243,7 +267,8 @@
     "type": "Armor",
     "slots": 3,
     "defense": 4,
-    "cost": 75,
+    "cost_sp": 75,
+    "cost_cp": 0,
     "details": "DISADV to stealth, max +2 DEX bonus."
   },
   {
@@ -252,17 +277,18 @@
     "type": "Armor",
     "slots": 5,
     "defense": 6,
-    "cost": 200,
-    "details": "DISADV to stealth, max +0 DEX bonus, heavy plate layers."
+    "cost_sp": 200,
+    "cost_cp": 0,
+    "details": "DISADV to stealth & swimming, no DEX bonus."
   },
-
   {
     "id": "a_05",
     "name": "Mithril Light Armor",
     "type": "Armor",
     "slots": 0,
     "defense": 2,
-    "cost": 100,
+    "cost_sp": 100,
+    "cost_cp": 0,
     "details": "Flexible mithril padding. -1 slot."
   },
   {
@@ -271,7 +297,8 @@
     "type": "Armor",
     "slots": 2,
     "defense": 4,
-    "cost": 300,
+    "cost_sp": 300,
+    "cost_cp": 0,
     "details": "No penalty to stealth or swim. -1 slot."
   },
   {
@@ -280,7 +307,8 @@
     "type": "Armor",
     "slots": 4,
     "defense": 6,
-    "cost": 800,
+    "cost_sp": 800,
+    "cost_cp": 0,
     "details": "No penalty to stealth or swim. -1 slot."
   },
   {
@@ -288,7 +316,8 @@
     "name": "Ball bearings, 100 (bag)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "A bag of 100 metal balls. Useful for creating slipping hazards or checking floors."
   },
   {
@@ -296,7 +325,8 @@
     "name": "Bear Trap",
     "type": "Equipment",
     "slots": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "Heavy iron spring trap used to catch or restrain creatures."
   },
   {
@@ -304,7 +334,8 @@
     "name": "Black Grease",
     "type": "Equipment",
     "slots": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "Slippery substance used to lubricate gears or create friction-free surfaces."
   },
   {
@@ -312,7 +343,8 @@
     "name": "Caltrops 20 (bag)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "Bag of 20 four-pointed spikes. Scatters to slow down and damage pursuers."
   },
   {
@@ -320,15 +352,17 @@
     "name": "Chalk (5 pieces)",
     "type": "Equipment",
     "slots": 0.33,
-    "cost": 1,
-    "details": "5 pieces of white chalk. Rounded up to 1 silver piece. Perfect for mapping walls."
+    "cost_sp": 0,
+    "cost_cp": 5,
+    "details": "5 pieces of white chalk. Perfect for mapping walls."
   },
   {
     "id": "g_06",
     "name": "Cook Pot",
     "type": "Equipment",
     "slots": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "Metal pot for preparing meals over campfires."
   },
   {
@@ -336,7 +370,8 @@
     "name": "Crowbar",
     "type": "Equipment",
     "slots": 1,
-    "cost": 2,
+    "cost_sp": 2,
+    "cost_cp": 0,
     "details": "Heavy iron bar providing leverage for prying open stuck doors or chests."
   },
   {
@@ -344,7 +379,8 @@
     "name": "Grapnel Hook",
     "type": "Equipment",
     "slots": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "Multi-pronged anchor hook used for climbing structures."
   },
   {
@@ -352,7 +388,8 @@
     "name": "Herbalist's Kit",
     "type": "Equipment",
     "slots": 1,
-    "cost": 20,
+    "cost_sp": 20,
+    "cost_cp": 0,
     "details": "Tools and containers used to gather, store, and process restorative fauna."
   },
   {
@@ -360,7 +397,8 @@
     "name": "Lens/ Magnifying Glass",
     "type": "Equipment",
     "slots": 0.5,
-    "cost": 25,
+    "cost_sp": 25,
+    "cost_cp": 0,
     "details": "Polished glass lens to examine small details or spark dry tinder using sunlight."
   },
   {
@@ -368,7 +406,8 @@
     "name": "Lock-picks",
     "type": "Equipment",
     "slots": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "Finely crafted tension tools and picks to bypass locking mechanisms."
   },
   {
@@ -376,7 +415,8 @@
     "name": "Metal file",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "Hardened abrasive tool to grind away lock shackles or thin iron bars over time."
   },
   {
@@ -384,7 +424,8 @@
     "name": "Mirror (small, steel)",
     "type": "Equipment",
     "slots": 0.33,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "Polished steel surface to look around tight dungeon corners safely."
   },
   {
@@ -392,7 +433,8 @@
     "name": "Oil flask (3)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "3 flasks of combustible lantern fuel. Can be thrown and lit as an improvised weapon."
   },
   {
@@ -400,7 +442,8 @@
     "name": "Pole (10ft)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "Long wooden staff. Perfect for poking loose ceiling tiles or triggering floor traps."
   },
   {
@@ -408,7 +451,8 @@
     "name": "Quill & Ink Stick",
     "type": "Equipment",
     "slots": 0.5,
-    "cost": 2,
+    "cost_sp": 2,
+    "cost_cp": 0,
     "details": "Writing implements used to map dungeons or draft official paperwork."
   },
   {
@@ -416,7 +460,8 @@
     "name": "Ration",
     "type": "Equipment",
     "slots": 0.5,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "One full day's worth of preserved travel food."
   },
   {
@@ -424,7 +469,8 @@
     "name": "Rope (50ft)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 10,
+    "cost_sp": 10,
+    "cost_cp": 0,
     "details": "50 feet of sturdy braided hemp line for climbing or binding captives."
   },
   {
@@ -432,7 +478,8 @@
     "name": "Sack",
     "type": "Equipment",
     "slots": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "Large canvas container to transport loose loot back out of dark domains."
   },
   {
@@ -440,7 +487,8 @@
     "name": "Spike, Iron (10)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "10 heavy wedges used to spike doors shut or secure climbing guide-ropes."
   },
   {
@@ -448,7 +496,8 @@
     "name": "Spyglass",
     "type": "Equipment",
     "slots": 1,
-    "cost": 50,
+    "cost_sp": 50,
+    "cost_cp": 0,
     "details": "High-magnification telescope optic to scout long distances or watch horizons."
   },
   {
@@ -456,7 +505,8 @@
     "name": "Tar (Pot)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "Pot of thick, sticky adhesive sealant. Useful for patching hulls or binding items."
   },
   {
@@ -464,7 +514,8 @@
     "name": "Torches (6)",
     "type": "Equipment",
     "slots": 1,
-    "cost": 5,
+    "cost_sp": 5,
+    "cost_cp": 0,
     "details": "Bundle of 6 fuel-dipped wooden torches. Each burns bright for approximately one hour."
   },
   {
@@ -472,7 +523,8 @@
     "name": "Water/wineskin",
     "type": "Equipment",
     "slots": 1,
-    "cost": 1,
+    "cost_sp": 1,
+    "cost_cp": 0,
     "details": "Leather bladder container holding clean drinking liquids."
   }
 ]

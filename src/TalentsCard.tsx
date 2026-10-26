@@ -42,7 +42,7 @@ export function TalentsCard({
   <div className="talents-header-row">
     <h3 className="panel-heading">Talents</h3>
     <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
-      {filledCount} / {maxTalentSlots} Slots Filled
+      {filledCount} / {maxTalentSlots} Talents Selected
     </span>
   </div>
 
