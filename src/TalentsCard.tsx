@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { TalentSelectorModal } from './TalentSelectorModal';
+
 export interface Talent {
   id: string;
   name: string;
@@ -20,6 +23,8 @@ export function TalentsCard({
   maxTalentSlots,
   onTalentChange,
 }: TalentsCardProps) {
+  const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
+
   const filledCount = selectedTalents.filter(Boolean).length;
   const isFull = filledCount === maxTalentSlots && maxTalentSlots > 0;
 
@@ -38,13 +43,13 @@ export function TalentsCard({
 
   return (
     <div className="talents-card">
-  {/* Header & Status */}
-  <div className="talents-header-row">
-    <h3 className="panel-heading">Talents</h3>
-    <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
-      {filledCount} / {maxTalentSlots} Talents Selected
-    </span>
-  </div>
+      {/* Header & Status */}
+      <div className="talents-header-row">
+        <h3 className="panel-heading">Talents</h3>
+        <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
+          {filledCount} / {maxTalentSlots} Talents Selected
+        </span>
+      </div>
 
       {/* Instructions */}
       <p className="talents-instructions">
@@ -71,26 +76,16 @@ export function TalentsCard({
                 </button>
               </div>
 
-              {/* Dropdown */}
-              <select
-                value={currentId}
-                onChange={(e) => onTalentChange(index, e.target.value)}
-                className={`talent-select ${selected ? 'has-selection' : ''}`}
+              {/* Trigger Button to Open Modal */}
+              <button
+                type="button"
+                className={`talent-selector-trigger ${selected ? 'has-selection' : ''}`}
+                onClick={() => setActiveModalIndex(index)}
               >
-                <option value="">-- Select a Talent --</option>
-                {talents
-                  .filter((t) => {
-                    if (t.repeatable || t.id === currentId) return true;
-                    return !selectedTalents.some((selectedId, idx) => idx !== index && selectedId === t.id);
-                  })
-                  .map((t) => (
-                    <option key={t.id} value={t.id}>
-                      [{t.set}] {t.name} {t.repeatable ? '(Repeatable)' : ''}
-                    </option>
-                  ))}
-              </select>
+                {selected ? `[${selected.set}] ${selected.name}` : '-- Select a Talent --'}
+              </button>
 
-              {/* Description */}
+              {/* Description preview if selected */}
               {selected && (
                 <div className="talent-description-box">
                   <strong>{selected.name}:</strong> {selected.description}
@@ -100,6 +95,18 @@ export function TalentsCard({
           );
         })}
       </div>
+
+      {/* Modal Popup */}
+      {activeModalIndex !== null && (
+        <TalentSelectorModal
+          isOpen={activeModalIndex !== null}
+          onClose={() => setActiveModalIndex(null)}
+          talents={talents}
+          selectedTalents={selectedTalents}
+          currentIndex={activeModalIndex}
+          onSelectTalent={(talentId) => onTalentChange(activeModalIndex, talentId)}
+        />
+      )}
     </div>
   );
 }

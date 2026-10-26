@@ -387,6 +387,167 @@ textarea:focus {
   color: var(--text-h);
 }
 
+
+/* ==========================================
+   6b TALENT SELECTOR MODAL STYLES
+   ================================          */
+.talent-modal-card {
+  max-width: 620px;
+}
+
+
+.talent-filter-container {
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.talent-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  background-color: #f8fafc;
+  box-sizing: border-box;
+}
+
+.talent-pill-scroll-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+}
+
+.talent-filter-pill {
+  background-color: #f1f5f9;
+  color: #4a5568;
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.talent-filter-pill:hover {
+  background-color: #e2e8f0;
+  color: var(--text-h);
+}
+
+.talent-filter-pill.active {
+  background-color: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+.talent-grid-list {
+  max-height: 400px;
+  min-height: 320px;
+}
+
+.talent-selection-card {
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.1s;
+}
+
+.talent-selection-card:hover {
+  background-color: #f7fafc;
+  border-color: var(--accent);
+}
+
+.talent-selection-card.selected-card {
+  background-color: #f0fff4;
+  border-color: #38a169;
+}
+
+.talent-card-tag {
+  font-size: 12px;
+  font-weight: bold;
+  color: #2b6cb0;
+  margin-right: 6px;
+}
+
+.talent-card-description-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* Standard property to satisfy the linter */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #4a5568;
+  line-height: 1.4;
+}
+
+.talent-selector-trigger {
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #718096;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.15s;
+}
+
+.talent-selector-trigger:hover {
+  border-color: var(--accent);
+}
+
+.talent-selector-trigger.has-selection {
+  color: var(--text-h);
+  font-weight: bold;
+  background-color: #fff;
+}
+
+/* Segmented Control Selector Bar */
+.talent-segmented-control {
+  display: flex;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  gap: 6px;
+  margin: 16px 20px 4px 20px;
+  border: 1px solid var(--border);
+}
+
+.segmented-btn {
+  flex: 1;
+  background-color: transparent;
+  color: #64748b;
+  border: none;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.segmented-btn:hover {
+  color: var(--text-h);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.segmented-btn.active {
+  background-color: #ffffff;
+  color: var(--text-h);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+
 /* ==========================================
    7. TRAITS CARD 2-COLUMN GRID STYLES
    ================================---------- */
