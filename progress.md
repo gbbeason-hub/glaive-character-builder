@@ -75,18 +75,28 @@ The fonts to use in the PDF & web site
 - [DONE] Phase 7a Talents: Implemented slot count logic, advanced slot controls, selection tracking, deduplication filters, and slot caps.
 - [DONE] Phase 7b Talents: Refactored all inline styling out of `TalentsCard.tsx` and moved clean class rules over to `index.css`.
 - [DONE] Phase 7c Talents: Panel head is smaller than others
+- [DONE] Phase 7d Talents: Alternative to long list of talents. Dialog?
 
 - [DONE] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
 - [DONE] Phase 9a Ability Max: Add logic for controlling maximum value of ability scores 
 - [DONE] Phase 9b Ability: Add instructions, descriptions. Fix Constitution > Willpower, Attributes > Abilities
 - [DONE] Phase 10 Traits: Add dropdowns. Stack labels? 2 columns?
+- [DONE] Phase 11 Mutations: Add space for mutations
+    - no background adds mutations
+    - no trait adds mutations
+    - no talent adds mutations
+    - no talent adds mutations
+    - [DONE] Created `Mutations.json` from option Doom & Mishaps table
+    - [DONE] Created `spell_mutations.json`
+    - [DONE] Check mutations.json vs rules
+- [DONE] Phase 12 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
+
 - [DONE] Phase 14 Name: Add name generator
 - [DONE] Phase 18 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
 - [DONE] Phase 22 Background: No longer shows description.  
 
 ## 🏁 Next Target Steps
-
-- [NEW] Phase 7d Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
+- [NEW] Phase 7e Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
     - Once per long rest . . . . (see Die Hard) -- Give a checkbox?
     - Favor of the Gods: AC & HP effects
     - Heaven’s Crushing Touch: HP effects
@@ -104,16 +114,20 @@ The fonts to use in the PDF & web site
     - Pack Rat: Item Slots
     - Shield Master: AC bonus for shield
     - Dark Bloodline: Suboptions
-- [NEW] Phase 11 Mutations: Add space for mutations
-- [NEW] Phase 12 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
+
+
 - [NEW] Phase 13 Magic: Add magic items & spells
+    - [DONE] Created spells.json
+    - [NEW] Build modal to select spells
+    - [NEW] Check spells.json vs rules
+
 - [NEW] Phase 15 Conditions: Add conditions (maybe only for PDF print)
 - [NEW] Phase 16 Fatigue & Encumbrance: Mark fatigue and Encumbrance
 - [NEW] Phase 17 Pregen All: One button to randomize everything!
 - [NEW] Phase 19 Bonds: Add input field for PC name? Change input to dropdown?
 - [NEW] Phase 20 Character Status: Change name? Stack? Bubble?
 - [NEW] Phase 21 Wallet & Coinage: 
-- [NEW] Phase 23 Equipment & Inventory: 
+- [WIP] Phase 23 Equipment & Inventory: 
     - [DONE] Updated JSON for items (cp,sp,hands,etc.)
     - [DONE] UI mockups for cards & modals
     - [DONE] Built cards
@@ -122,7 +136,7 @@ The fonts to use in the PDF & web site
     - [DONE] Modal Height Stability: Set bounds with `min-height` and `max-height` on the item container so the modal UI stops jumping around vertically as results filter dynamically.
     - [DONE] Added shop flavor text: random name + templates
     - [DONE] Fixed roll silver button & modified card alignments
-    - Show items from backgrounds
+    - [NEW] Show items from backgrounds
         * [NEW] **Monster Hunter (4-6)**: Gain a shortbow and 20 arrows.
         * [NEW] **Former Squire (13-15)**: Gain a suit of battered medium armor.
         * [NEW] **Ill Luck (16-18)**: Gain a good luck trinket.
@@ -138,7 +152,7 @@ The fonts to use in the PDF & web site
         * [NEW] **Abandoned (82-84)**: Start with 2 extra rations.
         * [NEW] **Monster Gourmand (85-86)**: Gain an iron pot and cooking utensils.
         * [NEW] **Letcher (99-100)**: Gain a vial of scented oil.
-    - Inventory changes from talents
+    - [NEW] Inventory changes from talents
         * [NEW] **Pack Rat (Thief)**: Adds 3 additional Item Slots to total carrying capacity.
         * [NEW] **Dog Whisperer (Hunter)**: Grants a dog companion.
         * [NEW] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
@@ -148,7 +162,7 @@ The fonts to use in the PDF & web site
         * [NEW] **Always Prepared (Thief)**: Unlocks purchasing Unlabelled Packages (1 slot items).
         * [NEW] **Eldritch Feast (Magic User)**: Spell is grafted directly to soul (0 item slots required).
         * [NEW] **Sword Wizard (Magic User)**: Replaces standard spellbooks with rune-carved swords.
-    - Items from talents
+    - [NEW] Items from talents
         * [NEW] **Dog Whisperer (Hunter)**: Grants a dog companion.
         * [NEW] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
         * [NEW] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
@@ -163,3 +177,40 @@ The fonts to use in the PDF & web site
     - Button consistency
 
 - [NEW] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
+
+- [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
+
+    **Status:** [IN PROGRESS]
+    **Goal:** Upgrade the Glaive Character Builder to conform to WCAG 2.1 AA standards, ensuring complete screen reader support, keyboard navigation, and high-contrast compliance.
+
+    - [ ] **26.1: Semantic HTML & Document Structure**
+        - [ ] Wrap primary layout regions in appropriate semantic tags (`<header>`, `<main>`, `<nav>`, `<footer>`).
+        - [ ] Review heading hierarchy (`<h1>` through `<h3>`) across all character card components to ensure logical nesting without skipping levels.
+
+    - [ ] **26.2: Modal Dialog Accessibility & Focus Trapping**
+        - [ ] Implement focus trapping for `TalentSelectorModal` and `ItemShopModal` so keyboard navigation (`Tab` / `Shift+Tab`) stays contained inside active modals.
+        - [ ] Auto-focus the primary interactive element (e.g., search input) upon modal open, and restore focus to the triggering element upon close.
+        - [ ] Add `aria-modal="true"`, `role="dialog"`, and `aria-labelledby` attributes to modal root elements.
+        - [ ] Ensure pressing the `Escape` key reliably closes any active modal overlay.
+
+    - [ ] **26.3: Custom Controls & ARIA Attributes**
+        - [ ] Convert the 3-option Segmented Control (`All Talents` | `Ancestry` | `Heroic`) to use proper ARIA tab pattern (`role="tablist"`, `role="tab"`, `aria-selected="true|false"`).
+        - [ ] Add explicit `aria-label` tags to all icon-only buttons (e.g., modal close `✕` buttons, roll buttons, counter increment/decrement controls).
+        - [ ] Ensure all filter pills and dynamic buttons announce active states to screen readers (`aria-pressed` or `aria-selected`).
+
+    - [ ] **26.4: Forms & Input Labeling**
+        - [ ] Audit all input fields (Name, Level, Search inputs, Item quantities) to ensure each has a visible `<label>` or an `aria-label` attribute.
+        - [ ] Add `aria-describedby` links where input fields have secondary helper text or error messages.
+
+    - [ ] **26.5: Keyboard Navigation & Focus Indicators**
+        - [ ] Ensure all interactive elements have highly visible focus rings using CSS `:focus-visible` token colors.
+        - [ ] Verify that non-button clickable `<div>` or `<span>` elements are replaced with native `<button>` tags or provided `tabIndex={0}` and keyboard event handlers (`Enter` / `Space`).
+
+    - [ ] **26.6: Color Contrast & Visual Clarity**
+        - [ ] Audit low-contrast text colors (`#64748b`, `#4a5568`, dynamic tags) against light surface backgrounds to guarantee at least a 4.5:1 contrast ratio.
+        - [ ] Ensure essential UI indicators (selected tabs, active pills, badges) do not rely solely on color to convey state (e.g., include text labels, icons, or visual weight shifts).
+
+    - [ ] **26.7: Automated & Manual Testing Verification**
+        - [ ] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
+        - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
+        - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).

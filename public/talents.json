@@ -64,35 +64,35 @@
     ]
   },
   {
-  "id": "anc_draconic_bloodlines",
-  "name": "Draconic Bloodlines",
-  "type": "ancestry",
-  "set": "Drake",
-  "description": "You manifest the great wyrms in some physical fashion. Choose or roll 1d4:",
-  "repeatable": false,
-  "subOptions": [
-    {
-      "id": "bloodline_fangs",
-      "name": "1. Fangs & Claws",
-      "description": "Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage)."
-    },
-    {
-      "id": "bloodline_horns",
-      "name": "2. Horns",
-      "description": "You have really cool horns (ram, bull, rhino, etc.). Roll with ADV when attempting to intimidate anyone shorter than your horns."
-    },
-    {
-      "id": "bloodline_tail",
-      "name": "3. Tail",
-      "description": "ADV on rolls to perform the following combat maneuvers: disarm and trip."
-    },
-    {
-      "id": "bloodline_wings",
-      "name": "4. Wings",
-      "description": "You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
-    }
-  ]
-},
+    "id": "anc_draconic_bloodlines",
+    "name": "Draconic Bloodlines",
+    "type": "ancestry",
+    "set": "Drake",
+    "description": "You manifest the great wyrms in some physical fashion. Choose or roll 1d4:",
+    "repeatable": false,
+    "subOptions": [
+      {
+        "id": "bloodline_fangs",
+        "name": "1. Fangs & Claws",
+        "description": "Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage)."
+      },
+      {
+        "id": "bloodline_horns",
+        "name": "2. Horns",
+        "description": "You have really cool horns (ram, bull, rhino, etc.). Roll with ADV when attempting to intimidate anyone shorter than your horns."
+      },
+      {
+        "id": "bloodline_tail",
+        "name": "3. Tail",
+        "description": "ADV on rolls to perform the following combat maneuvers: disarm and trip."
+      },
+      {
+        "id": "bloodline_wings",
+        "name": "4. Wings",
+        "description": "You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
+      }
+    ]
+  },
   {
     "id": "anc_elemental_breath",
     "name": "Elemental Breath",
@@ -301,7 +301,6 @@
     "description": "Once per Long Rest, when you’re reduced to 0hp but not killed outright, you drop to 1hp instead.",
     "repeatable": false
   },
-
   {
     "id": "gen_barbarian_cleave",
     "name": "Cleave",
@@ -342,8 +341,7 @@
       }
     ]
   },
-
-{
+  {
     "id": "gen_barbarian_rage",
     "name": "Rage!",
     "type": "talent",
@@ -429,7 +427,12 @@
     "type": "talent",
     "set": "Holy Warrior",
     "description": "You have been entrusted with the safekeeping of 3 holy relics - these allow you to cast divine spells. You may take this talent more than once. Roll randomly or work with your GM to select spells from the Spell List (pg. 30).",
-    "repeatable": true
+    "repeatable": true,
+    "containerGrant": {
+      "type": "Holy Relic",
+      "count": 3,
+      "itemSlots": 1
+    }
   },
   {
     "id": "gen_holy_warrior_radiance",
@@ -551,14 +554,18 @@
     "description": "You thrive in the wild, protecting the realm from the horrors that lurk in the demon-haunted woods and the deep places of the earth. You have ADV on WIS saves to track, hunt, and navigate in wilderness areas. When you act as a guide, terrain penalties for overland travel are reduced by 1. When you travel alone, or with other adventurers who have this talent you cannot be tracked and terrain penalties do not effect you.",
     "repeatable": false
   },
-
   {
     "id": "gen_magic_user_eldritch_feast",
     "name": "Eldritch Feast",
     "type": "talent",
     "set": "Magic User",
     "description": "A living spell has grafted itself to your soul. You may cast it once per Long Rest. No spellbook/item slot required. The effects of containing raw magic within your physical body manifests in some strange and possibly upsetting way - please describe how. By tasting an object you can tell if it is magical though not what it does.",
-    "repeatable": false
+    "repeatable": false,
+    "containerGrant": {
+      "type": "Soul-grafted Spell",
+      "count": 1,
+      "itemSlots": 0
+    }
   },
   {
     "id": "gen_magic_user_familiar",
@@ -566,7 +573,12 @@
     "type": "talent",
     "set": "Magic User",
     "description": "Gain a small mystical companion with [L]+5 HP. You can communicate with it telepathically as long as you can see it. If it dies it can be re-summoned with 50sp worth of components and a Long Rest. Your familiar can hold one of your spells like an extra item slot and you can cast that spell through them.",
-    "repeatable": false
+    "repeatable": false,
+    "containerGrant": {
+      "type": "Familiar Spell",
+      "count": 1,
+      "itemSlots": 0
+    }
   },
   {
     "id": "gen_magic_user_flame_proof",
@@ -598,7 +610,12 @@
     "type": "talent",
     "set": "Magic User",
     "description": "Your master has entrusted you with the safekeeping of 3 spellbooks. You may take this talent more than once. Roll randomly or work with your GM to select spells from the Spell List (pg. 30) and learn the following cantrips: A. Change the color or texture of a medium-sized object for 10 minutes. B. Create a tiny light as bright as a match on your fingertip. C. Move a light object with a wave of your finger. Cause a coin to dance on a tabletop or turn the pages of a book, etc.",
-    "repeatable": true
+    "repeatable": true,
+    "containerGrant": {
+      "type": "Spellbook",
+      "count": 3,
+      "itemSlots": 1
+    }
   },
   {
     "id": "gen_magic_user_spell_eater",
@@ -614,7 +631,12 @@
     "type": "talent",
     "set": "Magic User",
     "description": "You can cast spells while wielding a weapon in one or both of your hands. Replace spellbooks with rune carved swords. Your spells become sword-themed. Spells can be cast as part of a melee attack - roll +WIL instead of +STR.",
-    "repeatable": false
+    "repeatable": false,
+    "containerGrant": {
+      "type": "Rune Sword",
+      "count": 1,
+      "itemSlots": 1
+    }
   },
   {
     "id": "gen_magic_user_the_thrice_divided_intellect",
@@ -640,7 +662,7 @@
     "description": "Use your action to grant a willing creature +1d4 to their next save or attack roll.",
     "repeatable": false
   },
-{
+  {
     "id": "gen_thief_always_armed",
     "name": "Always Armed",
     "type": "talent",
@@ -808,5 +830,4 @@
       }
     ]
   }
-
 ]

@@ -5,6 +5,9 @@ import { SilverAndGearCard } from './SilverAndGearCard';
 import type { InventoryItem } from './SilverAndGearCard';
 import { ItemShopModal } from './ItemShopModal';
 import type { CatalogItem } from './ItemShopModal';
+import { MutationsCard } from './MutationsCard';
+import { SpellsCard } from './SpellsCard';
+import type { Spell, ContainerSlot } from './SpellsCard';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -36,12 +39,11 @@ interface NameDatabase {
   sobriquets: string[];
 }
 
-// Map of concise attribute descriptions
 const attributeDescriptions: Record<keyof Abilities, string> = {
   strength: 'Melee attacks, physical saves, & bonus to most weapon damage',
   dexterity: 'delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
   willpower: 'resolve, stubbornness, mental endurance, & use to wield & resist magic.',
-  wisdom: 'ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.'
+  wisdom: 'ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.',
 };
 
 export function App() {
@@ -51,7 +53,7 @@ export function App() {
   const [characterName, setCharacterName] = useState('Glaive Hero');
   const [level, setLevel] = useState(1);
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
-  
+
   // Currency States
   const [silver, setSilver] = useState<number>(50);
   const [copper, setCopper] = useState<number>(0);
@@ -60,7 +62,7 @@ export function App() {
   // Inventory & Shop States
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [freeGearText, setFreeGearText] = useState<string>('Backpack, Flint & Steel, worn travel clothing, tiny trinkets');
-  
+
   // Modal State
   const [isShopOpen, setIsShopOpen] = useState<boolean>(false);
   const [shopCategory, setShopCategory] = useState<'Weapon' | 'Armor' | 'Equipment' | 'Magic' | null>(null);
@@ -76,11 +78,10 @@ export function App() {
     hair: 'Bald',
     looks: 'Athletic',
     skin: 'Pale',
-    speech: 'Formal'
+    speech: 'Formal',
   });
 
   const [bond, setBond] = useState<string>('Roll a bond with the PC to your left...');
-
   const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
   const [background, setBackground] = useState<string>('');
 
@@ -93,6 +94,14 @@ export function App() {
   const [selectedTalents, setSelectedTalents] = useState<string[]>(['']);
   const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
 
+  // Mutations State
+  const [mutationsCatalog, setMutationsCatalog] = useState<any[]>([]);
+  const [selectedMutations, setSelectedMutations] = useState<string[]>([]);
+
+  // Spells State
+  const [spellsCatalog, setSpellsCatalog] = useState<Spell[]>([]);
+  const [assignedSpells, setAssignedSpells] = useState<Record<string, number>>({});
+
   // Sync logic: calculates max talent slots based on Ancestry and Level
   useEffect(() => {
     const isHuman = selectedAncestryId === 'human';
@@ -101,7 +110,7 @@ export function App() {
 
     setMaxTalentSlots(calculatedMax);
 
-    setSelectedTalents(prev => {
+    setSelectedTalents((prev) => {
       if (prev.length < calculatedMax) {
         return [...prev, ...Array(calculatedMax - prev.length).fill('')];
       } else {
@@ -115,35 +124,92 @@ export function App() {
   // ==========================================
   useEffect(() => {
     Promise.all([
-      fetch('/traits.json').then(res => res.json()),
-      fetch('/backgrounds.json').then(res => res.json()),
-      fetch('/ancestries.json').then(res => res.json()),
-      fetch('/talents.json').then(res => res.json()),
-      fetch('/names.json').then(res => res.json())
+      fetch('/traits.json').then((res) => res.json()),
+      fetch('/backgrounds.json').then((res) => res.json()),
+      fetch('/ancestries.json').then((res) => res.json()),
+      fetch('/talents.json').then((res) => res.json()),
+      fetch('/names.json').then((res) => res.json()),
+      fetch('/mutations.json').then((res) => res.json()),
+      fetch('/spells.json').then((res) => res.json()),
     ])
-      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData]) => {
+      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData, mutationsData, spellsData]) => {
         setTraitDatabase(traitsData);
         setBackgroundDatabase(backgroundData);
         setAncestriesCatalog(ancestriesData);
         setTalentsCatalog(talentsData);
         setNameDatabase(namesData);
+        setMutationsCatalog(mutationsData);
+        setSpellsCatalog(spellsData);
       })
-      .catch(err => console.error("Error initializing background data layers:", err));
+      .catch((err) => console.error('Error initializing background data layers:', err));
   }, []);
 
   // ==========================================
-  // 4. SYNCHRONOUS REAL-TIME EQUATIONS
+  // 4. CONTAINER & INVENTORY SYNC
+  // ==========================================
+  // Determine all granted container slots from active talents
+  const grantedContainers: ContainerSlot[] = [];
+  selectedTalents.forEach((talentId, talentIndex) => {
+    if (!talentId) return;
+    const talentObj = talentsCatalog.find((t) => t.id === talentId);
+    if (talentObj && talentObj.containerGrant) {
+      const grant = talentObj.containerGrant;
+      for (let c = 0; c < grant.count; c++) {
+        grantedContainers.push({
+          slotId: `container_${talentIndex}_${c}`,
+          sourceTalentName: talentObj.name,
+          containerType: grant.type,
+          itemSlots: grant.itemSlots,
+        });
+      }
+    }
+  });
+
+  // Sync Granted Container Items to Inventory State
+  useEffect(() => {
+    setInventory((prev) => {
+      // Retain all non-container items
+      const nonContainerItems = prev.filter((item) => !item.id.startsWith('spell_container_'));
+
+      // Generate items for current granted containers
+      const containerItems: InventoryItem[] = [];
+      grantedContainers.forEach((container) => {
+        if (container.itemSlots === 0) return; // 0 slot items (e.g. Eldritch Feast) don't take inventory space
+
+        const assignedSpellId = assignedSpells[container.slotId];
+        const spell = spellsCatalog.find((s) => s.id === assignedSpellId);
+        const spellName = spell ? spell.name : 'Empty';
+        const itemName = `${spellName} ${container.containerType.toLowerCase()}`;
+
+        containerItems.push({
+          id: `spell_container_${container.slotId}`,
+          name: itemName,
+          type: 'Equipment',
+          slots: container.itemSlots,
+          cost_sp: 0,
+          cost_cp: 0,
+          details: spell ? spell.description : `Houses a ${container.containerType.toLowerCase()} spell.`,
+          quantity: 1,
+        });
+      });
+
+      return [...nonContainerItems, ...containerItems];
+    });
+  }, [selectedTalents, assignedSpells, spellsCatalog]);
+
+  // ==========================================
+  // 5. SYNCHRONOUS REAL-TIME EQUATIONS
   // ==========================================
   const maxStatBonus = Math.min(5, level + 2);
   const dynamicAttributeChoices = Array.from({ length: maxStatBonus + 1 }, (_, i) => maxStatBonus - i);
-  
-  const totalUsedSlots = inventory.reduce((total, item) => total + (item.slots * item.quantity), 0);
+
+  const totalUsedSlots = inventory.reduce((total, item) => total + item.slots * item.quantity, 0);
   const maxCarryingCapacity = 10 + stats.strength;
-  const hitPoints = 10 + stats.strength + ((level - 1) * 5);
+  const hitPoints = 10 + stats.strength + (level - 1) * 5;
 
   const armorBonus = inventory
-    .filter(item => item.type === 'Armor')
-    .reduce((sum, item) => sum + (item.quantity * 2), 0); // Simplified AC calculation from inventory
+    .filter((item) => item.type === 'Armor')
+    .reduce((sum, item) => sum + item.quantity * 2, 0);
   const armorClass = 10 + stats.dexterity + armorBonus;
 
   const expectedTotalPoints = 6 + (level - 1);
@@ -151,10 +217,14 @@ export function App() {
   const unspentPoints = expectedTotalPoints - spentPoints;
 
   // ==========================================
-  // 5. HELPER ACTION FUNCTIONS
+  // 6. HELPER ACTION FUNCTIONS
   // ==========================================
   const handleStatChange = (statName: keyof Abilities, value: number) => {
-    setStats(prev => ({ ...prev, [statName]: value }));
+    setStats((prev) => ({ ...prev, [statName]: value }));
+  };
+
+  const handleAssignSpell = (slotId: string, spellId: number) => {
+    setAssignedSpells((prev) => ({ ...prev, [slotId]: spellId }));
   };
 
   const rollStartingSilver = () => {
@@ -174,14 +244,12 @@ export function App() {
     setHasRolledSilver(true);
   };
 
-  // --- SHOP & INVENTORY TRANSACTIONS ---
   const handleBuyItem = (catalogItem: CatalogItem) => {
     const totalCopperWealth = silver * 10 + copper;
     const itemCostInCopper = catalogItem.cost_sp * 10 + catalogItem.cost_cp;
 
     if (totalCopperWealth < itemCostInCopper) return;
 
-    // Deduct Wealth
     let newCopper = copper - catalogItem.cost_cp;
     let newSilver = silver - catalogItem.cost_sp;
     if (newCopper < 0) {
@@ -192,14 +260,13 @@ export function App() {
     setSilver(Math.max(0, newSilver));
     setCopper(Math.max(0, newCopper));
 
-    // Update Inventory Quantities
-    setInventory(prev => {
-      const existingIndex = prev.findIndex(i => i.id === catalogItem.id);
+    setInventory((prev) => {
+      const existingIndex = prev.findIndex((i) => i.id === catalogItem.id);
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + 1
+          quantity: updated[existingIndex].quantity + 1,
         };
         return updated;
       } else {
@@ -213,32 +280,28 @@ export function App() {
             cost_sp: catalogItem.cost_sp,
             cost_cp: catalogItem.cost_cp,
             details: catalogItem.details,
-            quantity: 1
-          }
+            quantity: 1,
+          },
         ];
       }
     });
   };
 
   const handleSellItem = (itemId: string) => {
-    const itemToSell = inventory.find(i => i.id === itemId);
+    const itemToSell = inventory.find((i) => i.id === itemId);
     if (!itemToSell) return;
 
-    // Refund 100% of cost (or adjust if partial refund desired)
-    const refundSp = itemToSell.cost_sp;
-    const refundCp = itemToSell.cost_cp;
+    setSilver((prev) => prev + itemToSell.cost_sp);
+    setCopper((prev) => prev + itemToSell.cost_cp);
 
-    setSilver(prev => prev + refundSp);
-    setCopper(prev => prev + refundCp);
-
-    setInventory(prev => {
-      const existing = prev.find(i => i.id === itemId);
+    setInventory((prev) => {
+      const existing = prev.find((i) => i.id === itemId);
       if (!existing) return prev;
 
       if (existing.quantity > 1) {
-        return prev.map(i => i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i);
+        return prev.map((i) => (i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i));
       } else {
-        return prev.filter(i => i.id !== itemId);
+        return prev.filter((i) => i.id !== itemId);
       }
     });
   };
@@ -253,7 +316,7 @@ export function App() {
       strength: values[0],
       dexterity: values[1],
       willpower: values[2],
-      wisdom: values[3]
+      wisdom: values[3],
     });
   };
 
@@ -282,7 +345,7 @@ export function App() {
       hair: traitDatabase.hair ? traitDatabase.hair[rollDice(20)] : 'Bald',
       looks: traitDatabase.looks ? traitDatabase.looks[rollDice(20)] : 'Athletic',
       skin: traitDatabase.skin ? traitDatabase.skin[rollDice(20)] : 'Pale',
-      speech: traitDatabase.speech ? traitDatabase.speech[rollDice(20)] : 'Formal'
+      speech: traitDatabase.speech ? traitDatabase.speech[rollDice(20)] : 'Formal',
     });
   };
 
@@ -294,18 +357,36 @@ export function App() {
   const rollCharacterBackground = () => {
     if (!backgroundDatabase) return;
     const roll = Math.floor(Math.random() * 100) + 1;
-    const match = backgroundDatabase.find(b => roll >= b.min && roll <= b.max);
+    const match = backgroundDatabase.find((b) => roll >= b.min && roll <= b.max);
     if (match) setBackground(match.text);
   };
 
   const handleAncestryChange = (ancestryId: string) => {
     setSelectedAncestryId(ancestryId);
-    const foundAncestry = ancestriesCatalog.find(a => a.id === ancestryId);
+    const foundAncestry = ancestriesCatalog.find((a) => a.id === ancestryId);
     if (foundAncestry && foundAncestry.fixedTalentIds?.length > 0) {
       setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
     } else {
       setSelectedAncestryTalentId('');
     }
+  };
+
+  const handleMutationsCountChange = (count: number) => {
+    setSelectedMutations((prev) => {
+      if (prev.length < count) {
+        return [...prev, ...Array(count - prev.length).fill('')];
+      } else {
+        return prev.slice(0, count);
+      }
+    });
+  };
+
+  const handleMutationChange = (index: number, mutationId: string) => {
+    setSelectedMutations((prev) => {
+      const next = [...prev];
+      next[index] = mutationId;
+      return next;
+    });
   };
 
   const exportCharacter = () => {
@@ -321,8 +402,10 @@ export function App() {
       selectedAncestryId,
       selectedAncestryTalentId,
       selectedTalents,
+      selectedMutations,
+      assignedSpells,
       freeGearText,
-      inventory
+      inventory,
     };
     navigator.clipboard.writeText(btoa(JSON.stringify(save)));
     setExportMessage('Character code copied to clipboard!');
@@ -346,6 +429,8 @@ export function App() {
       if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
       if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
       if (decoded.selectedTalents) setSelectedTalents(decoded.selectedTalents);
+      if (decoded.selectedMutations) setSelectedMutations(decoded.selectedMutations);
+      if (decoded.assignedSpells) setAssignedSpells(decoded.assignedSpells);
       if (decoded.inventory) setInventory(decoded.inventory);
 
       setImportString('');
@@ -354,8 +439,16 @@ export function App() {
     }
   };
 
+  // Active Spells List for Display & Printing
+  const activeSpellsList = grantedContainers
+    .map((container) => {
+      const spellId = assignedSpells[container.slotId];
+      return spellsCatalog.find((s) => s.id === spellId);
+    })
+    .filter(Boolean) as Spell[];
+
   // ==========================================
-  // 6. RENDER INTERFACE STRUCTURAL LAYOUT
+  // 7. RENDER INTERFACE STRUCTURAL LAYOUT
   // ==========================================
   return (
     <div className="app-container">
@@ -363,7 +456,6 @@ export function App() {
         <h1 className="main-title">Glaive v3 Character Builder</h1>
 
         <div className="card-stack">
-
           {/* Profile Header Details */}
           <div className="card-panel">
             <h3 className="panel-heading">Character Details</h3>
@@ -384,7 +476,9 @@ export function App() {
                 <label className="field-label">PC Level</label>
                 <select value={level} onChange={(e) => setLevel(Number(e.target.value))}>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((lvl) => (
-                    <option key={lvl} value={lvl}>Level {lvl}</option>
+                    <option key={lvl} value={lvl}>
+                      Level {lvl}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -397,13 +491,16 @@ export function App() {
             <p className="instruction-text">Select or roll your hero's origins and formative experiences:</p>
             <select
               value={background}
-              onChange={e => setBackground(e.target.value)}
+              onChange={(e) => setBackground(e.target.value)}
               className="form-select-spacing"
             >
               <option value="">-- Select a Background --</option>
-              {backgroundDatabase && backgroundDatabase.map((b, idx) => (
-                <option key={idx} value={b.text}>{b.name}</option>
-              ))}
+              {backgroundDatabase &&
+                backgroundDatabase.map((b, idx) => (
+                  <option key={idx} value={b.text}>
+                    {b.name}
+                  </option>
+                ))}
             </select>
             {background && <div className="description-box">{background}</div>}
             <button type="button" onClick={rollCharacterBackground} className="btn-primary full-width">
@@ -436,9 +533,11 @@ export function App() {
                 <div key={s} className="attribute-field">
                   <label className="attribute-label">{s}</label>
                   <span className="attribute-desc">{attributeDescriptions[s]}</span>
-                  <select value={stats[s]} onChange={e => handleStatChange(s, Number(e.target.value))}>
-                    {dynamicAttributeChoices.map(v => (
-                      <option key={v} value={v}>+{v}</option>
+                  <select value={stats[s]} onChange={(e) => handleStatChange(s, Number(e.target.value))}>
+                    {dynamicAttributeChoices.map((v) => (
+                      <option key={v} value={v}>
+                        +{v}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -465,7 +564,7 @@ export function App() {
             selectedTalents={selectedTalents}
             maxTalentSlots={maxTalentSlots}
             onTalentChange={(index, val) => {
-              setSelectedTalents(prev => {
+              setSelectedTalents((prev) => {
                 const next = [...prev];
                 next[index] = val;
                 return next;
@@ -473,21 +572,32 @@ export function App() {
             }}
           />
 
-          {/* 5. Traits Card */}
+          {/* 5. Spells & Magic Containers Module */}
+          <SpellsCard
+            spellsCatalog={spellsCatalog}
+            grantedContainers={grantedContainers}
+            assignedSpells={assignedSpells}
+            onAssignSpell={handleAssignSpell}
+            willpowerBonus={stats.willpower}
+          />
+
+          {/* 6. Traits Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Traits</h3>
             <div className="traits-grid">
-              {(Object.keys(traits) as Array<keyof CharacterTraits>).map(t => (
+              {(Object.keys(traits) as Array<keyof CharacterTraits>).map((t) => (
                 <div key={t} className="form-group">
                   <label className="field-label uppercase-label">{t}</label>
                   <select
                     value={traits[t]}
-                    onChange={e => setTraits(prev => ({ ...prev, [t]: e.target.value }))}
+                    onChange={(e) => setTraits((prev) => ({ ...prev, [t]: e.target.value }))}
                     className="form-select-spacing"
                   >
                     {traitDatabase && traitDatabase[t] ? (
                       traitDatabase[t].map((val: string, idx: number) => (
-                        <option key={idx} value={val}>{val}</option>
+                        <option key={idx} value={val}>
+                          {val}
+                        </option>
                       ))
                     ) : (
                       <option value={traits[t]}>{traits[t]}</option>
@@ -501,21 +611,17 @@ export function App() {
             </button>
           </div>
 
-          {/* 6. Character Bond Card */}
+          {/* 7. Character Bond Card */}
           <div className="card-panel">
             <h3 className="panel-heading">Bond</h3>
             <p className="instruction-text">Relationship with PC to your left:</p>
-            <textarea
-              value={bond}
-              onChange={e => setBond(e.target.value)}
-              className="bond-textarea"
-            />
+            <textarea value={bond} onChange={(e) => setBond(e.target.value)} className="bond-textarea" />
             <button type="button" onClick={rollCharacterBond} className="btn-primary full-width">
               🎲 Roll Character Bond
             </button>
           </div>
 
-          {/* 7. Silver & Gear Card */}
+          {/* 8. Silver & Gear Card */}
           <SilverAndGearCard
             silver={silver}
             copper={copper}
@@ -534,11 +640,21 @@ export function App() {
             onSellItem={handleSellItem}
           />
 
-          {/* 8. Character Dynamic Status Dashboard Card */}
+          {/* 9. Mutations Card */}
+          <MutationsCard
+            mutationsCatalog={mutationsCatalog}
+            selectedMutations={selectedMutations}
+            onMutationsCountChange={handleMutationsCountChange}
+            onMutationChange={handleMutationChange}
+          />
+
+          {/* 10. Character Dynamic Status Dashboard Card */}
           <div className={`card-panel status-card ${totalUsedSlots > maxCarryingCapacity ? 'overencumbered' : ''}`}>
             <h3 className="panel-heading">Character Status</h3>
             <div className="status-grid">
-              <div><strong className="vital-label">Hit Points:</strong> {hitPoints} HP</div>
+              <div>
+                <strong className="vital-label">Hit Points:</strong> {hitPoints} HP
+              </div>
               <div>
                 <strong className="vital-label">Armor Class:</strong> {armorClass} AC
               </div>
@@ -551,7 +667,7 @@ export function App() {
             </p>
           </div>
 
-          {/* 9. Save / Load Clipboard System */}
+          {/* 11. Save / Load Clipboard System */}
           <div className="card-panel save-load-panel">
             <h3 className="panel-heading">Save / Load Tools</h3>
             <button type="button" onClick={exportCharacter} className="btn-primary full-width mb-2">
@@ -565,14 +681,13 @@ export function App() {
               type="text"
               placeholder="Paste save code..."
               value={importString}
-              onChange={e => setImportString(e.target.value)}
+              onChange={(e) => setImportString(e.target.value)}
               className="import-input mb-2"
             />
             <button type="button" onClick={importCharacter} className="btn-secondary full-width">
               📥 Load Save Code
             </button>
           </div>
-
         </div>
       </div>
 
@@ -597,46 +712,92 @@ export function App() {
             <span className="print-label">Name:</span> <span>{characterName}</span>
           </div>
           <div className="print-header-field print-silver-width">
-            <span className="print-label">Silver:</span> <span>{silver} sp {copper} cp</span>
+            <span className="print-label">Silver:</span>{' '}
+            <span>
+              {silver} sp {copper} cp
+            </span>
           </div>
         </div>
 
         <div className="print-grid">
           <div>
             <div className="print-stats-grid">
-              <div className="print-stat-item"><b>STR:</b> +{stats.strength}</div>
-              <div className="print-stat-item"><b>HP:</b> {hitPoints}</div>
-              <div className="print-stat-item"><b>DEX:</b> +{stats.dexterity}</div>
-              <div className="print-stat-item"><b>AC:</b> {armorClass}</div>
-              <div className="print-stat-item"><b>WIL:</b> +{stats.willpower}</div>
-              <div className="print-stat-item"><b>Level:</b> {level}</div>
-              <div className="print-stat-item"><b>WIS:</b> +{stats.wisdom}</div>
-              <div className="print-stat-item"><b>XP:</b> ——</div>
+              <div className="print-stat-item">
+                <b>STR:</b> +{stats.strength}
+              </div>
+              <div className="print-stat-item">
+                <b>HP:</b> {hitPoints}
+              </div>
+              <div className="print-stat-item">
+                <b>DEX:</b> +{stats.dexterity}
+              </div>
+              <div className="print-stat-item">
+                <b>AC:</b> {armorClass}
+              </div>
+              <div className="print-stat-item">
+                <b>WIL:</b> +{stats.willpower}
+              </div>
+              <div className="print-stat-item">
+                <b>Level:</b> {level}
+              </div>
+              <div className="print-stat-item">
+                <b>WIS:</b> +{stats.wisdom}
+              </div>
+              <div className="print-stat-item">
+                <b>XP:</b> ——
+              </div>
             </div>
 
             <div className="print-traits-grid">
-              <div><strong>Gender:</strong> {traits.gender}</div>
-              <div><strong>Hair:</strong> {traits.hair}</div>
-              <div><strong>Looks:</strong> {traits.looks}</div>
-              <div><strong>Skin:</strong> {traits.skin}</div>
-              <div className="span-2"><strong>Speech:</strong> {traits.speech}</div>
+              <div>
+                <strong>Gender:</strong> {traits.gender}
+              </div>
+              <div>
+                <strong>Hair:</strong> {traits.hair}
+              </div>
+              <div>
+                <strong>Looks:</strong> {traits.looks}
+              </div>
+              <div>
+                <strong>Skin:</strong> {traits.skin}
+              </div>
+              <div className="span-2">
+                <strong>Speech:</strong> {traits.speech}
+              </div>
             </div>
 
             <div className="print-narrative-block">
-              <div className="mb-2"><strong>Bond:</strong> {bond}</div>
-              <div><strong>Background:</strong> {background}</div>
+              <div className="mb-2">
+                <strong>Bond:</strong> {bond}
+              </div>
+              <div>
+                <strong>Background:</strong> {background}
+              </div>
             </div>
           </div>
 
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
-            {inventory.filter(i => i.type === 'Weapon').length === 0 ? (
+            {inventory.filter((i) => i.type === 'Weapon').length === 0 ? (
               <div className="print-no-weapons">No weapons equipped. Unarmed Strike: 1d4 damage.</div>
             ) : (
               <div className="print-weapons-list">
-                {inventory.filter(i => i.type === 'Weapon').map((w, idx) => (
+                {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => (
                   <div key={idx} className="print-weapon-row">
                     ⚔️ <strong>{w.name} ({w.quantity})</strong> — Slots: {w.slots * w.quantity}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <h4 className="print-section-title">Spells & Magic Items</h4>
+            {activeSpellsList.length === 0 ? (
+              <div className="print-no-weapons">No spells bound.</div>
+            ) : (
+              <div className="print-weapons-list">
+                {activeSpellsList.map((spell, idx) => (
+                  <div key={idx} className="print-weapon-row">
+                    ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
                   </div>
                 ))}
               </div>
@@ -649,7 +810,9 @@ export function App() {
                 return (
                   <div
                     key={i}
-                    className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${i >= maxCarryingCapacity ? 'locked' : ''}`}
+                    className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
+                      i >= maxCarryingCapacity ? 'locked' : ''
+                    }`}
                   >
                     <span className="print-slot-number">{i + 1}</span>
                     <span className={i >= maxCarryingCapacity ? 'strike-through' : ''}>

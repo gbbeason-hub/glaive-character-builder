@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Area of Effect",
+    "description": "Increase number of creatures affected or AOE by 50% or 1 zone."
+  },
+  {
+    "id": 2,
+    "name": "Clone",
+    "description": "You achieve elemental chaos mitosis, creating a duplicate spell."
+  },
+  {
+    "id": 3,
+    "name": "Duration",
+    "description": "Increase duration by 50%."
+  },
+  {
+    "id": 4,
+    "name": "Effortless",
+    "description": "The spell does +1d6 damage or is easy to cast."
+  },
+  {
+    "id": 5,
+    "name": "Elongate",
+    "description": "When cast, a weaker copy of the spell bounces to a new target. Any saves to apply/resist the spell's effects become one step easier per bounce. Damage or number of creatures affected is reduced by 1 die per bounce. The spell continues until resisted or it fizzles."
+  },
+  {
+    "id": 6,
+    "name": "Facile",
+    "description": "Once per Long Rest you can cast the spell as a free action."
+  },
+  {
+    "id": 7,
+    "name": "Hardened",
+    "description": "The save to cast/resist is made with ADV/DISADV."
+  },
+  {
+    "id": 8,
+    "name": "New Flavor",
+    "description": "The spell changes elements or orientations. Light can be cast as darkness, charm person as frenzy, frost wave can do acid damage, etc."
+  },
+  {
+    "id": 9,
+    "name": "Range",
+    "description": "Double the spell's range."
+  },
+  {
+    "id": 10,
+    "name": "Recyclable",
+    "description": "3-in-6 chance of the spell immediately returning to its spellbook for reuse."
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Blindsight",
+    "description": "Tough flesh covers your eye sockets. You no longer 'see' per se, but you can sense vibrations regardless of light levels (R1)."
+  },
+  {
+    "id": 2,
+    "name": "Extra Limbs",
+    "description": "Sprout an extra pair of 1-4 arms, 5-6 legs. GMs may give situational ADV (climbing, grappling, jumping, etc.)."
+  },
+  {
+    "id": 3,
+    "name": "So Many Eyes",
+    "description": "You grow 1d6 functioning eyes. Roll location for each. 1. Back 2. Chest 3. Forehead 4. Mouth 5. Back of Head 6. Palm of hand."
+  },
+  {
+    "id": 4,
+    "name": "Goat Boy",
+    "description": "Your head turns into that of a goat and your feet become cloven hooves. WIL save or 'faint' at any loud sounds or sudden movements. You are an excellent climber."
+  },
+  {
+    "id": 5,
+    "name": "Cuttlefish Face",
+    "description": "You grow a great wet mass of tentacles where your nose and mouth used to be. Your mouth is a little beak."
+  },
+  {
+    "id": 6,
+    "name": "Misshapen Brute",
+    "description": "Bones break and muscles tear as your body reshapes itself into a lopsided juggernaut. Gain +2 STR & -2 WIS."
+  },
+  {
+    "id": 7,
+    "name": "Elongation",
+    "description": "Part of your body doubles in length. 1d6: 1-2 arms, 3-4 legs, 5 torso, 6 neck."
+  },
+  {
+    "id": 8,
+    "name": "Prehensile Tongue",
+    "description": "Your tongue swells and elongates until it is as long as your arms. You can hold objects with it. Speech is nearly impossible. Eating is difficult. Your saliva causes blindness."
+  },
+  {
+    "id": 9,
+    "name": "Tentacle Guts",
+    "description": "A seething mass of jelly-like pseudopods erupts from your abdomen. ADV when attempting to grapple."
+  },
+  {
+    "id": 10,
+    "name": "Saltwater Horror",
+    "description": "Random body part (1d6: 1-2 legs, 3-5 arms, 6 head) replaced with the parts from a 1d12: 1-3 jelly, 4-6 crustacean, 7-9 mollusk, 10-12 gastropod."
+  },
+  {
+    "id": 11,
+    "name": "Extra Mouths",
+    "description": "You grow 1d6 extra functioning mouths. They mutter and grumble constantly. Roll location for each. 1. Back, 2. Chest, 3. Forehead, 4. Rump, 5. Back of Head, 6. Palm of hand."
+  },
+  {
+    "id": 12,
+    "name": "Kemp’s Entropic Spiral",
+    "description": "Become a feral goblin. This overrides or incorporates any previous mutations. Gain +2 DEX, -1 STR, WIL, & WIS."
+  }
+]
