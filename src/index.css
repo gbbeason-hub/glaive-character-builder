@@ -1,4 +1,3 @@
-
 /* ==========================================================================
    1. GLOBAL VARIABLES & THEMING
    ========================================================================== */
@@ -211,11 +210,14 @@ textarea:focus {
 }
 
 /* ==========================================================================
-   5. PRINT ENGINE OVERRIDES (@media print)
+   5. PRINT ENGINE & WEB FONT IMPORTS (@media print)
    ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Lilita+One&family=Rubik+Dirt&display=swap');
+
 .printable-character-sheet {
   display: none !important;
 }
+
 
 @media print {
   :root {
@@ -228,7 +230,7 @@ textarea:focus {
     background-color: #fff !important;
     background: #fff !important;
     color: #000 !important;
-    font-family: 'Georgia', 'Times New Roman', serif !important;
+    font-family: 'Amaranth', sans-serif !important;
   }
 
   .builder-interface-view,
@@ -253,10 +255,11 @@ textarea:focus {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 10px !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
     color: #000 !important;
     background-color: #fff !important;
+    font-family: 'Amaranth', sans-serif !important;
   }
 
   * {
@@ -265,10 +268,197 @@ textarea:focus {
   }
 
   @page {
-    size: letter;
-    margin: 1.2cm;
+    size: letter portrait;
+    margin: 0.25in;
+  }
+
+  /* --- NAME & SILVER HEADER (Single Page Fit) --- */
+  .print-header-row {
+    margin-bottom: 12px !important;
+    align-items: baseline !important;
+  }
+  .print-header-row .print-label {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 16pt !important;
+  }
+
+  /* --- CONDITIONS TRACKER --- */
+  .print-conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px 8px;
+    margin-bottom: 10px !important;
+    font-size: 10pt !important;
+    line-height: 1.1 !important;
+  }
+
+  .print-condition-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-family: 'Amaranth', sans-serif !important;
+  }
+
+  .print-condition-checkbox {
+    width: 15px !important;
+    height: 15px !important;
+    margin: 0 !important;
+  }
+
+  /* PC Name text = Amaranth (as requested), sized cleanly */
+  .print-header-row span:not(.print-label) {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 16pt !important;
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  /* Coins write-in line */
+  .print-silver-width {
+    border-bottom: none !important;
+    width: auto !important;
+    text-align: right;
+  }
+  .print-coin-write-box {
+    display: inline-block;
+    border-bottom: 1.5px solid #000;
+    min-width: 70px;
+    text-align: left;
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 11pt !important;
+    padding-left: 4px;
+    margin-right: 4px;
+  }
+
+  /* --- STATS: Labels = Rubik Dirt, Values = Lilita One --- */
+  .print-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 10px;
+    margin-bottom: 12px;
+  }
+  .print-stat-item {
+    border: none !important;
+    padding: 4px 8px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Stat Labels (STR, DEX, HP, Level, etc.) -> Rubik Dirt */
+  .print-stat-label-font {
+    font-family: 'Rubik Dirt', display, sans-serif !important;
+    font-size: 10.5pt !important;
+  }
+
+  /* Stat Values (+3, 13, 1, etc.) -> Lilita One */
+  .print-stat-value-font {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 12pt !important;
+  }
+
+  /* Attribute Box Styling */
+  .print-stat-item.print-attribute-box {
+    background-color: #434343 !important;
+    border-radius: 4px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-stat-item.print-attribute-box .print-stat-label-font,
+  .print-stat-item.print-attribute-box .print-stat-value-font {
+    color: #ffffff !important;
+  }
+
+  /* Vitals Styling (No background box) */
+  .print-stat-item.print-vital-box {
+    background-color: transparent !important;
+    padding: 2px 4px !important;
+  }
+  .print-stat-item.print-vital-box .print-stat-label-font,
+  .print-stat-item.print-vital-box .print-stat-value-font {
+    color: #000000 !important;
+  }
+
+  /* --- CLEANUP --- */
+  .print-trackers-section,
+  .print-trackers-section div,
+  .print-trackers-section label {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Unified Typography for Traits, Narrative, and Free Gear Blocks */
+  .print-traits-grid,
+  .print-traits-grid div,
+  .print-narrative-block,
+  .print-narrative-block div,
+  .print-freegear-block,
+  .print-freegear-block div {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 10.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-traits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 10px;
+    margin-bottom: 8px !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .print-traits-grid .span-2 {
+    grid-column: span 2;
+  }
+
+  .print-narrative-block,
+  .print-freegear-block {
+    margin-bottom: 8px !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .print-traits-grid strong,
+  .print-narrative-block strong,
+  .print-freegear-block strong {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 10.5pt !important;
+  }
+
+  /* --- WEAPON CARDS COMPACT REFINEMENT --- */
+  .print-weapon-card {
+    border: none !important;
+    border-bottom: 1.5px solid #000 !important;
+    padding: 0 0 3px 0 !important;    /* Reduced top padding to 0 */
+    margin-bottom: 3px !important;    /* Reduced space between cards */
+  }
+
+  .print-weapon-top {
+    border-bottom: none !important;
+    margin-bottom: 0px !important;   /* Pulls stat numbers directly under the header line */
+    font-size: 10.5pt !important;
+    line-height: 1.1 !important;
+  }
+
+  .print-weapon-stats > div > div:first-child {
+    font-family: 'Amaranth', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 12pt !important;       /* Clean, compact stat value size */
+    line-height: 1.1 !important;
+  }
+
+  .print-weapon-stat-label {
+    font-size: 8pt !important;
+    text-transform: uppercase;
+    font-family: 'Lilita One', cursive !important;
+    line-height: 1.0 !important;
   }
 }
+
 
 /* ==========================================================================
    6. TALENTS CARD STYLES
@@ -387,14 +577,12 @@ textarea:focus {
   color: var(--text-h);
 }
 
-
 /* ==========================================
    6b TALENT SELECTOR MODAL STYLES
    ================================          */
 .talent-modal-card {
   max-width: 620px;
 }
-
 
 .talent-filter-container {
   padding: 12px 20px;
@@ -475,7 +663,7 @@ textarea:focus {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  line-clamp: 2; /* Standard property to satisfy the linter */
+  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: var(--font-body);
@@ -511,7 +699,6 @@ textarea:focus {
   background-color: #fff;
 }
 
-/* Segmented Control Selector Bar */
 .talent-segmented-control {
   display: flex;
   background-color: #f1f5f9;
@@ -546,7 +733,6 @@ textarea:focus {
   color: var(--text-h);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-
 
 /* ==========================================
    7. TRAITS CARD 2-COLUMN GRID STYLES
@@ -610,7 +796,6 @@ textarea:focus {
   }
 }
 
-/* Purse Column & Conversion Subtext */
 .purse-column {
   display: flex;
   flex-direction: column;
@@ -815,7 +1000,6 @@ textarea:focus {
   border-bottom: none;
 }
 
-/* 1) Item Name: Single Line, No Wrap */
 .item-name-cell {
   font-weight: bold;
   color: var(--text-h);
@@ -823,14 +1007,12 @@ textarea:focus {
   width: 1%;
 }
 
-/* 2) Center Alignment for Number & Slots */
 .th-center,
 .td-center {
   text-align: center;
   width: 60px;
 }
 
-/* 3) Cost Column: Wider, single line */
 .th-cost,
 .td-cost {
   white-space: nowrap;
@@ -840,14 +1022,12 @@ textarea:focus {
   text-align: center;
 }
 
-/* Notes Column */
 .item-notes-cell {
   color: #555;
   font-size: 12px;
   line-height: 1.3;
 }
 
-/* Sell Action Column */
 .actions-header,
 .actions-cell {
   text-align: center;
@@ -867,6 +1047,7 @@ textarea:focus {
 .sell-row-btn:hover {
   background: #edf2f7;
 }
+
 /* ==========================================
    9. ITEM SHOP MODAL STYLES
    ========================================== */
@@ -884,7 +1065,6 @@ textarea:focus {
   padding: 16px;
 }
 
-/* Shopkeeper Flavor Text & Left Group Layout */
 .modal-title-left-group {
   display: flex;
   align-items: baseline;
@@ -901,6 +1081,7 @@ textarea:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .modal-card {
   background: #fff;
   width: 100%;
@@ -959,8 +1140,8 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-height: 320px; /* Keeps modal height stable when filtered items change */
-  max-height: 450px; /* Prevents it from growing infinitely */
+  min-height: 320px;
+  max-height: 450px;
 }
 
 .shop-item-card {
@@ -1226,7 +1407,6 @@ textarea:focus {
   resize: vertical;
 }
 
-/* Wallet Controls */
 .field-label-small {
   font-family: var(--font-body);
   font-size: 12px;
@@ -1266,7 +1446,6 @@ textarea:focus {
   cursor: pointer;
 }
 
-/* Status Dashboard */
 .status-card.overencumbered {
   background-color: #fff0f0;
 }
@@ -1299,7 +1478,6 @@ textarea:focus {
   font-weight: bold;
 }
 
-/* Inventory & Catalog */
 .starter-gear-notice {
   background-color: #ebf8ff;
   border-left: 4px solid #3182ce;
@@ -1350,7 +1528,6 @@ textarea:focus {
 .catalog-scroll-box.short { max-height: 150px; }
 .catalog-scroll-box.tall { max-height: 250px; }
 
-/* Item Card Specifics */
 .item-card {
   display: flex;
   justify-content: space-between;
@@ -1427,7 +1604,6 @@ textarea:focus {
   color: #fff;
 }
 
-/* Save / Load */
 .save-load-panel {
   background-color: #fafafa;
 }
@@ -1459,9 +1635,6 @@ textarea:focus {
   font-family: var(--font-body);
 }
 
-/* ==========================================
-   10. ATTRIBUTE BONUS BADGES
-   ========================================== */
 .instruction-block {
   margin-bottom: 16px;
 }
@@ -1491,7 +1664,6 @@ textarea:focus {
   margin-top: 4px;
 }
 
-/* Attribute Helper Subtext */
 .attribute-desc {
   font-size: 12px;
   color: #6b7280;
@@ -1501,9 +1673,6 @@ textarea:focus {
   line-height: 1.2;
 }
 
-/* ==========================================
-   11. LEVEL BONUS BADGE & PANEL HEADINGS
-   ========================================== */
 .panel-heading-row {
   display: flex;
   justify-content: space-between;
@@ -1516,7 +1685,7 @@ textarea:focus {
 }
 
 .level-bonus-badge {
-  background-color: #d97706; /* Warm amber warning/notification color */
+  background-color: #d97706;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -1527,32 +1696,71 @@ textarea:focus {
   font-family: var(--font-body);
 }
 
-/* Print Utilities */
-.print-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+/* Print Utilities & Sheet Layout */
+.print-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
 .print-header-field { border-bottom: 2px solid #000; padding-bottom: 2px; }
-.print-label { font-weight: bold; font-size: 18px; }
-.print-silver-width { width: 150px; margin-left: 20px; }
-.print-grid { display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 30px; }
-.print-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-.print-stat-item { border-bottom: 2px solid #000; padding-bottom: 2px; }
-.print-traits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; margin-bottom: 25px; font-size: 14px; }
+.print-label { font-weight: bold; font-size: 16px; }
+.print-silver-width { width: 140px; margin-left: 20px; }
+.print-grid { display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 20px; }
+.print-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+.print-stat-item { border: 1.5px solid #000; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.print-stat-item b { font-family: 'Lilita One', cursive; font-size: 14px; }
+.print-traits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-bottom: 15px; font-size: 12px; border: 1px solid #000; padding: 8px; }
 .print-traits-grid .span-2 { grid-column: span 2; }
-.print-narrative-block { margin-bottom: 25px; font-size: 14px; }
-.print-section-title { margin: 0 0 10px 0; border-bottom: 2px solid #000; padding-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
-.print-no-weapons { color: #666; font-style: italic; margin-bottom: 20px; font-size: 13px; }
-.print-weapons-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.print-weapon-row { padding: 6px; border-bottom: 1px dashed #000; font-size: 13px; }
-.print-inventory-grid { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid #000; border-radius: 4px; font-size: 13px; }
-.print-inventory-slot { display: flex; border-bottom: 1px solid #000; padding: 5px; min-height: 24px; align-items: center; }
+.print-narrative-block { margin-bottom: 15px; font-size: 12px; border: 1px solid #000; padding: 8px; }
+.print-section-title { margin: 12px 0 6px 0; border-bottom: 2px solid #000; padding-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; }
+.print-no-weapons { color: #666; font-style: italic; margin-bottom: 15px; font-size: 12px; }
+.print-weapons-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+.print-weapon-row { padding: 4px; border-bottom: 1px dashed #000; font-size: 12px; }
+.print-inventory-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid #000; border-radius: 4px; font-size: 11px; }
+.print-inventory-slot { 
+  display: flex; 
+  border-bottom: 1px solid #000; 
+  padding: 6px 8px; 
+  min-height: 28px; 
+  align-items: center; }
 .print-inventory-slot.border-right { border-right: 1px solid #000; }
 .print-inventory-slot.locked { background-color: #f0f0f0; }
-.print-slot-number { font-weight: bold; width: 22px; color: #666; }
+.print-slot-number { font-weight: bold; width: 18px; color: #666; }
 .strike-through { text-decoration: line-through; color: #999; }
 .underline { text-decoration: underline; }
 
-/* ==========================================
-   12. BOND INPUT & PRINT STYLING HELPERS
-   ================================          */
+/* Conditions Table for Print */
+.print-conditions-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #000;
+  margin-bottom: 15px;
+  font-size: 10px;
+}
+.print-conditions-table td {
+  border: 1px solid #000;
+  padding: 4px 6px;
+  text-align: center;
+  font-family: 'Amaranth', sans-serif;
+  font-weight: 700;
+}
+
+/* Talents Table for Print */
+.print-talents-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #000;
+  margin-bottom: 15px;
+  font-size: 11px;
+}
+.print-talents-table th, .print-talents-table td {
+  border: 1px solid #000;
+  padding: 4px 6px;
+  text-align: left;
+}
+.print-talents-table th {
+  background-color: #eee;
+  font-family: 'Lilita One', cursive;
+  font-size: 12px;
+}
+
+/* Bond & Status Helpers */
 .bond-input-row {
   display: flex;
   gap: 10px;
@@ -1572,8 +1780,8 @@ textarea:focus {
 }
 
 .print-weapon-card {
-  border: 1px solid #000;
-  padding: 8px;
+  border: 1.5px solid #000;
+  padding: 6px 8px;
   margin-bottom: 6px;
 }
 
@@ -1581,17 +1789,20 @@ textarea:focus {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #000;
-  padding-bottom: 4px;
+  padding-bottom: 3px;
   margin-bottom: 4px;
+  font-size: 12px;
 }
 
 .print-weapon-stats {
   display: flex;
   justify-content: space-around;
   text-align: center;
+  font-size: 12px;
 }
 
 .print-weapon-stat-label {
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
+  font-family: 'Lilita One', cursive;
 }

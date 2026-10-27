@@ -141,7 +141,8 @@ The fonts to use in the PDF & web site
 - [DONE] Phase 14 Name: Add name generator
 - [DONE] Phase 18 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
 - [DONE] Phase 19 Bonds: Add input field for PC name? Change input to dropdown?
-
+- [DONE] Phase 20 Character Status: Change name? Stack? Bubble?
+    - No changes
 - [DONE] Phase 21 Wallet & Coinage: 
 - [DONE] Phase 22 Background: No longer shows description.  
 - [DONE] Phase 22b Backgrounds: Confirm `backgrounds.json` matches rulebook. 
@@ -187,28 +188,37 @@ The fonts to use in the PDF & web site
         * [DONE] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
         * [DONE] **Always Armed (Thief)**: Always grants a hidden dagger.
 
+    - [DONE] Phase 24 Save & Load: Update style to be consistent
+        - [DONE] Add download JSON
+        - [DONE] Remove Base64 encoding for plain JSON
+        - [DONE] Button consistency
 
-
-## PDF Weapons 
-- no damage coming through for standard weapons. 
-- no bonus shown for standard weapons. 
 
 ## 🏁 Next Target Steps
 
 
-
-
-- [NEW] Phase 15 Conditions: Add conditions (maybe only for PDF print)
-- [NEW] Phase 16 Fatigue & Encumbrance: Mark fatigue and Encumbrance
 - [NEW] Phase 17 Pregen All: One button to randomize everything!
-- [NEW] Phase 20 Character Status: Change name? Stack? Bubble?
 
+1. Fix Weapon Calculation Bugs (Immediate Priority) [DONE] 
+Weapons: missing damage & bonus for standard weapons: Fixing how damage strings and stat-based attack bonuses (Strength/Wisdom/Dexterity) populate into standard weapons in state/inventory ensures all inventory items render complete combat data before working on visual templates.
+
+2. Page Orientation & Multi-Page Structural Layout
+Change to Landscape? & Better Looking Front/Back Layout: Deciding on portrait vs. landscape upfront determines your grid dimensions and column structure. Establishing the 2-page (Front/Back) print layout blueprint now dictates where every section lives.
+
+3. Font & Visual Styling Consistency
+Use webapp fonts for PDF elements: Applying @media print CSS rules to import and map your display/body fonts (Lilita One, Amaranth) to the print stylesheet ensures visual harmony between the builder UI and the printed sheet.
+
+4. Print-Only Mechanical Trackers [DONE] 
+Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print blocks/checkboxes for tracking Conditions, Fatigue, and Encumbrance slots on the printed sheet once the main layout is locked down.
         
 
-- [DONE] Phase 24 Save & Load: Update style to be consistent
-    - Button consistency
-
 - [NEW] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
+    - [NEW] Change to landscape ? 
+    - [NEW] Use the same fonts for the same elements as in the webapp UI
+    - [DONE] Conditions, Fatigue, Encumberance: Add to PDF
+    - [NEW] Weapons: no damage coming through for standard weapons
+    - [NEW] Weapons: no bonus shown for standard weapons
+    - [DONE] Weapons: Add range, throwable, subtype keys
 
 - [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
 

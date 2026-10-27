@@ -10,6 +10,8 @@ import { SpellsCard } from './SpellsCard';
 import type { Spell, ContainerSlot } from './SpellsCard';
 import { CompanionsCard } from './CompanionsCard';
 import type { CompanionSlot } from './CompanionsCard';
+import { calculateWeaponCombatStats } from './utils/combatCalculations';
+import conditionsData from '../public/conditions.json';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -89,6 +91,7 @@ export function App() {
 
   const [traitDatabase, setTraitDatabase] = useState<any>(null);
   const [nameDatabase, setNameDatabase] = useState<NameDatabase | null>(null);
+
 
   const [traits, setTraits] = useState<CharacterTraits>({
     gender: 'Masculine',
@@ -535,6 +538,11 @@ export function App() {
             cost_cp: catalogItem.cost_cp,
             details: catalogItem.details,
             quantity: 1,
+            // PRESERVE WEAPON PROPERTIES FROM CATALOG:
+            damage: (catalogItem as any).damage,
+            subtype: (catalogItem as any).subtype,
+            range: (catalogItem as any).range,
+            bonus: (catalogItem as any).bonus,
           },
         ];
       }
@@ -983,9 +991,13 @@ export function App() {
             <button type="button" onClick={downloadCharacterFile} className="btn-primary full-width mb-2">
               💾 Download Character (.json)
             </button>
-            <button type="button" onClick={() => window.print()} className="btn-primary full-width mb-2">
-              🖨️ Export PDF / Print Character Sheet
-            </button>
+            <button 
+  type="button" 
+  onClick={() => window.print()} 
+  className="btn-primary full-width mb-2"
+>
+  🖨️ Export PDF / Print Character Sheet
+</button>
             {exportMessage && <p className="success-message">{exportMessage}</p>}
             <input
               type="text"
@@ -1021,59 +1033,54 @@ export function App() {
           <div className="print-header-field flex-1">
             <span className="print-label">Name:</span> <span>{characterName}</span>
           </div>
-          <div className="print-header-field print-silver-width">
-            <span className="print-label">Silver:</span>{' '}
-            <span>
-              {silver} sp {copper} cp
-            </span>
-          </div>
+       
+            <div className="print-header-field print-silver-width">
+              <span className="print-label">Silver:</span>{' '}
+              <span>
+                <span className="print-coin-write-box">{silver}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> sp{' '}
+                <span className="print-coin-write-box">{copper}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> cp
+              </span>
+            </div>
+
         </div>
 
         <div className="print-grid">
           <div>
             <div className="print-stats-grid">
-              <div className="print-stat-item">
-                <b>STR:</b> +{stats.strength}
-              </div>
-              <div className="print-stat-item">
-                <b>HP:</b> {hitPoints}
-              </div>
-              <div className="print-stat-item">
-                <b>DEX:</b> +{stats.dexterity}
-              </div>
-              <div className="print-stat-item">
-                <b>AC:</b> {armorClass}
-              </div>
-              <div className="print-stat-item">
-                <b>WIL:</b> +{stats.willpower}
-              </div>
-              <div className="print-stat-item">
-                <b>Level:</b> {level}
-              </div>
-              <div className="print-stat-item">
-                <b>WIS:</b> +{stats.wisdom}
-              </div>
-              <div className="print-stat-item">
-                <b>XP:</b> ——
-              </div>
-            </div>
+  <div className="print-stat-item print-attribute-box">
+    <b className="print-stat-label-font">STR:</b> <span className="print-stat-value-font">+{stats.strength}</span>
+  </div>
+  <div className="print-stat-item print-vital-box">
+    <b className="print-stat-label-font">HP:</b> <span className="print-stat-value-font">{hitPoints}</span>
+  </div>
+  <div className="print-stat-item print-attribute-box">
+    <b className="print-stat-label-font">DEX:</b> <span className="print-stat-value-font">+{stats.dexterity}</span>
+  </div>
+  <div className="print-stat-item print-vital-box">
+    <b className="print-stat-label-font">AC:</b> <span className="print-stat-value-font">{armorClass}</span>
+  </div>
+  <div className="print-stat-item print-attribute-box">
+    <b className="print-stat-label-font">WIL:</b> <span className="print-stat-value-font">+{stats.willpower}</span>
+  </div>
+  <div className="print-stat-item print-vital-box">
+    <b className="print-stat-label-font">Level:</b> <span className="print-stat-value-font">{level}</span>
+  </div>
+  <div className="print-stat-item print-attribute-box">
+    <b className="print-stat-label-font">WIS:</b> <span className="print-stat-value-font">+{stats.wisdom}</span>
+  </div>
+  <div className="print-stat-item print-vital-box">
+    <b className="print-stat-label-font">XP:</b> <span className="print-stat-value-font">——</span>
+  </div>
+</div>
+
+
 
             <div className="print-traits-grid">
-              <div>
-                <strong>Gender:</strong> {traits.gender}
-              </div>
-              <div>
-                <strong>Hair:</strong> {traits.hair}
-              </div>
-              <div>
-                <strong>Looks:</strong> {traits.looks}
-              </div>
-              <div>
-                <strong>Skin:</strong> {traits.skin}
-              </div>
-              <div className="span-2">
-                **Speech:** {traits.speech}
-              </div>
+              <div><strong>Gender:</strong> {traits.gender}</div>
+              <div><strong>Hair:</strong> {traits.hair}</div>
+              <div><strong>Looks:</strong> {traits.looks}</div>
+              <div><strong>Skin:</strong> {traits.skin}</div>
+              <div className="span-2"><strong>Speech:</strong> {traits.speech}</div>
             </div>
 
             <div className="print-narrative-block">
@@ -1084,37 +1091,73 @@ export function App() {
                 <strong>Background:</strong> {background}
               </div>
             </div>
-          </div>
+
+            
+
+            {/* MECHANICAL TRACKERS */}
+            <div className="print-trackers-section" style={{ marginTop: '12px' }}>
+              
+              <h4 className="print-section-title">Conditions</h4>
+              <div className="print-conditions-grid">
+                {conditionsData.map((cond) => (
+                  <label key={cond.name} className="print-condition-item" title={cond.effects}>
+                    <input type="checkbox" className="print-condition-checkbox" /> {cond.name}
+                  </label>
+                ))}
+              </div>
+
+              <h4 className="print-section-title">Fatigue & Status</h4>
+              <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
+                <div style={{ flex: 1, border: '1px solid #000', padding: '6px', fontSize: '12px' }}>
+                  <strong>Fatigue Level:</strong> <span style={{ display: 'inline-block', width: '30px', borderBottom: '1px solid #000', textAlign: 'center' }}></span>
+                </div>
+                <div style={{ flex: 1, border: '1px solid #000', padding: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <input type="checkbox" style={{ width: '13px', height: '13px', margin: 0 }} />
+                  <strong>Encumbered</strong>
+                </div>
+              </div>
+            </div>
+
+</div>
 
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
-            {inventory.filter((i) => i.type === 'Weapon').length === 0 ? (
-              <div className="print-no-weapons">No weapons equipped. Unarmed Strike: 1d4 damage.</div>
-            ) : (
-              <div className="print-weapons-list">
-                {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => (
-                  <div key={idx} className="print-weapon-card">
-                    <div className="print-weapon-top">
-                      <strong>Weapon:</strong> <span>{w.name} ({w.quantity})</span>
-                    </div>
-                    <div className="print-weapon-stats">
-                      <div>
-                        <div>{w.bonus !== undefined ? `+${w.bonus}` : '+0'}</div>
-                        <div className="print-weapon-stat-label">Bonus</div>
-                      </div>
-                      <div>
-                        <div>{w.damage || '—'}</div>
-                        <div className="print-weapon-stat-label">Damage</div>
-                      </div>
-                      <div>
-                        <div>{w.range || 'R0'}</div>
-                        <div className="print-weapon-stat-label">Range</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+{inventory.filter((i) => i.type === 'Weapon').length === 0 ? (
+  <div className="print-no-weapons">No weapons equipped. Unarmed Strike: 1d4 damage.</div>
+) : (
+  <div className="print-weapons-list">
+    {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => {
+      // Calculate dynamic attack and damage bonuses based on weapon type & stats!
+      const combatStats = calculateWeaponCombatStats(w, {
+        strength: stats.strength,
+        wisdom: stats.wisdom,
+        dexterity: stats.dexterity,
+      });
+
+      return (
+        <div key={idx} className="print-weapon-card">
+          <div className="print-weapon-top">
+            <strong>Weapon:</strong> <span>{w.name} ({w.quantity})</span>
+          </div>
+          <div className="print-weapon-stats">
+            <div>
+              <div>{combatStats.attackBonusDisplay}</div>
+              <div className="print-weapon-stat-label">Attack</div>
+            </div>
+            <div>
+              <div>{combatStats.damageDisplay}</div>
+              <div className="print-weapon-stat-label">Damage</div>
+            </div>
+            <div>
+              <div>{w.range || 'R0'}</div>
+              <div className="print-weapon-stat-label">Range</div>
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
 
             <h4 className="print-section-title">Spells & Magic Items</h4>
             {activeSpellsList.length === 0 ? (
@@ -1130,6 +1173,12 @@ export function App() {
             )}
 
             <h4 className="print-section-title">Inventory (Capacity: {maxCarryingCapacity} Slots)</h4>
+            
+            <div className="print-freegear-block">
+              <strong>Starting Gear:</strong> {freeGearText}
+            </div>
+ 
+ 
             <div className="print-inventory-grid">
               {Array.from({ length: 18 }).map((_, i) => {
                 const item = inventory[i];

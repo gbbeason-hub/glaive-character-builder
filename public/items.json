@@ -3,221 +3,263 @@
     "id": "w_01",
     "name": "Dagger",
     "type": "Weapon",
+    "subtype": "melee",
+    "throwable": true,
     "damage": "1d6",
     "slots": 0.5,
     "hands": 1,
     "cost_sp": 1,
     "cost_cp": 0,
-    "details": "R1 (thrown)*, concealable"
+    "details": "R1 (thrown)*, concealable",
+    "range": "R0/R1"
   },
   {
     "id": "w_02",
     "name": "Hand axe",
     "type": "Weapon",
+    "subtype": "melee",
+    "throwable": true,
     "damage": "1d6",
     "slots": 0.5,
     "hands": 1,
     "cost_sp": 1,
     "cost_cp": 0,
-    "details": "R1 (thrown)*, concealable"
+    "details": "R1 (thrown)*, concealable",
+    "range": "R0/R1"
   },
   {
     "id": "w_03",
     "name": "Spear",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_04",
     "name": "Sword",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_05",
     "name": "Mace",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_06",
     "name": "Battle Axe",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_07",
     "name": "Flail",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_08",
     "name": "Staff",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_09",
     "name": "War Hammer",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d8",
     "slots": 1,
     "hands": 1,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "1d10 damage if wielded 2-handed"
+    "details": "1d10 damage if wielded 2-handed",
+    "range": "R0"
   },
   {
     "id": "w_10",
     "name": "Bec de Corbin",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
     "cost_sp": 20,
     "cost_cp": 0,
-    "details": "Knock an enemy prone on a critical hit"
+    "details": "Knock an enemy prone on a critical hit",
+    "range": "R0"
   },
   {
     "id": "w_11",
     "name": "Maul",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
     "cost_sp": 20,
     "cost_cp": 0,
-    "details": "Knock an enemy prone on a critical hit"
+    "details": "Knock an enemy prone on a critical hit",
+    "range": "R0"
   },
   {
     "id": "w_12",
     "name": "Zweihander",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
     "cost_sp": 20,
     "cost_cp": 0,
-    "details": "Knock an enemy prone on a critical hit"
+    "details": "Knock an enemy prone on a critical hit",
+    "range": "R0"
   },
   {
     "id": "w_13",
     "name": "Greataxe",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d12",
     "slots": 2,
     "hands": 2,
     "cost_sp": 20,
     "cost_cp": 0,
-    "details": "Knock an enemy prone on a critical hit"
+    "details": "Knock an enemy prone on a critical hit",
+    "range": "R0"
   },
   {
     "id": "w_14",
     "name": "Hand crossbow",
     "type": "Weapon",
+    "subtype": "mechanical",
     "damage": "1d4",
     "slots": 0.5,
     "hands": 1,
     "cost_sp": 5,
     "cost_cp": 0,
-    "details": "R1, concealable (includes ammunition)"
+    "details": "R1, concealable (includes ammunition)",
+    "range": "R1"
   },
   {
     "id": "w_15",
     "name": "Sling",
     "type": "Weapon",
+    "subtype": "bow",
     "damage": "1d4",
     "slots": 0.5,
     "hands": 1,
     "cost_sp": 5,
     "cost_cp": 0,
-    "details": "R1, concealable (includes ammunition)"
+    "details": "R1, concealable (includes ammunition)",
+    "range": "R1"
   },
   {
     "id": "w_16",
     "name": "Shortbow",
     "type": "Weapon",
+    "subtype": "bow",
     "damage": "1d6",
     "slots": 1,
     "hands": 2,
     "cost_sp": 10,
     "cost_cp": 0,
-    "details": "R2 ranged weapon"
+    "details": "R2 ranged weapon",
+    "range": "R2"
   },
   {
     "id": "w_17",
     "name": "Warbow",
     "type": "Weapon",
+    "subtype": "bow",
     "damage": "1d8",
     "slots": 2,
     "hands": 2,
     "cost_sp": 35,
     "cost_cp": 0,
-    "details": "R3 heavy ranged weapon"
+    "details": "R3 heavy ranged weapon",
+    "range": "R3"
   },
   {
     "id": "w_18",
     "name": "Crossbow",
     "type": "Weapon",
+    "subtype": "mechanical",
     "damage": "1d8",
     "slots": 2,
     "hands": 2,
     "cost_sp": 35,
     "cost_cp": 0,
-    "details": "R3 heavy mechanics ranged weapon"
+    "details": "R3 heavy mechanics ranged weapon",
+    "range": "R3"
   },
   {
     "id": "w_19",
     "name": "Musket",
     "type": "Weapon",
+    "subtype": "mechanical",
     "damage": "1d10",
     "slots": 2,
     "hands": 2,
     "cost_sp": 100,
     "cost_cp": 0,
-    "details": "R2, AP2^, exchange move to reload, damage explodes**"
+    "details": "R2, AP2^, exchange move to reload, damage explodes**",
+    "range": "R2"
   },
   {
     "id": "w_20",
     "name": "Arquebus",
     "type": "Weapon",
+    "subtype": "mechanical",
     "damage": "1d10",
     "slots": 2,
     "hands": 2,
     "cost_sp": 100,
     "cost_cp": 0,
-    "details": "R2, AP2^, exchange move to reload, damage explodes**"
+    "details": "R2, AP2^, exchange move to reload, damage explodes**",
+    "range": "R2"
   },
   {
     "id": "w_21",
@@ -234,6 +276,7 @@
     "id": "w_22",
     "name": "Unarmed Attack",
     "type": "Weapon",
+    "subtype": "melee",
     "damage": "1d4",
     "slots": 0,
     "hands": 0,
