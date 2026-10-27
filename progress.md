@@ -69,6 +69,12 @@ To build a lightweight, fully client-side character generator and digital workbo
 - **Catalog & Database Wiring:** Integrated `items.json` lookups with inline item fallbacks to push background-granted equipment directly into the character's active inventory.
 - **Companion Sync Integration:** Tied background-granted companions and talent-granted companion slots into the active companion state and sheet rendering.
 
+## 🗡️ Schema-Driven Hidden Item Grants (`hiddenItemGrant`)
+- **Data-Driven Architecture**: Refactored talent item grants to use a generic, schema-driven `hiddenItemGrant` object in `talents.json` (such as for the Thief's **Always Armed** talent) rather than hardcoding talent IDs in application logic.
+- **Zero-Slot Encumbrance**: Granted hidden items automatically set `slots: 0` so they occupy no inventory capacity while remaining visible in the character's active inventory.
+- **Full Weapon Integration & Dynamic PDF Rendering**: When `type: "Weapon"` is declared with `damage` and `range` attributes, the item automatically registers under the PDF's **Weapons & Combat Attacks** block with complete stat breakdowns. Attack bonuses are left unforced so they naturally reflect the character's relevant ability modifiers.
+- **Reactive Lifecycle Management**: An automated `useEffect` hook in `App.tsx` dynamically adds and removes hidden items whenever talents are selected or deselected.
+
 ## PDF Resources
 The fonts to use in the PDF & web site
 - Lalita One for field labels, table titles, section titles, and attribute, HP, AC values
@@ -76,6 +82,16 @@ The fonts to use in the PDF & web site
 - Rubik Dirt for attribute, hit point, & armor class abbreviated labels
 
 ## 🏁 Completed Steps
+
+- [DONE] Categories of Changes (for talents & backgrounds). 
+    - [DONE] HP Changes (e.g., Brick Outhouse, Veteran, Professional Killer)
+    - [DONE] AC Changes (e.g., Stone Skin, Two-Weapon Fighter, Shield Master)
+    - [DONE] Item Slot Changes (e.g., Secret Compartments, Handy if Not Handsome, Pack Rat)
+    - [DONE] Suboptions / Choices (e.g., Draconic Bloodlines, Radiance)
+    - [DONE] Companions / Summons (e.g., Dog Whisperer, Familiar, Hospitaller)
+        - familiar ?
+
+
 - [DONE] Phase 4 Mihtril: Add mithril armor 
 - [DONE] Phase 5 Ancestry: Add Ancestry selection with talent
 - [DONE] Phase 5b Ancestry: remove underline
@@ -84,37 +100,7 @@ The fonts to use in the PDF & web site
 - [DONE] Phase 7b Talents: Refactored all inline styling out of `TalentsCard.tsx` and moved clean class rules over to `index.css`.
 - [DONE] Phase 7c Talents: Panel head is smaller than others
 - [DONE] Phase 7d Talents: Alternative to long list of talents. Dialog?
-
-- [DONE] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
-- [DONE] Phase 9a Ability Max: Add logic for controlling maximum value of ability scores 
-- [DONE] Phase 9b Ability: Add instructions, descriptions. Fix Constitution > Willpower, Attributes > Abilities
-- [DONE] Phase 10 Traits: Add dropdowns. Stack labels? 2 columns?
-- [DONE] Phase 11 Mutations: Add space for mutations
-    - no background adds mutations
-    - no trait adds mutations
-    - no talent adds mutations
-    - no talent adds mutations
-    - [DONE] Created `Mutations.json` from option Doom & Mishaps table
-    - [DONE] Created `spell_mutations.json`
-    - [DONE] Check mutations.json vs rules
-- [DONE] Phase 12 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
-- [DONE] Phase 13 Magic: Add magic items & spells
-    - [DONE] Created spells.json
-    - [DONE] Build modal to select spells
-- [DONE] Phase 14 Name: Add name generator
-- [DONE] Phase 18 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
-- [DONE] Phase 21 Wallet & Coinage: 
-- [DONE] Phase 22 Background: No longer shows description.  
-- [DONE] Phase 22b Backgrounds: Confirm `backgrounds.json` matches rulebook. 
-    - Backgrounds that grant talents: add logic
-        - 58–59 (Poacher): Gain the Dog Whisperer talent
-
-## PDF Weapons 
-- no damage coming through for standard weapons. 
-- no bonus shown for standard weapons. 
-
-## 🏁 Next Target Steps
-- [NEW] Phase 7e Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
+- [DONE] Phase 7e Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
     - Once per long rest . . . . (see Die Hard) -- Give a checkbox?
     - Favor of the Gods: AC & HP effects
     - Heaven’s Crushing Touch: HP effects
@@ -134,22 +120,33 @@ The fonts to use in the PDF & web site
     - Thief: Always Prepared - 
     - Shield Master: AC bonus for shield
     - Dark Bloodline: Suboptions
-- [WIP] Categories of Changes. 
-    - [DONE] HP Changes (e.g., Brick Outhouse, Veteran, Professional Killer)
-    - [DONE] AC Changes (e.g., Stone Skin, Two-Weapon Fighter, Shield Master)
-    - [DONE] Item Slot Changes (e.g., Secret Compartments, Handy if Not Handsome, Pack Rat)
-    - [DONE] Suboptions / Choices (e.g., Draconic Bloodlines, Radiance)
-    - [WIP] Companions / Summons (e.g., Dog Whisperer, Familiar, Hospitaller)
-        - familiar ?
+- [DONE] Phase 8 Advancement: Add logic for leveling up characters -- HP, talents, ability bonus. 
+- [DONE] Phase 9a Ability Max: Add logic for controlling maximum value of ability scores 
+- [DONE] Phase 9b Ability: Add instructions, descriptions. Fix Constitution > Willpower, Attributes > Abilities
+- [DONE] Phase 10 Traits: Add dropdowns. Stack labels? 2 columns?
+- [DONE] Phase 11 Mutations: Add space for mutations
+    - no background adds mutations
+    - no trait adds mutations
+    - no talent adds mutations
+    - no talent adds mutations
+    - [DONE] Created `Mutations.json` from option Doom & Mishaps table
+    - [DONE] Created `spell_mutations.json`
+    - [DONE] Check mutations.json vs rules
+- [DONE] Phase 12 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
+- [DONE] Phase 13 Magic: Add magic items & spells
+    - [DONE] Created spells.json
+    - [DONE] Build modal to select spells
+- [DONE] Phase 13 Magic: Add magic items & spells
+    - [DONE] Check spells.json vs rules
+- [DONE] Phase 14 Name: Add name generator
+- [DONE] Phase 18 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
+- [DONE] Phase 19 Bonds: Add input field for PC name? Change input to dropdown?
 
-- [WIP] Phase 13 Magic: Add magic items & spells
-    - [NEW] Check spells.json vs rules
-
-- [NEW] Phase 15 Conditions: Add conditions (maybe only for PDF print)
-- [NEW] Phase 16 Fatigue & Encumbrance: Mark fatigue and Encumbrance
-- [NEW] Phase 17 Pregen All: One button to randomize everything!
-- [NEW] Phase 19 Bonds: Add input field for PC name? Change input to dropdown?
-- [NEW] Phase 20 Character Status: Change name? Stack? Bubble?
+- [DONE] Phase 21 Wallet & Coinage: 
+- [DONE] Phase 22 Background: No longer shows description.  
+- [DONE] Phase 22b Backgrounds: Confirm `backgrounds.json` matches rulebook. 
+    - Backgrounds that grant talents: add logic
+        - 58–59 (Poacher): Gain the Dog Whisperer talent
 - [DONE] Phase 23 Equipment & Inventory: 
     - [DONE] Updated JSON for items (cp,sp,hands,etc.)
     - [DONE] UI mockups for cards & modals
@@ -184,16 +181,31 @@ The fonts to use in the PDF & web site
         * [DONE] **Always Prepared (Thief)**: Unlocks purchasing Unlabelled Packages (1 slot items).
         * [DONE] **Eldritch Feast (Magic User)**: Spell is grafted directly to soul (0 item slots required).
         * [DONE] **Sword Wizard (Magic User)**: Replaces standard spellbooks with rune-carved swords.
-    - [NEW] Items from talents
+    - [DONE] Items from talents
         * [DONE] **Dog Whisperer (Hunter)**: Grants a dog companion.
         * [DONE] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
         * [DONE] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
-        * [NEW] **Always Armed (Thief)**: Always grants a hidden dagger.
+        * [DONE] **Always Armed (Thief)**: Always grants a hidden dagger.
 
+
+
+## PDF Weapons 
+- no damage coming through for standard weapons. 
+- no bonus shown for standard weapons. 
+
+## 🏁 Next Target Steps
+
+
+
+
+- [NEW] Phase 15 Conditions: Add conditions (maybe only for PDF print)
+- [NEW] Phase 16 Fatigue & Encumbrance: Mark fatigue and Encumbrance
+- [NEW] Phase 17 Pregen All: One button to randomize everything!
+- [NEW] Phase 20 Character Status: Change name? Stack? Bubble?
 
         
 
-- [NEW] Phase 24 Save & Load: 
+- [DONE] Phase 24 Save & Load: Update style to be consistent
     - Button consistency
 
 - [NEW] Phase 25 PDF cleanup: Better looking front & back layout for character sheet

@@ -670,14 +670,23 @@
     "description": "Use your action to grant a willing creature +1d4 to their next save or attack roll.",
     "repeatable": false
   },
-  {
-    "id": "gen_thief_always_armed",
-    "name": "Always Armed",
-    "type": "talent",
-    "set": "Thief",
-    "description": "Even when you have been disarmed, you still have a dagger hidden on you.",
-    "repeatable": false
-  },
+{
+  "id": "gen_thief_always_armed",
+  "name": "Always Armed",
+  "type": "talent",
+  "set": "Thief",
+  "description": "Even when you have been disarmed, you still have a dagger hidden on you.",
+  "repeatable": false,
+  "hiddenItemGrant": {
+    "name": "Hidden Dagger",
+    "type": "Weapon",
+    "damage": "1d4",
+    "range": "Close",
+    "slots": 0,
+    "cost_sp": 0,
+    "details": "Concealed on your person. Always available even when disarmed."
+  }
+},
 
 {
     "id": "gen_thief_always_prepared",

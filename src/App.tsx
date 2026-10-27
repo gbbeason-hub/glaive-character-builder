@@ -98,7 +98,8 @@ export function App() {
     speech: 'Formal',
   });
 
-  const [bond, setBond] = useState<string>('Roll a bond with the PC to your left...');
+  const [bond, setBond] = useState<string>('');
+  const [bondPcName, setBondPcName] = useState<string>('');
 
   // Backgrounds
   const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
@@ -362,7 +363,6 @@ export function App() {
         const spell = spellsCatalog.find((s) => s.id === assignedSpellId);
         const spellName = spell ? spell.name : 'Empty';
         
-        // Dynamic name: e.g. "Fireball Rune Sword" or just "Rune Sword" / "Spellbook"
         const itemName = container.weaponProfile 
           ? `${spellName !== 'Empty' ? `${spellName} ` : ''}${container.weaponProfile.name}`
           : `${spellName} ${container.containerType.toLowerCase()}`;
@@ -387,6 +387,37 @@ export function App() {
   }, [selectedTalents, background, assignedSpells, spellsCatalog, talentsCatalog]);
 
   // ==========================================
+  // 4.6. GENERIC HIDDEN ITEM / WEAPON SYNC
+  // ==========================================
+  useEffect(() => {
+    setInventory((prev) => {
+      const filteredInventory = prev.filter((item) => !item.id.startsWith('talent_hidden_'));
+      const dynamicHiddenGrants: InventoryItem[] = [];
+
+      allActiveTalentIds.forEach((talentId, index) => {
+        const talentObj = talentsCatalog.find((t) => t.id === talentId);
+        if (talentObj && (talentObj as any).hiddenItemGrant) {
+          const grant = (talentObj as any).hiddenItemGrant;
+          dynamicHiddenGrants.push({
+            id: `talent_hidden_${index}_${talentId}`,
+            name: grant.name,
+            type: grant.type || 'Equipment',
+            slots: grant.slots ?? 0,
+            cost_sp: grant.cost_sp ?? 0,
+            cost_cp: grant.cost_cp ?? 0,
+            details: grant.details || '',
+            quantity: 1,
+            damage: grant.damage,
+            range: grant.range,
+          });
+        }
+      });
+
+      return [...filteredInventory, ...dynamicHiddenGrants];
+    });
+  }, [selectedTalents, background, talentsCatalog]);
+
+  // ==========================================
   // 4.5. COMPANIONS SYNC
   // ==========================================
   const grantedCompanions: CompanionSlot[] = [];
@@ -402,7 +433,6 @@ export function App() {
     }
   });
 
-  // Background granted companions (e.g., Chicken Baron)
   if (backgroundDatabase && background) {
     const currentBg = backgroundDatabase.find((b) => b.text === background);
     if (currentBg && currentBg.grantedCompanions) {
@@ -434,6 +464,11 @@ export function App() {
   const expectedTotalPoints = 6 + (level - 1);
   const spentPoints = stats.strength + stats.dexterity + stats.willpower + stats.wisdom;
   const unspentPoints = expectedTotalPoints - spentPoints;
+
+  // Flattened bonds array for dropdown selection
+  const allAvailableBonds = traitDatabase && traitDatabase.bonds 
+    ? traitDatabase.bonds.flat() 
+    : [];
 
   // ==========================================
   // 6. HELPER ACTION FUNCTIONS
@@ -570,7 +605,9 @@ export function App() {
 
   const rollCharacterBond = () => {
     if (!traitDatabase || !traitDatabase.bonds) return;
-    setBond(traitDatabase.bonds[Math.floor(Math.random() * 6)][Math.floor(Math.random() * 6)]);
+    const row = traitDatabase.bonds[Math.floor(Math.random() * traitDatabase.bonds.length)];
+    const randomBond = row[Math.floor(Math.random() * row.length)];
+    setBond(randomBond);
   };
 
   const rollCharacterBackground = () => {
@@ -608,40 +645,60 @@ export function App() {
     });
   };
 
-  const exportCharacter = () => {
-    const save = {
-      name: characterName,
-      level,
-      stats,
-      silver,
-      copper,
-      traits,
-      bond,
-      background,
-      selectedAncestryId,
-      selectedAncestryTalentId,
-      selectedTalents,
-      selectedMutations,
-      assignedSpells,
-      freeGearText,
-      inventory,
-    };
-    navigator.clipboard.writeText(btoa(JSON.stringify(save)));
-    setExportMessage('Character code copied to clipboard!');
+  const getCharacterSaveObject = () => ({
+    name: characterName,
+    level,
+    stats,
+    silver,
+    copper,
+    traits,
+    bond,
+    bondPcName,
+    background,
+    selectedAncestryId,
+    selectedAncestryTalentId,
+    selectedTalents,
+    selectedMutations,
+    assignedSpells,
+    freeGearText,
+    inventory,
+  });
+
+  const exportCharacterClipboard = () => {
+    const saveJson = JSON.stringify(getCharacterSaveObject(), null, 2);
+    navigator.clipboard.writeText(saveJson);
+    setExportMessage('Character JSON copied to clipboard!');
+    setTimeout(() => setExportMessage(''), 3000);
+  };
+
+  const downloadCharacterFile = () => {
+    const saveJson = JSON.stringify(getCharacterSaveObject(), null, 2);
+    const blob = new Blob([saveJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeName = (characterName || 'Character').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    link.download = `${safeName}_level_${level}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setExportMessage('Character JSON file downloaded!');
     setTimeout(() => setExportMessage(''), 3000);
   };
 
   const importCharacter = () => {
     try {
-      const decoded = JSON.parse(atob(importString.trim()));
-      setCharacterName(decoded.name);
+      const decoded = JSON.parse(importString.trim());
+      setCharacterName(decoded.name || 'Glaive Hero');
       setLevel(decoded.level || 1);
-      setStats(decoded.stats);
+      setStats(decoded.stats || { strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
       setSilver(decoded.silver ?? 50);
       setCopper(decoded.copper ?? 0);
       setHasRolledSilver(true);
       setTraits(decoded.traits || traits);
-      setBond(decoded.bond || bond);
+      setBond(decoded.bond || '');
+      setBondPcName(decoded.bondPcName || '');
       setBackground(decoded.background || '');
       setFreeGearText(decoded.freeGearText || freeGearText);
 
@@ -653,12 +710,13 @@ export function App() {
       if (decoded.inventory) setInventory(decoded.inventory);
 
       setImportString('');
+      setExportMessage('Character successfully loaded!');
+      setTimeout(() => setExportMessage(''), 3000);
     } catch {
-      alert('Error loading character code.');
+      alert('Error loading character code. Ensure it is valid JSON.');
     }
   };
 
-  // Active Spells List for Display & Printing
   const activeSpellsList = grantedContainers
     .map((container) => {
       const spellId = assignedSpells[container.slotId];
@@ -835,7 +893,27 @@ export function App() {
           <div className="card-panel">
             <h3 className="panel-heading">Bond</h3>
             <p className="instruction-text">Relationship with PC to your left:</p>
-            <textarea value={bond} onChange={(e) => setBond(e.target.value)} className="bond-textarea" />
+            <div className="bond-input-row mb-2">
+              <input
+                type="text"
+                placeholder="PC Name"
+                value={bondPcName}
+                onChange={(e) => setBondPcName(e.target.value)}
+                className="bond-pc-input"
+              />
+              <select
+                value={bond}
+                onChange={(e) => setBond(e.target.value)}
+                className="bond-select-input"
+              >
+                <option value="">-- Select a Bond --</option>
+                {allAvailableBonds.map((bText: string, idx: number) => (
+                  <option key={idx} value={bText}>
+                    {bText}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button type="button" onClick={rollCharacterBond} className="btn-primary full-width">
               🎲 Roll Character Bond
             </button>
@@ -896,24 +974,27 @@ export function App() {
             </p>
           </div>
 
-          {/* 11. Save / Load Clipboard System */}
+          {/* 11. Save / Load / Export Tools */}
           <div className="card-panel save-load-panel">
             <h3 className="panel-heading">Save / Load Tools</h3>
-            <button type="button" onClick={exportCharacter} className="btn-primary full-width mb-2">
-              📁 Copy Save Code
+            <button type="button" onClick={exportCharacterClipboard} className="btn-primary full-width mb-2">
+              📋 Copy JSON to Clipboard
             </button>
-            <button type="button" onClick={() => window.print()} className="btn-dark full-width mb-2">
+            <button type="button" onClick={downloadCharacterFile} className="btn-primary full-width mb-2">
+              💾 Download Character (.json)
+            </button>
+            <button type="button" onClick={() => window.print()} className="btn-primary full-width mb-2">
               🖨️ Export PDF / Print Character Sheet
             </button>
             {exportMessage && <p className="success-message">{exportMessage}</p>}
             <input
               type="text"
-              placeholder="Paste save code..."
+              placeholder="Paste raw JSON save code..."
               value={importString}
               onChange={(e) => setImportString(e.target.value)}
               className="import-input mb-2"
             />
-            <button type="button" onClick={importCharacter} className="btn-secondary full-width">
+            <button type="button" onClick={importCharacter} className="btn-primary full-width">
               📥 Load Save Code
             </button>
           </div>
@@ -997,7 +1078,7 @@ export function App() {
 
             <div className="print-narrative-block">
               <div className="mb-2">
-                <strong>Bond:</strong> {bond}
+                <strong>Bond {bondPcName ? `with ${bondPcName}` : ''}:</strong> {bond}
               </div>
               <div>
                 <strong>Background:</strong> {background}
@@ -1012,22 +1093,22 @@ export function App() {
             ) : (
               <div className="print-weapons-list">
                 {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => (
-                  <div key={idx} className="print-weapon-row" style={{ border: '1px solid #000', padding: '8px', marginBottom: '6px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #000', paddingBottom: '4px', marginBottom: '4px' }}>
+                  <div key={idx} className="print-weapon-card">
+                    <div className="print-weapon-top">
                       <strong>Weapon:</strong> <span>{w.name} ({w.quantity})</span>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
+                    <div className="print-weapon-stats">
                       <div>
                         <div>{w.bonus !== undefined ? `+${w.bonus}` : '+0'}</div>
-                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Bonus</div>
+                        <div className="print-weapon-stat-label">Bonus</div>
                       </div>
                       <div>
                         <div>{w.damage || '—'}</div>
-                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Damage</div>
+                        <div className="print-weapon-stat-label">Damage</div>
                       </div>
                       <div>
                         <div>{w.range || 'R0'}</div>
-                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Range</div>
+                        <div className="print-weapon-stat-label">Range</div>
                       </div>
                     </div>
                   </div>
