@@ -10,6 +10,9 @@ export interface InventoryItem {
   cost_cp: number;
   details?: string;
   quantity: number;
+  damage?: string;
+  range?: string;
+  bonus?: string | number;
 }
 
 interface SilverAndGearCardProps {

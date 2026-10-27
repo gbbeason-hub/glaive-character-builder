@@ -61,6 +61,14 @@ To build a lightweight, fully client-side character generator and digital workbo
 - Print Engine: Fully hooked up to `window.print()` using an explicit `@media print` style sheet in `src/index.css`. Automatically strips away the web layout dashboard configuration panels and forces a clean, high-fidelity OSR table character grid output.
 - Backup Serialization: Base64 encoders (`btoa`/`atob`) successfully bundle name, level, stats, wallet balance, custom descriptors, bond strings, background histories, and item ID tracks.
 
+## Background Updates for HP, AC, Inventory, Coins
+
+- **Background Data Automation (backgrounds.json):** Expanded background entries to include structured grants for items, silver currency, free gear text, and companions.   
+- **Custom Slot Overrides:** Configured item grants to support custom slot overrides (such as enforcing 1 full slot for the Romanticist's quill, ink, and paper).   
+- **State Synchronization & Cleanup:** Built a useEffect handler in `App.tsx` that tracks prevBackground to automatically revert previously granted silver, text, and inventory items when switching backgrounds, preventing exploit stacking.Inline 
+- **Catalog & Database Wiring:** Integrated `items.json` lookups with inline item fallbacks to push background-granted equipment directly into the character's active inventory.
+- **Companion Sync Integration:** Tied background-granted companions and talent-granted companion slots into the active companion state and sheet rendering.
+
 ## PDF Resources
 The fonts to use in the PDF & web site
 - Lalita One for field labels, table titles, section titles, and attribute, HP, AC values
@@ -90,10 +98,20 @@ The fonts to use in the PDF & web site
     - [DONE] Created `spell_mutations.json`
     - [DONE] Check mutations.json vs rules
 - [DONE] Phase 12 Economy Sync: Connecting item catalog buttons to check and subtract item `.cost` totals from the active editable silver piece purse balance on equip click.
-
+- [DONE] Phase 13 Magic: Add magic items & spells
+    - [DONE] Created spells.json
+    - [DONE] Build modal to select spells
 - [DONE] Phase 14 Name: Add name generator
 - [DONE] Phase 18 Webapp cleanup: Better layout with fonts (look at https://shadowdarklings.net/create as layout for webapp)
+- [DONE] Phase 21 Wallet & Coinage: 
 - [DONE] Phase 22 Background: No longer shows description.  
+- [DONE] Phase 22b Backgrounds: Confirm `backgrounds.json` matches rulebook. 
+    - Backgrounds that grant talents: add logic
+        - 58–59 (Poacher): Gain the Dog Whisperer talent
+
+## PDF Weapons 
+- no damage coming through for standard weapons. 
+- no bonus shown for standard weapons. 
 
 ## 🏁 Next Target Steps
 - [NEW] Phase 7e Talents: Check talents for display. Some have additional effects (like granting spells, familiars, etc.)
@@ -121,11 +139,10 @@ The fonts to use in the PDF & web site
     - [DONE] AC Changes (e.g., Stone Skin, Two-Weapon Fighter, Shield Master)
     - [DONE] Item Slot Changes (e.g., Secret Compartments, Handy if Not Handsome, Pack Rat)
     - [DONE] Suboptions / Choices (e.g., Draconic Bloodlines, Radiance)
-    - [NEW] Companions / Summons (e.g., Dog Whisperer, Familiar, Hospitaller)
+    - [WIP] Companions / Summons (e.g., Dog Whisperer, Familiar, Hospitaller)
+        - familiar ?
 
-- [NEW] Phase 13 Magic: Add magic items & spells
-    - [DONE] Created spells.json
-    - [NEW] Build modal to select spells
+- [WIP] Phase 13 Magic: Add magic items & spells
     - [NEW] Check spells.json vs rules
 
 - [NEW] Phase 15 Conditions: Add conditions (maybe only for PDF print)
@@ -133,8 +150,7 @@ The fonts to use in the PDF & web site
 - [NEW] Phase 17 Pregen All: One button to randomize everything!
 - [NEW] Phase 19 Bonds: Add input field for PC name? Change input to dropdown?
 - [NEW] Phase 20 Character Status: Change name? Stack? Bubble?
-- [NEW] Phase 21 Wallet & Coinage: 
-- [WIP] Phase 23 Equipment & Inventory: 
+- [DONE] Phase 23 Equipment & Inventory: 
     - [DONE] Updated JSON for items (cp,sp,hands,etc.)
     - [DONE] UI mockups for cards & modals
     - [DONE] Built cards
@@ -143,41 +159,38 @@ The fonts to use in the PDF & web site
     - [DONE] Modal Height Stability: Set bounds with `min-height` and `max-height` on the item container so the modal UI stops jumping around vertically as results filter dynamically.
     - [DONE] Added shop flavor text: random name + templates
     - [DONE] Fixed roll silver button & modified card alignments
-    - [NEW] Show items from backgrounds
-        * [NEW] **Monster Hunter (4-6)**: Gain a shortbow and 20 arrows.
-        * [NEW] **Former Squire (13-15)**: Gain a suit of battered medium armor.
-        * [NEW] **Ill Luck (16-18)**: Gain a good luck trinket.
-        * [NEW] **Accidental Revolutionary (34-36)**: Gain a tattered banner.
-        * [NEW] **Romanticist (40-42)**: Gain a quill, ink, and paper (1 slot total).
-        * [NEW] **Smuggler (49-51)**: Gain a lantern and 3 flasks of oil.
-        * [NEW] **Dissident (56-57)**: Gain a bundle of torches (5).
-        * [NEW] **Runaway (60-61)**: Start with 2 extra rations (pork themed).
-        * [NEW] **Chicken Thief (62-63)**: Gain 1d6 chickens (if rolled 6, gain $6 \times 1d6 \times 1d6$ chickens instead).
-        * [NEW] **Stagecoach Robber (67-69)**: Gain 5 silver pieces.
-        * [NEW] **Gambler (70-72)**: Gain a set of weighted dice.
-        * [NEW] **Wanderer (79-81)**: Gain a backpack and a shovel.
-        * [NEW] **Abandoned (82-84)**: Start with 2 extra rations.
-        * [NEW] **Monster Gourmand (85-86)**: Gain an iron pot and cooking utensils.
-        * [NEW] **Letcher (99-100)**: Gain a vial of scented oil.
-    - [NEW] Inventory changes from talents
+    - [DONE] Show items from backgrounds
+        * [DONE] **Monster Hunter (4-6)**: Gain a shortbow and 20 arrows.
+        * [DONE] **Former Squire (13-15)**: Gain a suit of battered medium armor.
+        * [DONE] **Ill Luck (16-18)**: Gain a good luck trinket.
+        * [DONE] **Accidental Revolutionary (34-36)**: Gain a tattered banner.
+        * [DONE] **Romanticist (40-42)**: Gain a quill, ink, and paper (1 slot total).
+        * [DONE] **Smuggler (49-51)**: Gain a lantern and 3 flasks of oil.
+        * [DONE] **Dissident (56-57)**: Gain a bundle of torches (5).
+        * [DONE] **Runaway (60-61)**: Start with 2 extra rations (pork themed).
+        * [DONE] **Chicken Thief (62-63)**: Gain 1d6 chickens (if rolled 6, gain $6 \times 1d6 \times 1d6$ chickens instead).
+        * [DONE] **Stagecoach Robber (67-69)**: Gain 5 silver pieces.
+        * [DONE] **Gambler (70-72)**: Gain a set of weighted dice.
+        * [DONE] **Wanderer (79-81)**: Gain a backpack and a shovel.
+        * [DONE] **Abandoned (82-84)**: Start with 2 extra rations.
+        * [DONE] **Monster Gourmand (85-86)**: Gain an iron pot and cooking utensils.
+        * [DONE] **Letcher (99-100)**: Gain a vial of scented oil.
+    - [DONE] Inventory changes from talents
         * [DONE] **Pack Rat (Thief)**: Adds 3 additional Item Slots to total carrying capacity.
-        * [NEW] **Dog Whisperer (Hunter)**: Grants a dog companion.
-        * [NEW] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
-        * [NEW] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
-        * [NEW] **Always Armed (Thief)**: Always grants a hidden dagger.
-        * [NEW] **Familiar (Magic User)**: Companion acts as 1 extra item slot for a spell.
-        * [NEW] **Always Prepared (Thief)**: Unlocks purchasing Unlabelled Packages (1 slot items).
-        * [NEW] **Eldritch Feast (Magic User)**: Spell is grafted directly to soul (0 item slots required).
-        * [NEW] **Sword Wizard (Magic User)**: Replaces standard spellbooks with rune-carved swords.
+        * [DONE] **Dog Whisperer (Hunter)**: Grants a dog companion.
+        * [DONE] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
+        * [DONE] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
+        * [DONE] **Familiar (Magic User)**: Companion acts as 1 extra item slot for a spell.
+        * [DONE] **Always Prepared (Thief)**: Unlocks purchasing Unlabelled Packages (1 slot items).
+        * [DONE] **Eldritch Feast (Magic User)**: Spell is grafted directly to soul (0 item slots required).
+        * [DONE] **Sword Wizard (Magic User)**: Replaces standard spellbooks with rune-carved swords.
     - [NEW] Items from talents
-        * [NEW] **Dog Whisperer (Hunter)**: Grants a dog companion.
-        * [NEW] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
-        * [NEW] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
+        * [DONE] **Dog Whisperer (Hunter)**: Grants a dog companion.
+        * [DONE] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
+        * [DONE] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.
         * [NEW] **Always Armed (Thief)**: Always grants a hidden dagger.
 
-- [DONE] Phase 22b Backgrounds: Confirm `backgrounds.json` matches rulebook. 
-    - Backgrounds that grant talents: add logic
-        - 58–59 (Poacher): Gain the Dog Whisperer talent
+
         
 
 - [NEW] Phase 24 Save & Load: 

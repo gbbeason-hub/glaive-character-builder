@@ -630,19 +630,22 @@
     "description": "Reaction. Once per Short Rest, when a spell is targeted at you, save vs WIL. If successful, you absorb the spell and may cast it once before your next Long Rest. Suffer the effects of the spell on a failed save. You can only hold one spell at a time in this manner.",
     "repeatable": false
   },
-  {
-    "id": "gen_magic_user_sword_wizard",
-    "name": "Sword Wizard",
-    "type": "talent",
-    "set": "Magic User",
-    "description": "You can cast spells while wielding a weapon in one or both of your hands. Replace spellbooks with rune carved swords. Your spells become sword-themed. Spells can be cast as part of a melee attack - roll +WIL instead of +STR.",
-    "repeatable": false,
-    "containerGrant": {
-      "type": "Rune Sword",
-      "count": 1,
-      "itemSlots": 1
-    }
+{
+  "id": "gen_magic_user_sword_wizard",
+  "name": "Sword Wizard",
+  "description": "You can cast spells while wielding a weapon in one or both of your hands. You still need to have the spellbook and components in your inventory and they are expended in the usual manner.",
+  "set": "Magic User",
+  "containerGrant": {
+    "type": "Rune Sword",
+    "count": 1,
+    "itemSlots": 1
   },
+  "weaponStats": {
+    "name": "Rune Sword",
+    "damage": "1d8",
+    "cost_sp": 10
+  }
+},
   {
     "id": "gen_magic_user_the_thrice_divided_intellect",
     "name": "The Thrice Divided Intellect",

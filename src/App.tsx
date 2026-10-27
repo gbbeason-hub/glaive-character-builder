@@ -98,7 +98,6 @@ export function App() {
     speech: 'Formal',
   });
 
-  
   const [bond, setBond] = useState<string>('Roll a bond with the PC to your left...');
 
   // Backgrounds
@@ -331,7 +330,7 @@ export function App() {
   const extraItemSlotsBonus = getEffectSum('extra_item_slots');
 
   // ==========================================
-  // 4. CONTAINER & INVENTORY SYNC
+  // 4. CONTAINER, SPELLBOOK & DUAL-STATE WEAPON SYNC
   // ==========================================
   const grantedContainers: ContainerSlot[] = [];
   allActiveTalentIds.forEach((talentId, talentIndex) => {
@@ -339,12 +338,14 @@ export function App() {
     if (talentObj && talentObj.containerGrant) {
       const grant = talentObj.containerGrant;
       for (let c = 0; c < grant.count; c++) {
+        const isWeaponContainer = (talentObj as any).weaponStats !== undefined;
         grantedContainers.push({
           slotId: `container_${talentIndex}_${c}`,
           sourceTalentName: talentObj.name,
           containerType: grant.type,
           itemSlots: grant.itemSlots,
-        });
+          weaponProfile: isWeaponContainer ? (talentObj as any).weaponStats : undefined,
+        } as any);
       }
     }
   });
@@ -354,29 +355,36 @@ export function App() {
       const nonContainerItems = prev.filter((item) => !item.id.startsWith('spell_container_'));
       const containerItems: InventoryItem[] = [];
 
-      grantedContainers.forEach((container) => {
+      grantedContainers.forEach((container: any) => {
         if (container.itemSlots === 0) return;
 
         const assignedSpellId = assignedSpells[container.slotId];
         const spell = spellsCatalog.find((s) => s.id === assignedSpellId);
         const spellName = spell ? spell.name : 'Empty';
-        const itemName = `${spellName} ${container.containerType.toLowerCase()}`;
+        
+        // Dynamic name: e.g. "Fireball Rune Sword" or just "Rune Sword" / "Spellbook"
+        const itemName = container.weaponProfile 
+          ? `${spellName !== 'Empty' ? `${spellName} ` : ''}${container.weaponProfile.name}`
+          : `${spellName} ${container.containerType.toLowerCase()}`;
 
         containerItems.push({
           id: `spell_container_${container.slotId}`,
           name: itemName,
-          type: 'Equipment',
+          type: container.weaponProfile ? 'Weapon' : 'Equipment',
           slots: container.itemSlots,
-          cost_sp: 0,
+          cost_sp: container.weaponProfile ? container.weaponProfile.cost_sp : 0,
           cost_cp: 0,
-          details: spell ? spell.description : `Houses a ${container.containerType.toLowerCase()} spell.`,
+          details: spell ? spell.description : `Houses a ${container.containerType.toLowerCase()} spell. ${container.weaponProfile ? 'Melee weapon (1d8 damage).' : ''}`,
           quantity: 1,
+          damage: container.weaponProfile ? container.weaponProfile.damage : undefined,
+          range: container.weaponProfile ? container.weaponProfile.range : undefined,
+          bonus: container.weaponProfile ? container.weaponProfile.bonus : undefined,
         });
       });
 
       return [...nonContainerItems, ...containerItems];
     });
-  }, [selectedTalents, background, assignedSpells, spellsCatalog]);
+  }, [selectedTalents, background, assignedSpells, spellsCatalog, talentsCatalog]);
 
   // ==========================================
   // 4.5. COMPANIONS SYNC
@@ -983,7 +991,7 @@ export function App() {
                 <strong>Skin:</strong> {traits.skin}
               </div>
               <div className="span-2">
-                <strong>Speech:</strong> {traits.speech}
+                **Speech:** {traits.speech}
               </div>
             </div>
 
@@ -1004,8 +1012,24 @@ export function App() {
             ) : (
               <div className="print-weapons-list">
                 {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => (
-                  <div key={idx} className="print-weapon-row">
-                    ⚔️ <strong>{w.name} ({w.quantity})</strong> — Slots: {w.slots * w.quantity}
+                  <div key={idx} className="print-weapon-row" style={{ border: '1px solid #000', padding: '8px', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #000', paddingBottom: '4px', marginBottom: '4px' }}>
+                      <strong>Weapon:</strong> <span>{w.name} ({w.quantity})</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center' }}>
+                      <div>
+                        <div>{w.bonus !== undefined ? `+${w.bonus}` : '+0'}</div>
+                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Bonus</div>
+                      </div>
+                      <div>
+                        <div>{w.damage || '—'}</div>
+                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Damage</div>
+                      </div>
+                      <div>
+                        <div>{w.range || 'R0'}</div>
+                        <div style={{ fontSize: '10px', textTransform: 'uppercase' }}>Range</div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
