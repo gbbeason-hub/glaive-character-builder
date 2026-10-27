@@ -8,6 +8,8 @@ import type { CatalogItem } from './ItemShopModal';
 import { MutationsCard } from './MutationsCard';
 import { SpellsCard } from './SpellsCard';
 import type { Spell, ContainerSlot } from './SpellsCard';
+import { CompanionsCard } from './CompanionsCard';
+import type { CompanionSlot } from './CompanionsCard';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -32,6 +34,21 @@ interface BackgroundEntry {
   max: number;
   name: string;
   text: string;
+  grantedTalentIds?: string[];
+  grantedItems?: Array<{
+    id: string;
+    name?: string;
+    type?: string;
+    slots?: number;
+    cost_sp?: number;
+    cost_cp?: number;
+    details?: string;
+    quantity: number;
+  }>;
+  grantedSilver?: number;
+  grantedFreeGear?: string;
+  grantedCompanions?: Array<{ type: string }>;
+  notes?: string;
 }
 
 interface NameDatabase {
@@ -81,13 +98,18 @@ export function App() {
     speech: 'Formal',
   });
 
+  
   const [bond, setBond] = useState<string>('Roll a bond with the PC to your left...');
+
+  // Backgrounds
   const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
   const [background, setBackground] = useState<string>('');
+  const [prevBackground, setPrevBackground] = useState<string>(''); 
 
   // Ancestries & Talents
   const [ancestriesCatalog, setAncestriesCatalog] = useState<any[]>([]);
   const [talentsCatalog, setTalentsCatalog] = useState<any[]>([]);
+  const [itemsCatalog, setItemsCatalog] = useState<CatalogItem[]>([]);
   const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
   const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
 
@@ -101,6 +123,9 @@ export function App() {
   // Spells State
   const [spellsCatalog, setSpellsCatalog] = useState<Spell[]>([]);
   const [assignedSpells, setAssignedSpells] = useState<Record<string, number>>({});
+
+  // Companions State
+  const [companionNames, setCompanionNames] = useState<Record<string, string>>({});
 
   // Sync logic: calculates max talent slots based on Ancestry and Level
   useEffect(() => {
@@ -131,8 +156,9 @@ export function App() {
       fetch('/names.json').then((res) => res.json()),
       fetch('/mutations.json').then((res) => res.json()),
       fetch('/spells.json').then((res) => res.json()),
+      fetch('/items.json').then((res) => res.json()),
     ])
-      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData, mutationsData, spellsData]) => {
+      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData, mutationsData, spellsData, itemsData]) => {
         setTraitDatabase(traitsData);
         setBackgroundDatabase(backgroundData);
         setAncestriesCatalog(ancestriesData);
@@ -140,17 +166,175 @@ export function App() {
         setNameDatabase(namesData);
         setMutationsCatalog(mutationsData);
         setSpellsCatalog(spellsData);
+        setItemsCatalog(itemsData);
       })
       .catch((err) => console.error('Error initializing background data layers:', err));
   }, []);
 
   // ==========================================
+  // 3.1. BACKGROUND AUTO-REWARD HANDLER
+  // ==========================================
+  useEffect(() => {
+    if (!backgroundDatabase) return;
+
+    // 1. CLEAN UP PREVIOUS BACKGROUND REWARDS
+    if (prevBackground && prevBackground !== background) {
+      const oldBg = backgroundDatabase.find((b) => b.text === prevBackground);
+      if (oldBg) {
+        // Remove old silver
+        if (oldBg.grantedSilver) {
+          setSilver((prev) => Math.max(0, prev - oldBg.grantedSilver!));
+        }
+
+        // Remove old free gear text
+        if (oldBg.grantedFreeGear) {
+          setFreeGearText((prev) => {
+            const escaped = oldBg.grantedFreeGear!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(,\\s*${escaped}|${escaped},\\s*|${escaped})`, 'g');
+            return prev.replace(regex, '').trim();
+          });
+        }
+
+        // Remove old granted inventory items
+        if (oldBg.grantedItems && oldBg.grantedItems.length > 0) {
+          setInventory((prevInventory) => {
+            let updated = [...prevInventory];
+            oldBg.grantedItems!.forEach((grant) => {
+              const existingIndex = updated.findIndex((i) => i.id === grant.id);
+              if (existingIndex > -1) {
+                const currentQty = updated[existingIndex].quantity;
+                if (currentQty <= grant.quantity) {
+                  updated.splice(existingIndex, 1);
+                } else {
+                  updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    quantity: currentQty - grant.quantity,
+                  };
+                }
+              }
+            });
+            return updated;
+          });
+        }
+      }
+    }
+
+    // Update the reference tracker
+    setPrevBackground(background);
+
+    if (!background) return;
+    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    if (!currentBg) return;
+
+    // 2. GRANT NEW BACKGROUND REWARDS
+    if (currentBg.grantedSilver) {
+      setSilver((prev) => prev + currentBg.grantedSilver!);
+    }
+
+    if (currentBg.grantedFreeGear) {
+      setFreeGearText((prev) => {
+        if (prev.includes(currentBg.grantedFreeGear!)) return prev;
+        return prev ? `${prev}, ${currentBg.grantedFreeGear}` : currentBg.grantedFreeGear!;
+      });
+    }
+
+    if (currentBg.grantedItems && currentBg.grantedItems.length > 0) {
+      currentBg.grantedItems.forEach((grant) => {
+        const catalogMatch = itemsCatalog.find((item) => item.id === grant.id);
+
+        setInventory((prev) => {
+          const existingIndex = prev.findIndex((i) => i.id === grant.id);
+          if (existingIndex > -1) {
+            const updated = [...prev];
+            updated[existingIndex] = {
+              ...updated[existingIndex],
+              quantity: updated[existingIndex].quantity + grant.quantity,
+            };
+            return updated;
+          }
+
+          if (catalogMatch) {
+            return [
+              ...prev,
+              {
+                id: catalogMatch.id,
+                name: grant.name || catalogMatch.name,
+                type: catalogMatch.type as any,
+                slots: grant.slots !== undefined ? grant.slots : catalogMatch.slots,
+                cost_sp: catalogMatch.cost_sp,
+                cost_cp: catalogMatch.cost_cp,
+                details: catalogMatch.details,
+                quantity: grant.quantity,
+              },
+            ];
+          }
+
+          if (grant.name && grant.type) {
+            return [
+              ...prev,
+              {
+                id: grant.id,
+                name: grant.name,
+                type: grant.type as any,
+                slots: grant.slots ?? 1,
+                cost_sp: grant.cost_sp ?? 0,
+                cost_cp: grant.cost_cp ?? 0,
+                details: grant.details ?? '',
+                quantity: grant.quantity,
+              },
+            ];
+          }
+
+          return prev;
+        });
+      });
+    }
+  }, [background, backgroundDatabase, itemsCatalog]);
+
+  // ==========================================
+  // 3.25. ACTIVE TALENTS AGGREGATOR
+  // ==========================================
+  const backgroundGrantedTalentIds: string[] = [];
+  if (backgroundDatabase && background) {
+    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    if (currentBg && currentBg.grantedTalentIds) {
+      backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
+    }
+  }
+
+  const allActiveTalentIds = [
+    ...selectedTalents.filter(Boolean),
+    ...backgroundGrantedTalentIds,
+  ];
+
+  // ==========================================
+  // 3.5. TALENT EFFECTS HELPER
+  // ==========================================
+  const getEffectSum = (targetName: string) => {
+    let total = 0;
+
+    allActiveTalentIds.forEach((talentId) => {
+      const talentObj = talentsCatalog.find((t) => t.id === talentId);
+      if (talentObj && talentObj.effects) {
+        talentObj.effects.forEach((eff: any) => {
+          if (eff.target === targetName && eff.mode === 'add') {
+            total += eff.value;
+          }
+        });
+      }
+    });
+
+    return total;
+  };
+
+  const hpPerLevelBonus = getEffectSum('hp_per_level_bonus');
+  const extraItemSlotsBonus = getEffectSum('extra_item_slots');
+
+  // ==========================================
   // 4. CONTAINER & INVENTORY SYNC
   // ==========================================
-  // Determine all granted container slots from active talents
   const grantedContainers: ContainerSlot[] = [];
-  selectedTalents.forEach((talentId, talentIndex) => {
-    if (!talentId) return;
+  allActiveTalentIds.forEach((talentId, talentIndex) => {
     const talentObj = talentsCatalog.find((t) => t.id === talentId);
     if (talentObj && talentObj.containerGrant) {
       const grant = talentObj.containerGrant;
@@ -165,16 +349,13 @@ export function App() {
     }
   });
 
-  // Sync Granted Container Items to Inventory State
   useEffect(() => {
     setInventory((prev) => {
-      // Retain all non-container items
       const nonContainerItems = prev.filter((item) => !item.id.startsWith('spell_container_'));
-
-      // Generate items for current granted containers
       const containerItems: InventoryItem[] = [];
+
       grantedContainers.forEach((container) => {
-        if (container.itemSlots === 0) return; // 0 slot items (e.g. Eldritch Feast) don't take inventory space
+        if (container.itemSlots === 0) return;
 
         const assignedSpellId = assignedSpells[container.slotId];
         const spell = spellsCatalog.find((s) => s.id === assignedSpellId);
@@ -195,7 +376,37 @@ export function App() {
 
       return [...nonContainerItems, ...containerItems];
     });
-  }, [selectedTalents, assignedSpells, spellsCatalog]);
+  }, [selectedTalents, background, assignedSpells, spellsCatalog]);
+
+  // ==========================================
+  // 4.5. COMPANIONS SYNC
+  // ==========================================
+  const grantedCompanions: CompanionSlot[] = [];
+  allActiveTalentIds.forEach((talentId, index) => {
+    const talentObj = talentsCatalog.find((t) => t.id === talentId);
+    if (talentObj && (talentObj as any).companionGrant) {
+      const grant = (talentObj as any).companionGrant;
+      grantedCompanions.push({
+        slotId: `companion_${index}_${talentObj.id}`,
+        sourceTalentName: talentObj.name,
+        companionType: grant.type,
+      });
+    }
+  });
+
+  // Background granted companions (e.g., Chicken Baron)
+  if (backgroundDatabase && background) {
+    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    if (currentBg && currentBg.grantedCompanions) {
+      currentBg.grantedCompanions.forEach((grant, idx) => {
+        grantedCompanions.push({
+          slotId: `bg_companion_${idx}`,
+          sourceTalentName: currentBg.name,
+          companionType: grant.type,
+        });
+      });
+    }
+  }
 
   // ==========================================
   // 5. SYNCHRONOUS REAL-TIME EQUATIONS
@@ -204,8 +415,8 @@ export function App() {
   const dynamicAttributeChoices = Array.from({ length: maxStatBonus + 1 }, (_, i) => maxStatBonus - i);
 
   const totalUsedSlots = inventory.reduce((total, item) => total + item.slots * item.quantity, 0);
-  const maxCarryingCapacity = 10 + stats.strength;
-  const hitPoints = 10 + stats.strength + (level - 1) * 5;
+  const maxCarryingCapacity = 10 + stats.strength + extraItemSlotsBonus;
+  const hitPoints = 10 + stats.strength + (level - 1) * (5 + hpPerLevelBonus);
 
   const armorBonus = inventory
     .filter((item) => item.type === 'Armor')
@@ -570,6 +781,7 @@ export function App() {
                 return next;
               });
             }}
+            backgroundGrantedTalentIds={backgroundGrantedTalentIds}
           />
 
           {/* 5. Spells & Magic Containers Module */}
@@ -638,6 +850,15 @@ export function App() {
               setIsShopOpen(true);
             }}
             onSellItem={handleSellItem}
+          />
+
+          {/* 8b. Companions Card */}
+          <CompanionsCard
+            grantedCompanions={grantedCompanions}
+            companionNames={companionNames}
+            onUpdateCompanionName={(slotId: string, name: string) => {
+              setCompanionNames((prev) => ({ ...prev, [slotId]: name }));
+            }}
           />
 
           {/* 9. Mutations Card */}

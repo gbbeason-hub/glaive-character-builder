@@ -516,7 +516,7 @@
     "slots": 1,
     "cost_sp": 5,
     "cost_cp": 0,
-    "details": "Bundle of 6 fuel-dipped wooden torches. Each burns bright for approximately one hour."
+    "details": "Bundle of 6 fuel-dipped wooden torches. Each burns bright for approximately one hour. Bright light in your zone and dim light in all adjacent zones."
   },
   {
     "id": "g_24",
@@ -526,5 +526,14 @@
     "cost_sp": 1,
     "cost_cp": 0,
     "details": "Leather bladder container holding clean drinking liquids."
+  },
+  {
+    "id": "g_25",
+    "name": "Lantern",
+    "type": "Equipment",
+    "slots": 1,
+    "cost_sp": 10,
+    "cost_cp": 0,
+    "details": "Requires flask of oil to light that last 1 hour. Bright light in your zone and dim light in all adjacent zones."
   }
 ]

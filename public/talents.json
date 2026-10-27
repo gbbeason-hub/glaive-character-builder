@@ -474,13 +474,18 @@
     "description": "When you miss with a ranged attack, your next shot is made with ADV.",
     "repeatable": false
   },
+
   {
-    "id": "gen_hunter_dog_whisperer",
-    "name": "Dog Whisperer",
-    "type": "talent",
-    "set": "Hunter",
-    "description": "You have a dog. Dogs you train have ADV when attempting to Move Silently & Unseen, can communicate to you if an area is obviously dangerous, and can track a week-old trail by scent without fail (barring magical concealment).",
-    "repeatable": false
+  "id": "gen_ranger_dog_whisperer",
+  "name": "Dog Whisperer",
+  "type": "talent",
+  "set": "Hunter",
+  "description": "You have a dog. Dogs you train have ADV when attempting to Move Silently & Unseen, can communicate to you if an area is obviously dangerous, and can track a week-old trail by scent without fail (barring magical concealment).",
+  "repeatable": false,
+  "companionGrant": {
+    "type": "Hound",
+    "itemSlots": 0
+  }
   },
   {
     "id": "gen_hunter_crippling_shot",
@@ -670,7 +675,8 @@
     "description": "Even when you have been disarmed, you still have a dagger hidden on you.",
     "repeatable": false
   },
-  {
+
+{
     "id": "gen_thief_always_prepared",
     "name": "Always Prepared",
     "type": "talent",
@@ -724,7 +730,15 @@
     "type": "talent",
     "set": "Thief",
     "description": "You have 3 additional Item Slots.",
-    "repeatable": false
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
   },
   {
     "id": "gen_thief_quick_fingers",
@@ -804,7 +818,15 @@
     "type": "talent",
     "set": "Warrior",
     "description": "When a physical attack or effect allows a save for ½ damage, take no damage if you succeed - your shield absorbs the blow. Shields provide you with +4 AC against ranged attacks, instead of the usual +2 AC.",
-    "repeatable": false
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "ac_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
   },
   {
     "id": "gen_warrior_truculence",

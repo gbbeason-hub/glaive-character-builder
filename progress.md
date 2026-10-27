@@ -112,9 +112,16 @@ The fonts to use in the PDF & web site
     - Two-Weapon Fighter: AC effects
     - Always Prepared: Item?
     - Pack Rat: Item Slots
+    - Construct: Secret Compartments - item slots
+    - Thief: Always Prepared - 
     - Shield Master: AC bonus for shield
     - Dark Bloodline: Suboptions
-
+- [WIP] Categories of Changes. 
+    - [DONE] HP Changes (e.g., Brick Outhouse, Veteran, Professional Killer)
+    - [DONE] AC Changes (e.g., Stone Skin, Two-Weapon Fighter, Shield Master)
+    - [DONE] Item Slot Changes (e.g., Secret Compartments, Handy if Not Handsome, Pack Rat)
+    - [DONE] Suboptions / Choices (e.g., Draconic Bloodlines, Radiance)
+    - [NEW] Companions / Summons (e.g., Dog Whisperer, Familiar, Hospitaller)
 
 - [NEW] Phase 13 Magic: Add magic items & spells
     - [DONE] Created spells.json
@@ -153,7 +160,7 @@ The fonts to use in the PDF & web site
         * [NEW] **Monster Gourmand (85-86)**: Gain an iron pot and cooking utensils.
         * [NEW] **Letcher (99-100)**: Gain a vial of scented oil.
     - [NEW] Inventory changes from talents
-        * [NEW] **Pack Rat (Thief)**: Adds 3 additional Item Slots to total carrying capacity.
+        * [DONE] **Pack Rat (Thief)**: Adds 3 additional Item Slots to total carrying capacity.
         * [NEW] **Dog Whisperer (Hunter)**: Grants a dog companion.
         * [NEW] **Keeper of Relics (Holy Warrior)**: Grants 3 holy relics (spellcasting items).
         * [NEW] **Scholar of The Unseen University (Magic User)**: Grants 3 spellbooks.

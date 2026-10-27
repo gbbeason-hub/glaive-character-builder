@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import { TalentSelectorModal } from './TalentSelectorModal';
+import { TalentSubOptionBox } from './TalentSubOptionBox';
+
+export interface SubOption {
+  id: string;
+  name: string;
+  description: string;
+}
 
 export interface Talent {
   id: string;
@@ -8,6 +15,7 @@ export interface Talent {
   set: string;
   description: string;
   repeatable?: boolean;
+  subOptions?: SubOption[];
 }
 
 interface TalentsCardProps {
@@ -15,6 +23,9 @@ interface TalentsCardProps {
   selectedTalents: string[];
   maxTalentSlots: number;
   onTalentChange: (index: number, val: string) => void;
+  selectedTalentSubOptions?: Record<number, string>;
+  onTalentSubOptionChange?: (index: number, subId: string) => void;
+  backgroundGrantedTalentIds?: string[];
 }
 
 export function TalentsCard({
@@ -22,6 +33,9 @@ export function TalentsCard({
   selectedTalents,
   maxTalentSlots,
   onTalentChange,
+  selectedTalentSubOptions = {},
+  onTalentSubOptionChange,
+  backgroundGrantedTalentIds = [],
 }: TalentsCardProps) {
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
 
@@ -43,7 +57,6 @@ export function TalentsCard({
 
   return (
     <div className="talents-card">
-      {/* Header & Status */}
       <div className="talents-header-row">
         <h3 className="panel-heading">Talents</h3>
         <span className={`talents-status-badge ${isFull ? 'full' : 'incomplete'}`}>
@@ -51,20 +64,18 @@ export function TalentsCard({
         </span>
       </div>
 
-      {/* Instructions */}
       <p className="talents-instructions">
         Select or roll additional heroic talents, veteran tricks, or uncanny aptitudes:
       </p>
 
-      {/* Slots Stack */}
       <div className="talents-slots-stack">
+        {/* 1. Render Regular Selectable Talent Slots */}
         {Array.from({ length: maxTalentSlots }).map((_, index) => {
           const currentId = selectedTalents[index] || '';
           const selected = talents.find((t) => t.id === currentId);
 
           return (
-            <div key={index} className="talent-slot-item">
-              {/* Slot Row */}
+            <div key={index} className="talent-slot-item" style={{ marginBottom: '16px' }}>
               <div className="talent-slot-row">
                 <label className="talent-slot-label">Talent Slot {index + 1}</label>
                 <button 
@@ -76,7 +87,6 @@ export function TalentsCard({
                 </button>
               </div>
 
-              {/* Trigger Button to Open Modal */}
               <button
                 type="button"
                 className={`talent-selector-trigger ${selected ? 'has-selection' : ''}`}
@@ -85,18 +95,45 @@ export function TalentsCard({
                 {selected ? `[${selected.set}] ${selected.name}` : '-- Select a Talent --'}
               </button>
 
-              {/* Description preview if selected */}
               {selected && (
-                <div className="talent-description-box">
+                <div className="talent-description-box" style={{ marginTop: '6px' }}>
                   <strong>{selected.name}:</strong> {selected.description}
                 </div>
               )}
+
+              {selected && (
+                <TalentSubOptionBox
+                  talent={selected}
+                  selectedSubOptionId={selectedTalentSubOptions[index]}
+                  onSubOptionChange={(subId) => {
+                    if (onTalentSubOptionChange) onTalentSubOptionChange(index, subId);
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
+
+        {/* 2. Render Background-Granted Read-Only Talents Right Inline */}
+        {backgroundGrantedTalentIds.map((grantedId) => {
+          const grantedTalent = talents.find((t) => t.id === grantedId);
+          if (!grantedTalent) return null;
+
+          return (
+            <div key={grantedId} className="talent-slot-item granted-talent-box" style={{ marginBottom: '16px', background: '#f8fafc', padding: '14px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div className="talent-slot-row">
+                <label className="talent-slot-label" style={{ fontWeight: 'bold', color: '#334155' }}>
+                  [{grantedTalent.set}] {grantedTalent.name} <span style={{ fontSize: '0.8rem', fontWeight: 'normal', color: '#0284c7', fontStyle: 'italic' }}>(Derived from Background)</span>
+                </label>
+              </div>
+              <div className="talent-description-box" style={{ marginTop: '6px', background: '#ffffff' }}>
+                <strong>{grantedTalent.name}:</strong> {grantedTalent.description}
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Modal Popup */}
       {activeModalIndex !== null && (
         <TalentSelectorModal
           isOpen={activeModalIndex !== null}

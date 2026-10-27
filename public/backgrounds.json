@@ -7,7 +7,11 @@
   {
     "min": 4, "max": 6,
     "name": "Monster Hunter",
-    "text": "Monster hunter. Your definition of \"monster\" is amorphous and changes to suit your needs and whims. Gain a shortbow and 20 arrows."
+    "text": "Monster hunter. Your definition of \"monster\" is amorphous and changes to suit your needs and whims. Gain a shortbow and 20 arrows.",
+    "grantedItems": [
+      { "id": "w_16", "quantity": 1 },
+      { "id": "w_21", "quantity": 1 }
+    ]
   },
   {
     "min": 7, "max": 9,
@@ -22,12 +26,16 @@
   {
     "min": 13, "max": 15,
     "name": "Hedge Knight Squire",
-    "text": "Former squire to a broken-down hedge knight. When they died of the dungeon-drip, you grabbed their gear and assumed their identity. It's shocking how many enemies they made over the years! Gain a suit of battered medium armor."
+    "text": "Former squire to a broken-down hedge knight. When they died of the dungeon-drip, you grabbed their gear and assumed their identity. It's shocking how many enemies they made over the years! Gain a suit of battered medium armor.",
+    "grantedItems": [
+      { "id": "a_03", "quantity": 1 }
+    ]
   },
   {
     "min": 16, "max": 18,
     "name": "Unlucky Sod",
-    "text": "Ill luck. Every proper job you've ever tried has ended in disaster, your dismissal, and occasionally being run out of town by an angry mob. Gain a good luck trinket."
+    "text": "Ill luck. Every proper job you've ever tried has ended in disaster, your dismissal, and occasionally being run out of town by an angry mob. Gain a good luck trinket.",
+    "grantedFreeGear": "Good Luck Trinket (Unlucky Sod)"
   },
   {
     "min": 19, "max": 21,
@@ -57,7 +65,19 @@
   {
     "min": 34, "max": 36,
     "name": "Rebel Without a Clue",
-    "text": "Accidental revolutionary. All you said was, \"Wouldn't it be nice if the workers could have...?\" Next it was all screaming aristocrats, charging hussars, and thrusting lances. Gain a tattered banner."
+    "text": "Accidental revolutionary. All you said was, \"Wouldn't it be nice if the workers could have...?\" Next it was all screaming aristocrats, charging hussars, and thrusting lances. Gain a tattered banner.",
+    "grantedItems": [
+      {
+        "id": "tattered_banner",
+        "name": "Tattered Banner (Rebel Without a Clue)",
+        "type": "Equipment",
+        "slots": 1,
+        "cost_sp": 0,
+        "cost_cp": 0,
+        "details": "A tattered revolutionary banner.",
+        "quantity": 1
+      }
+    ]
   },
   {
     "min": 37, "max": 39,
@@ -67,8 +87,22 @@
   {
     "min": 40, "max": 42,
     "name": "Romanticist",
-    "text": "Romanticist. You are writing a manuscript about the unbreakable bonds of comradeship forged by the hardships endured on the dungeon delve. The reality is falling somewhat short of your expectations. Gain a quill, ink, and paper (1 slot total)."
+    "text": "Romanticist. You are writing a manuscript about the unbreakable bonds of comradeship forged by the hardships endured on the dungeon delve. The reality is falling somewhat short of your expectations. Gain a quill, ink, and paper (1 slot total).",
+    "grantedItems": [
+      {
+        "id": "g_16",
+        "name": "Quill, Ink, Paper (Romanticist)",
+        "type": "Equipment",
+        "slots": 1,
+        "cost_sp": 2,
+        "cost_cp": 0,
+        "details": "Writing implements and paper.",
+        "quantity": 1
+      }
+    ]
   },
+
+  
   {
     "min": 43, "max": 45,
     "name": "Vengeful Conscript",
@@ -82,7 +116,11 @@
   {
     "min": 49, "max": 51,
     "name": "Smuggler",
-    "text": "Smuggler. Secret tunnels and hidden coves are your speciality. Gain a lantern and 3 flasks of oil."
+    "text": "Smuggler. Secret tunnels and hidden coves are your speciality. Gain a lantern and 3 flasks of oil.",
+    "grantedItems": [
+      { "id": "g_25", "quantity": 1 },
+      { "id": "g_14", "quantity": 1 }
+    ]
   },
   {
     "min": 52, "max": 53,
@@ -97,22 +135,32 @@
   {
     "min": 56, "max": 57,
     "name": "Working Class Hero",
-    "text": "Dissident. Tax collectors, sheriffs and their reeves, petty nobility, and the decadent merchant guilds - these are all your class enemies. Gain a bundle of torches (5)."
+    "text": "Dissident. Tax collectors, sheriffs and their reeves, petty nobility, and the decadent merchant guilds - these are all your class enemies. Gain a bundle of torches (5).",
+    "grantedItems": [
+      { "id": "g_23", "quantity": 1 }
+    ]
   },
   {
     "min": 58, "max": 59,
     "name": "Dogged Poacher",
-    "text": "You poached the local noble's forests with the aid of well-trained dogs. Gain the Dog Whisperer talent (pg.12)"
+    "text": "You poached the local noble's forests with the aid of well-trained dogs. Gain the Dog Whisperer talent (pg.12)",
+    "grantedTalentIds": ["gen_ranger_dog_whisperer"]
   },
   {
     "min": 60, "max": 61,
     "name": "Runaway Betrothed",
-    "text": "Runaway. You were betrothed to the pig farmer's son/daughter from a neighboring village. Start with 2 extra rations (pork themed)."
+    "text": "Runaway. You were betrothed to the pig farmer's son/daughter from a neighboring village. Start with 2 extra rations (pork themed).",
+    "grantedItems": [
+      { "id": "g_17", "quantity": 2 }
+    ]
   },
   {
     "min": 62, "max": 63,
     "name": "Chicken Baron",
-    "text": "Look at all these chickens you stole. Gain 1d6 chickens. If you roll a 6, gain 6x1d6x1d6 chickens instead. Do not gain any way to store, feed, or corral these chickens."
+    "text": "Look at all these chickens you stole. Gain 1d6 chickens. If you roll a 6, gain 6x1d6x1d6 chickens instead. Do not gain any way to store, feed, or corral these chickens.",
+    "grantedCompanions": [
+      { "type": "Chicken Flock" }
+    ]
   },
   {
     "min": 64, "max": 66,
@@ -122,12 +170,15 @@
   {
     "min": 67, "max": 69,
     "name": "Wanted Thief",
-    "text": "During a botch stagecoach robbery, you shot a noble in the eye. Partially blinded, they have vowed revenge. Gain 5 silver pieces and a powerful enemy."
+    "text": "During a botch stagecoach robbery, you shot a noble in the eye. Partially blinded, they have vowed revenge. Gain 5 silver pieces and a powerful enemy.",
+    "grantedSilver": 5,
+    "notes": "Powerful enemy seeking revenge for a shot to the eye."
   },
   {
     "min": 70, "max": 72,
     "name": "Hunted High Roller",
-    "text": "Gambler. You owe a powerful guild a great deal of money. Gain a set of weighted dice."
+    "text": "Gambler. You owe a powerful guild a great deal of money. Gain a set of weighted dice.",
+    "grantedFreeGear": "Weighted Dice (Hunted High Roller)"
   },
   {
     "min": 73, "max": 75,
@@ -147,12 +198,18 @@
   {
     "min": 82, "max": 84,
     "name": "Regretful Hustler",
-    "text": "Abandoned your family to seek wealth, glory, or a better position. Start with 2 extra rations and a lingering sense of guilt."
+    "text": "Abandoned your family to seek wealth, glory, or a better position. Start with 2 extra rations and a lingering sense of guilt.",
+    "grantedItems": [
+      { "id": "g_17", "quantity": 2 }
+    ]
   },
   {
     "min": 85, "max": 86,
     "name": "Beast Eater",
-    "text": "Monster gourmand. You are writing a secret cookbook about how to survive only on what you slay in dungeons. Gain an iron pot and cooking utensils."
+    "text": "Monster gourmand. You are writing a secret cookbook about how to survive only on what you slay in dungeons. Gain an iron pot and cooking utensils.",
+    "grantedItems": [
+      { "id": "g_06", "quantity": 1 }
+    ]
   },
   {
     "min": 87, "max": 89,
@@ -177,6 +234,7 @@
   {
     "min": 99, "max": 100,
     "name": "Lothario on the Lam",
-    "text": "Letcher. Fleeing a string of torrid affairs in the capitol, you thought the borderlands would be a good place to lay low for a while. Gain a vial of scented oil."
+    "text": "Letcher. Fleeing a string of torrid affairs in the capitol, you thought the borderlands would be a good place to lay low for a while. Gain a vial of scented oil.",
+    "grantedFreeGear": "Vial of Scented Oil"
   }
 ]
