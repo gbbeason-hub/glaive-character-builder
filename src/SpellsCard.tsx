@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export interface Spell {
   id: number;
   name: string;
