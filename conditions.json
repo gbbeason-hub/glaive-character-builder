@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Blinded",
+    "effects": "Attacks against you have ADV and do +2 damage. You have DISADV on DEX Saves."
+  },
+  {
+    "name": "Charmed",
+    "effects": "Cannot attack the creature that charmed you. WIL save ends, unless a spell or magic item provides other rules."
+  },
+  {
+    "name": "Deafened",
+    "effects": "Auto-fail any saves that rely on hearing alone."
+  },
+  {
+    "name": "Fatigue",
+    "effects": "Each level of Fatigue takes up 2 Item Slots and imposes a cumulative -1 modifier to all saves and attack rolls. If this exceeds your total number of Item Slots you become Incapacitated until you drop some equipment. See page 9 for more details."
+  },
+  {
+    "name": "Frightened",
+    "effects": "WIL save to resist and end effects. Your saves, attacks, etc. have DISADV while you can see the source of your fear. Cannot willingly move closer to the source of your fear."
+  },
+  {
+    "name": "Grappled",
+    "effects": "Cannot move. Attacks against you have ADV. Your attacks and DEX saves to avoid harm have DISADV. STR save to escape."
+  },
+  {
+    "name": "Incapacitated",
+    "effects": "Cannot move or speak. Cannot take actions/reactions. Auto-fail DEX saves."
+  },
+  {
+    "name": "Invisible",
+    "effects": "Can still be heard, smelled, etc. You have ADV to attack and Move Silently & Unseen. Attacks against you have DISADV."
+  },
+  {
+    "name": "Paralyzed",
+    "effects": "See Incapacitated. Auto-fail STR and DEX saves. Attacks against you automatically hit and do critical damage."
+  },
+  {
+    "name": "Petrified",
+    "effects": "See Incapacitated. You transform into a solid inanimate substance. Attacks against you hit automatically. Auto-fail all saves. Affects non-magical gear."
+  },
+  {
+    "name": "Poisoned",
+    "effects": "DISADV on saves and attack rolls. STR save to end."
+  },
+  {
+    "name": "Prone",
+    "effects": "Melee attacks against you have ADV. Ranged attacks against you have DISADV. Spend an action to stand up. Attacks against you have ADV until the end of that round as you get your feet under you."
+  },
+  {
+    "name": "Restrained",
+    "effects": "See Grappled. STR save to escape."
+  },
+  {
+    "name": "Slowed",
+    "effects": "Save vs STR to move. -2 AC & DISADV on DEX saves. Regardless of talents or abilities you can only make 1 attack per round."
+  },
+  {
+    "name": "Stunned",
+    "effects": "Your saves and attack rolls have DISADV. Attacks against you have ADV. WIL save ends."
+  },
+  {
+    "name": "Unconscious",
+    "effects": "Auto-fail all saves. Attacks against you hit automatically and do critical damage."
+  }
+]

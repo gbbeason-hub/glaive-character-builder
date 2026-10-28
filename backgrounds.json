@@ -1,0 +1,240 @@
+[
+  {
+    "min": 1, "max": 3,
+    "name": "Expensive Habit",
+    "text": "You have an expensive habit (opium, rare scrolls & tomes, weird mushrooms, etc.) that can only be paid for with the sort of loot you haul out of a dungeon."
+  },
+  {
+    "min": 4, "max": 6,
+    "name": "Monster Hunter",
+    "text": "Monster hunter. Your definition of \"monster\" is amorphous and changes to suit your needs and whims. Gain a shortbow and 20 arrows.",
+    "grantedItems": [
+      { "id": "w_16", "quantity": 1 },
+      { "id": "w_21", "quantity": 1 }
+    ]
+  },
+  {
+    "min": 7, "max": 9,
+    "name": "Disowned Heir",
+    "text": "You come from a minor noble family known for being petty tyrants. You inadvertently sparked a peasant uprising against them during a drunken debauch through one of their villages. You've been disowned."
+  },
+  {
+    "min": 10, "max": 12,
+    "name": "Cure Seeker",
+    "text": "A wandering wizard \"saved\" your village by turning a rampaging basilisk's to stone. Things were fine until he exploded it for dramatic effect. The resultant dust cloud petrified everyone but you. You seek a cure."
+  },
+  {
+    "min": 13, "max": 15,
+    "name": "Hedge Knight Squire",
+    "text": "Former squire to a broken-down hedge knight. When they died of the dungeon-drip, you grabbed their gear and assumed their identity. It's shocking how many enemies they made over the years! Gain a suit of battered medium armor.",
+    "grantedItems": [
+      { "id": "a_03", "quantity": 1 }
+    ]
+  },
+  {
+    "min": 16, "max": 18,
+    "name": "Unlucky Sod",
+    "text": "Ill luck. Every proper job you've ever tried has ended in disaster, your dismissal, and occasionally being run out of town by an angry mob. Gain a good luck trinket.",
+    "grantedFreeGear": "Good Luck Trinket (Unlucky Sod)"
+  },
+  {
+    "min": 19, "max": 21,
+    "name": "Hedonist",
+    "text": "Hedonist. You were never meant for civil society. You became an adventurer to indulge in drink, luxury, and carnal pleasure."
+  },
+  {
+    "min": 22, "max": 24,
+    "name": "Criminal",
+    "text": "Criminal. To avoid the executioner's block you maintain a series of false identities which are becoming increasingly difficult to keep straight."
+  },
+  {
+    "min": 25, "max": 27,
+    "name": "Magic Kink",
+    "text": "Magic kink. You want to indulge in forbidden knowledge and eldritch rituals. Maybe start a cult?"
+  },
+  {
+    "min": 28, "max": 30,
+    "name": "Monster Kink",
+    "text": "Monster kink. Sure, you can kill them. But can you romance them?"
+  },
+  {
+    "min": 31, "max": 33,
+    "name": "Scandalous Topiarist",
+    "text": "Disgraced noble. Your erotic topiary garden was not well received by the Duchess's pious new husband. You lands and title were revoked."
+  },
+  {
+    "min": 34, "max": 36,
+    "name": "Rebel Without a Clue",
+    "text": "Accidental revolutionary. All you said was, \"Wouldn't it be nice if the workers could have...?\" Next it was all screaming aristocrats, charging hussars, and thrusting lances. Gain a tattered banner.",
+    "grantedItems": [
+      {
+        "id": "tattered_banner",
+        "name": "Tattered Banner (Rebel Without a Clue)",
+        "type": "Equipment",
+        "slots": 1,
+        "cost_sp": 0,
+        "cost_cp": 0,
+        "details": "A tattered revolutionary banner.",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "min": 37, "max": 39,
+    "name": "Illegitimate Challenger",
+    "text": "Bastard by-blow of a powerful noble. They will only acknowledge you if you make a name for yourself. Their heirs oppose you."
+  },
+  {
+    "min": 40, "max": 42,
+    "name": "Romanticist",
+    "text": "Romanticist. You are writing a manuscript about the unbreakable bonds of comradeship forged by the hardships endured on the dungeon delve. The reality is falling somewhat short of your expectations. Gain a quill, ink, and paper (1 slot total).",
+    "grantedItems": [
+      {
+        "id": "g_16",
+        "name": "Quill, Ink, Paper (Romanticist)",
+        "type": "Equipment",
+        "slots": 1,
+        "cost_sp": 2,
+        "cost_cp": 0,
+        "details": "Writing implements and paper.",
+        "quantity": 1
+      }
+    ]
+  },
+
+  
+  {
+    "min": 43, "max": 45,
+    "name": "Vengeful Conscript",
+    "text": "Forcibly conscripted by an unscrupulous lord. Your farm was seized in your absence. You vowed to have your revenge."
+  },
+  {
+    "min": 46, "max": 48,
+    "name": "Poor Farmer's Child",
+    "text": "The child of poor farmers. D12+2 kids. You were one mouth too many to feed."
+  },
+  {
+    "min": 49, "max": 51,
+    "name": "Smuggler",
+    "text": "Smuggler. Secret tunnels and hidden coves are your speciality. Gain a lantern and 3 flasks of oil.",
+    "grantedItems": [
+      { "id": "g_25", "quantity": 1 },
+      { "id": "g_14", "quantity": 1 }
+    ]
+  },
+  {
+    "min": 52, "max": 53,
+    "name": "Wandering Soldier",
+    "text": "You served in the militia of your village. A desire for freedom and sense of adventure lead you into the wider world."
+  },
+  {
+    "min": 54, "max": 55,
+    "name": "Bitter Brewer",
+    "text": "Brewer. Life was pretty good until a company of carousing rat-catchers burned down your tavern. You will have your revenge."
+  },
+  {
+    "min": 56, "max": 57,
+    "name": "Working Class Hero",
+    "text": "Dissident. Tax collectors, sheriffs and their reeves, petty nobility, and the decadent merchant guilds - these are all your class enemies. Gain a bundle of torches (5).",
+    "grantedItems": [
+      { "id": "g_23", "quantity": 1 }
+    ]
+  },
+  {
+    "min": 58, "max": 59,
+    "name": "Dogged Poacher",
+    "text": "You poached the local noble's forests with the aid of well-trained dogs. Gain the Dog Whisperer talent (pg.12)",
+    "grantedTalentIds": ["gen_ranger_dog_whisperer"]
+  },
+  {
+    "min": 60, "max": 61,
+    "name": "Runaway Betrothed",
+    "text": "Runaway. You were betrothed to the pig farmer's son/daughter from a neighboring village. Start with 2 extra rations (pork themed).",
+    "grantedItems": [
+      { "id": "g_17", "quantity": 2 }
+    ]
+  },
+  {
+    "min": 62, "max": 63,
+    "name": "Chicken Baron",
+    "text": "Look at all these chickens you stole. Gain 1d6 chickens. If you roll a 6, gain 6x1d6x1d6 chickens instead. Do not gain any way to store, feed, or corral these chickens.",
+    "grantedCompanions": [
+      { "type": "Chicken Flock" }
+    ]
+  },
+  {
+    "min": 64, "max": 66,
+    "name": "Cursed Farmer",
+    "text": "Cursed farmer. Your crops withered, your friends turned against you, your cattle melted, and your house burned down. Gain the ability to sense magic (as Eldritch Feast pg. 13)."
+  },
+  {
+    "min": 67, "max": 69,
+    "name": "Wanted Thief",
+    "text": "During a botch stagecoach robbery, you shot a noble in the eye. Partially blinded, they have vowed revenge. Gain 5 silver pieces and a powerful enemy.",
+    "grantedSilver": 5,
+    "notes": "Powerful enemy seeking revenge for a shot to the eye."
+  },
+  {
+    "min": 70, "max": 72,
+    "name": "Hunted High Roller",
+    "text": "Gambler. You owe a powerful guild a great deal of money. Gain a set of weighted dice.",
+    "grantedFreeGear": "Weighted Dice (Hunted High Roller)"
+  },
+  {
+    "min": 73, "max": 75,
+    "name": "Robbing Hood",
+    "text": "You robbed from the rich and gave to the poor. Sometimes on purpose. You have a reputation in a nearby city or town and a small bounty on your head."
+  },
+  {
+    "min": 76, "max": 78,
+    "name": "Mycology Enthusiast",
+    "text": "Mycology enthusiast. You have an encyclopedic knowledge of mushrooms and other fungi. ADV on WIS saves to determine the edibility and potentially lethal nature of any mushrooms that you harvest."
+  },
+  {
+    "min": 79, "max": 81,
+    "name": "Wanderer",
+    "text": "Wanderer. Youngest of 4 siblings. The oldest inherited the family home, the next the workshop, and the third the pack animals. You got a backpack and a shove out the door."
+  },
+  {
+    "min": 82, "max": 84,
+    "name": "Regretful Hustler",
+    "text": "Abandoned your family to seek wealth, glory, or a better position. Start with 2 extra rations and a lingering sense of guilt.",
+    "grantedItems": [
+      { "id": "g_17", "quantity": 2 }
+    ]
+  },
+  {
+    "min": 85, "max": 86,
+    "name": "Beast Eater",
+    "text": "Monster gourmand. You are writing a secret cookbook about how to survive only on what you slay in dungeons. Gain an iron pot and cooking utensils.",
+    "grantedItems": [
+      { "id": "g_06", "quantity": 1 }
+    ]
+  },
+  {
+    "min": 87, "max": 89,
+    "name": "Escaped Acolyte",
+    "text": "Acolyte. You escaped from the stifling monotony of a monastery. A team of angry nuns track you relentlessly."
+  },
+  {
+    "min": 90, "max": 92,
+    "name": "Exiled Ward",
+    "text": "Your father died and your mother remarried an influential yeoman of the county. He agreed to adopt you, but instead had you kidnapped in the dead of night and shipped off to foreign lands."
+  },
+  {
+    "min": 93, "max": 95,
+    "name": "Mistaken Crook",
+    "text": "Outcast. You lost an ear to a badger as the result of a childhood dare. Everyone now assumes you are a petty criminal, making honest work all but impossible to find."
+  },
+  {
+    "min": 96, "max": 98,
+    "name": "Fallen Scion",
+    "text": "Scion of a fallen house. Your family claims descent from the nobility of an ancient kingdom. You seek some way of proving it."
+  },
+  {
+    "min": 99, "max": 100,
+    "name": "Lothario on the Lam",
+    "text": "Letcher. Fleeing a string of torrid affairs in the capitol, you thought the borderlands would be a good place to lay low for a while. Gain a vial of scented oil.",
+    "grantedFreeGear": "Vial of Scented Oil"
+  }
+]

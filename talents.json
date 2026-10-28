@@ -1,0 +1,867 @@
+[
+  {
+    "id": "anc_construct_main",
+    "name": "Construct",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "Constructs don’t necessarily consume rations like other PCs, but they do need fuel or spare parts to heal/repair during Short or Long Rests. Treat these as rations.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_gadgets",
+    "name": "Gadgets",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "You have 3 mundane items from the equipment list (pg. 9) built into your body. They occupy 0 item slots.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_secret_compartments",
+    "name": "Secret Compartments",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "You have 3 internal item slots. They are concealed, but can be found with a deliberate search.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "id": "anc_stone_skin",
+    "name": "Stone Skin",
+    "type": "ancestry",
+    "set": "Construct",
+    "description": "Your outer casing functions as medium armor (AC 14, same restrictions). This can be upgraded. Costs 200sp and a week of downtime per additional +1 AC.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "ac_unarmored_base",
+        "mode": "override",
+        "value": 14
+      }
+    ]
+  },
+  {
+    "id": "anc_brick_outhouse",
+    "name": "Brick Outhouse",
+    "type": "ancestry",
+    "set": "Demi-Ogre",
+    "description": "You're built hardier than most humanoids. You have ADV on STR saves and gain +2hp per level.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "anc_draconic_bloodlines",
+    "name": "Draconic Bloodlines",
+    "type": "ancestry",
+    "set": "Drake",
+    "description": "You manifest the great wyrms in some physical fashion. Choose or roll 1d4:",
+    "repeatable": false,
+    "subOptions": [
+      {
+        "id": "bloodline_fangs",
+        "name": "1. Fangs & Claws",
+        "description": "Your claws and fangs are particularly pronounced and function as natural weapons (1d6 +STR damage)."
+      },
+      {
+        "id": "bloodline_horns",
+        "name": "2. Horns",
+        "description": "You have really cool horns (ram, bull, rhino, etc.). Roll with ADV when attempting to intimidate anyone shorter than your horns."
+      },
+      {
+        "id": "bloodline_tail",
+        "name": "3. Tail",
+        "description": "ADV on rolls to perform the following combat maneuvers: disarm and trip."
+      },
+      {
+        "id": "bloodline_wings",
+        "name": "4. Wings",
+        "description": "You cannot fly. But you can fall up to 3 zones without taking any damage. After that, you take ½ falling damage."
+      }
+    ]
+  },
+  {
+    "id": "anc_elemental_breath",
+    "name": "Elemental Breath",
+    "type": "ancestry",
+    "set": "Drake",
+    "description": "[HL] times per Long Rest you can manifest this as an exhalation of destructive energy. Determine the elemental energy type of your breath attack (Acid, Cold, Fire, Lightning, or Poison) and shape: cones hit up to [HL]+2 targets in your zone, or a stream that can hit up to [HL]+1 targets in a line up to 2 zones away. Save vs STR to hit. Your breath inflicts [HL]d6+STR damage. On a failed save you still inflict ½ damage.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_scales",
+    "name": "Scales",
+    "type": "ancestry",
+    "set": "Drake",
+    "description": "Reduce incoming physical damage by 2 point. You gain a +2 bonus when making STR saves to resist physical attacks and effects.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_the_stare",
+    "name": "The Stare, R0",
+    "type": "ancestry",
+    "set": "Drake",
+    "description": "You have the dead eyes of a coldblooded predator. As an action, save vs WIL to lock eyes with a single creature of [L]HD or less that you can see. They are incapacitated. Save vs WIL each round to maintain. The target creature must have eyes and basic animal intelligence.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_greedy",
+    "name": "Greedy",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "You can smell when a treasure hoard is nearby. This ability is imprecise. A bag of gold in the next room smells the same as a dragon’s hoard three leagues away.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_handy_if_not_handsome",
+    "name": "Handy if Not Handsome",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "As long as you have basic tools you can make significant repairs to a single object overnight. You don't need sleep when you work; your obsession is refreshing. You have 3 extra item slots. These are hidden in your beard.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "id": "anc_roots_of_the_mountain",
+    "name": "Roots of The Mountain",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "Gain +2hp per Level. As long as one foot is planted firmly on the ground you have ADV on STR saves to resist being knocked prone, shoved, or otherwise moved. You gain ADV on rolls to perform the following combat maneuvers: grapple and shield bash.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "anc_stone_cunning",
+    "name": "Stone Cunning",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "By tasting and nibbling the stone of a room you can determine if there are any traps nearby, though not their exact location - ADV to spot traps.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_stone_sight",
+    "name": "Stone Sight, R2",
+    "type": "ancestry",
+    "set": "Dwarf",
+    "description": "In complete darkness (windowless room, dungeon etc.) dwarves use sonic throat singing, providing them a sort of sonar that lets them see as if it were dimly lit. The ringholds of your people are alive with sonorous music. Moving silently & unseen is impossible when using these vocalizations.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_alert",
+    "name": "Alert",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "You have ADV on rolls to avoid being surprised when in the wilderness and may add your WIS bonus, in addition to DEX to all initiative rolls.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_glade_and_glen",
+    "name": "Glade & Glen",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "You are attuned to the living spirits all around you in stoic rock, burbling stream, and wolf's red ripping mouth. You move through the landscape without leaving a trace, and the natural world conspires with you in this. You are sly and wily. Gain +2 to Move Silently & Unseen. When traveling through a wilderness alone or with other elves you cannot be tracked and terrain penalties do not effect you.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_star_eyed",
+    "name": "Star Eyed",
+    "type": "ancestry",
+    "set": "Elf",
+    "description": "Elves treat starlight as sunlight. If you can see the stars, you can see as well as you can during the day. You can do the spooky head turn thing like an owl. You effectively have 360-degree vision. Because the great wodes were once full of magic doors to the fey realms you have ADV when searching for secret doors.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_sneaky_git",
+    "name": "Sneaky Git!",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You have ADV on rolls to Move Silently and Unseen.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_suspicious_by_nature",
+    "name": "Suspicious By Nature",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You have ADV on rolls to avoid being surprised.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_moon_eyes",
+    "name": "Moon Eyes",
+    "type": "ancestry",
+    "set": "Goblin",
+    "description": "You are not penalized when acting in dim light.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_danger_sense",
+    "name": "Danger Sense",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "You have ADV on rolls to avoid being surprised.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_dungeon_gourmand",
+    "name": "Dungeon Gourmand",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "Hereditary gourmets, half-foots have a knack for finding edible morsels. When foraging or examining the corpse of a monster, you're able to identify the safest and tastiest portions. You can also \"follow you noses\" to locate kitchens, larders, pantries, and feast-halls -GM’s discretion on the range of this ability.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_luck_of_the_small_folk",
+    "name": "Luck of the Small Folk",
+    "type": "ancestry",
+    "set": "Half-Foot",
+    "description": "Once per Long Rest you may reroll a failed save.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_hells_child",
+    "name": "Hell’s Child",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "Your demonic bloodlines allow you to sense when creatures from the Nine-Fold Hells are nearby. This registers as a sulfuric burn in your nostrils that varies in intensity with distance and the power of the hellspawn. This ability is imprecise. An imp in the next room smells the same as a demon prince three leagues away.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_prehensile_tail",
+    "name": "Prehensile Tail",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "Can be used as a crude third arm. It can’t wield a weapon but it can carry things, help open stuck jars, and make melee attacks against anyone who has you in a grapple without DISADV. You have ADV on the combat maneuvers: disarm and trip.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_read_the_coals",
+    "name": "Read The Coals",
+    "type": "ancestry",
+    "set": "Infernal",
+    "description": "You can gain insight from mundane fire. As long as the embers are still warm you can create a ghostly illusion that plays back everything that happened within the light of that fire. The ash and embers cannot answer questions or recognize individuals, but if you are looking for something specific, and you have seen it with your own eyes earlier, you can jump directly to that part of the illusion.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_keen_senses",
+    "name": "Keen Senses",
+    "type": "ancestry",
+    "set": "Kobold",
+    "description": "You have ADV on WIS saves that rely on sight, sound, or smell.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_uncanny",
+    "name": "Uncanny",
+    "type": "ancestry",
+    "set": "Kobold",
+    "description": "You can sense (but not see) invisible creatures within your zone. This lets you pinpoint their location. You also get a sense of their movements, so if they are moving at all, you can attack them without penalty.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_nights_sight",
+    "name": "Night’s Sight",
+    "type": "ancestry",
+    "set": "Orc",
+    "description": "Your glowing red eyes allow you to see further in dim lighting. The dim light from torches effectively reaches 1 additional zone for you. Penalties for dim light still apply. You can see the difference between dead bodies and the undead, between ordinary shadows and shadow-monsters. You can see necrotic magic and negative energy whenever they're used.",
+    "repeatable": false
+  },
+  {
+    "id": "anc_tough_as_nails",
+    "name": "Tough as Nails",
+    "type": "ancestry",
+    "set": "Orc",
+    "description": "Once per Long Rest, when you’re reduced to 0hp but not killed outright, you drop to 1hp instead.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_barbarian_cleave",
+    "name": "Cleave",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "When your attack reduces a creature to 0hp, make another attack with the same weapon against a target you can reach. You may cleave up to [HL] targets per round.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_barbarian_danger_sense",
+    "name": "Danger Sense",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "You have ADV on initiative rolls and WIS saves to avoid surprise.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_barbarian_die_hard",
+    "name": "Die Hard",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "Once per Long Rest when you are reduced to 0hp, but not killed outright, you stay on your feet with 1 HP.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_barbarian_favor_of_the_gods",
+    "name": "Favor of the Gods",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "When you wear no armor, add your STR bonus to your AC in addition to your DEX bonus. You may wield a shield. Sun's out, guns out! You gain +2hp per level.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "gen_barbarian_rage",
+    "name": "Rage!",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "[HL] times per Long Rest, as a free action enter a rage at the start of your turn, or as a reaction to taking damage. While in a rage, you have ADV on attack and damage rolls, reduce incoming physical damage by ½, and you are immune to fear and mind controlling spells. Spellcasting is not possible. You may save vs WIL at the start of your turn as a free action to end the Rage. Duration: [L]+2 rounds. You gain +2hp per level.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "gen_barbarian_rush",
+    "name": "Rush",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "[HL]+1 times per Long Rest you may take a free move action and make an attack with ADV.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_barbarian_savage_strike",
+    "name": "Savage Strike",
+    "type": "talent",
+    "set": "Barbarian",
+    "description": "Reroll damage of 3 or less. Use the better roll. When you kill a foe, any extra damage carries over to another enemy in the same zone.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_banish",
+    "name": "Banish",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "Banish (R1). [HL] times per Long Rest. 2d6+[L] Hit Dice worth of undead creatures are turned. Banished creatures flee the area and will not harm or make contact with you. When used against a mixed group of undead, those with the lowest HD are affected first. Undead with 2 HD less than you are destroyed outright.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_detect_rot",
+    "name": "Detect Rot",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "Detect Rot (R1). You can smell the foul taint of necromancers, warlocks, cursed objects, and evil creatures. Once you have laid eyes on such persons or objects, you are able to track them (1 mile range). When in their presence they emit a sooty smoke and reek of sulfur. Only you can detect these emanations.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_face_me",
+    "name": "\"Face Me!\"",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "\"Face Me!\" (WIL). Challenge a foe to single combat. If they attack a creature other than you, they do so with DISADV and grant you ADV on attacks made against them that round.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_heavens_crushing_touch",
+    "name": "Heaven's Crushing Touch",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "When you miss with a melee attack, your next melee attack & damage roll against the same target is made with ADV. You gain +2hp per level.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "gen_holy_warrior_hospitaller",
+    "name": "Hospitaller",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "Hospitaller. [HL] times per Short Rest. Your knowledge of godlings and spirits has lead to a strong working knowledge of the four basic humors, and the six-plus-one chakras. Save vs WIL to summon divine grace for yourself or a willing creature. You must declare what you are attempting to do. Failure means you may not attempt that specific wonder again until you Long Rest.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_keeper_of_relics",
+    "name": "Keeper of Relics",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "You have been entrusted with the safekeeping of 3 holy relics - these allow you to cast divine spells. You may take this talent more than once. Roll randomly or work with your GM to select spells from the Spell List (pg. 30).",
+    "repeatable": true,
+    "containerGrant": {
+      "type": "Holy Relic",
+      "count": 3,
+      "itemSlots": 1
+    }
+  },
+  {
+    "id": "gen_holy_warrior_radiance",
+    "name": "Radiance",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "Radiance (RO, WIL). [HL] times per Long Rest as a Free action, summon a holy aura that grants you +2 AC, +2 damage, [HL]+5 temporary hp, or makes you immune to fear and mind controlling spells. Affects you and up to [HL] allies in your zone. Duration: [L]+1 rounds.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_signs_and_portents",
+    "name": "Signs & Portents",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "You see symbols and meaning in everything. Sometimes they are even real. Reroll 1 save per Long Rest.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_smite",
+    "name": "Smite",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "Smite. [HL] times per Short Rest, as part of a successful melee attack call on your patron's wroth. Inflict an additional [HL]d6 damage.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_holy_warrior_suffer_the_slings_and_spears",
+    "name": "Suffer The Slings & Spears",
+    "type": "talent",
+    "set": "Holy Warrior",
+    "description": "As a free reaction, when an ally in the same zone is hit you may choose to take the damage for them. Physical damage only. If wielding a shield save vs STR for ½ damage. On a critical success take no damage.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_deadeye",
+    "name": "Deadeye",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "When you miss with a ranged attack, your next shot is made with ADV.",
+    "repeatable": false
+  },
+
+  {
+  "id": "gen_ranger_dog_whisperer",
+  "name": "Dog Whisperer",
+  "type": "talent",
+  "set": "Hunter",
+  "description": "You have a dog. Dogs you train have ADV when attempting to Move Silently & Unseen, can communicate to you if an area is obviously dangerous, and can track a week-old trail by scent without fail (barring magical concealment).",
+  "repeatable": false,
+  "companionGrant": {
+    "type": "Hound",
+    "itemSlots": 0
+  }
+  },
+  {
+    "id": "gen_hunter_crippling_shot",
+    "name": "Crippling Shot",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "If you hit an enemy with a ranged weapon, you can choose to deal 1 damage instead of rolling. The wounded creature cannot move until the end of your next turn and their next attack deals ½ damage.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_deflection",
+    "name": "Deflection",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "[L] times per Short Rest when a physical ranged attack would hit you, save vs DEX as a free reaction. On a success you block the attack. If the die result is 18+, you deflect the shot back on your attacker for full damage.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_impossible_shot",
+    "name": "Impossible Shot",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "Once per Short Rest, you can make an impossible shot with a ranged weapon. The attack automatically hits. The attack can bounce around corners, cut a coin in half, or part a single hair on a target's head.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_inhuman_accuracy",
+    "name": "Inhuman Accuracy",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "Your arrows appear to twist and turn in flight like birds. You ignore the penalty for shooting targets within the zone you occupy and there is no risk of hitting allies. Targets only receive ½ of their normal cover bonus (if any).",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_monster_slayer",
+    "name": "Monster Slayer",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "[HL] times per Long Rest, you can cause a weapon attack to deal maximum damage to a creature that is at or below 50% hp. If you miss, this ability is not expended. You can identify any creature you are familiar with by tasting its blood and estimate how old the blood is.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_quick_shot",
+    "name": "Quick Shot",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "If you do not move on your turn you may make an additional attack with a ranged weapon. Your first attack must have been made with the same weapon. Does not apply to weapons that take 1 or more rounds to reload.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_hunter_two_weapon_fighter",
+    "name": "Two-Weapon Fighter",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "You can fight with two one-handed melee weapons at once. Roll once to attack, but roll damage with ADV. The second weapon also grants +1 AC.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "ac_bonus",
+        "mode": "add",
+        "value": 1
+      }
+    ]
+  },
+  {
+    "id": "gen_hunter_wilderness_sense",
+    "name": "Wilderness Sense",
+    "type": "talent",
+    "set": "Hunter",
+    "description": "You thrive in the wild, protecting the realm from the horrors that lurk in the demon-haunted woods and the deep places of the earth. You have ADV on WIS saves to track, hunt, and navigate in wilderness areas. When you act as a guide, terrain penalties for overland travel are reduced by 1. When you travel alone, or with other adventurers who have this talent you cannot be tracked and terrain penalties do not effect you.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_magic_user_eldritch_feast",
+    "name": "Eldritch Feast",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "A living spell has grafted itself to your soul. You may cast it once per Long Rest. No spellbook/item slot required. The effects of containing raw magic within your physical body manifests in some strange and possibly upsetting way - please describe how. By tasting an object you can tell if it is magical though not what it does.",
+    "repeatable": false,
+    "containerGrant": {
+      "type": "Soul-grafted Spell",
+      "count": 1,
+      "itemSlots": 0
+    }
+  },
+  {
+    "id": "gen_magic_user_familiar",
+    "name": "Familiar",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "Gain a small mystical companion with [L]+5 HP. You can communicate with it telepathically as long as you can see it. If it dies it can be re-summoned with 50sp worth of components and a Long Rest. Your familiar can hold one of your spells like an extra item slot and you can cast that spell through them.",
+    "repeatable": false,
+    "containerGrant": {
+      "type": "Familiar Spell",
+      "count": 1,
+      "itemSlots": 0
+    }
+  },
+  {
+    "id": "gen_magic_user_flame_proof",
+    "name": "Flame Proof",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "You can cast from scrolls in a way that does not consume the scroll.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_magic_user_magic_ward",
+    "name": "Magic Ward",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "Reduce all incoming magic damage by ½. Does not apply to self-inflicted damage. Once per Long Rest, negate the full effect of a spell that targets you.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_magic_user_the_manifold_cerebrum",
+    "name": "The Manifold Cerebrum",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "You have trained in self-delusion, meditation, cerebration, and other esoteric techniques to modify your mind, making it alluring to your spells. Free Action: after a spell has been cast you yodel, sing, bark, and otherwise attempt to cajole the spell back to you. Save vs WIL. If you succeed, the spell returns to its spellbook and may be cast again that day on a subsequent turn. If you have already recovered it once that day, make the save with DISADV. Lost spells are replenished after a Long Rest as usual.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_magic_user_scholar_of_the_unseen_university",
+    "name": "Scholar of The Unseen University",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "Your master has entrusted you with the safekeeping of 3 spellbooks. You may take this talent more than once. Roll randomly or work with your GM to select spells from the Spell List (pg. 30) and learn the following cantrips: A. Change the color or texture of a medium-sized object for 10 minutes. B. Create a tiny light as bright as a match on your fingertip. C. Move a light object with a wave of your finger. Cause a coin to dance on a tabletop or turn the pages of a book, etc.",
+    "repeatable": true,
+    "containerGrant": {
+      "type": "Spellbook",
+      "count": 3,
+      "itemSlots": 1
+    }
+  },
+  {
+    "id": "gen_magic_user_spell_eater",
+    "name": "Spell Eater",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "Reaction. Once per Short Rest, when a spell is targeted at you, save vs WIL. If successful, you absorb the spell and may cast it once before your next Long Rest. Suffer the effects of the spell on a failed save. You can only hold one spell at a time in this manner.",
+    "repeatable": false
+  },
+{
+  "id": "gen_magic_user_sword_wizard",
+  "name": "Sword Wizard",
+  "description": "You can cast spells while wielding a weapon in one or both of your hands. You still need to have the spellbook and components in your inventory and they are expended in the usual manner.",
+  "set": "Magic User",
+  "containerGrant": {
+    "type": "Rune Sword",
+    "count": 1,
+    "itemSlots": 1
+  },
+  "weaponStats": {
+    "name": "Rune Sword",
+    "damage": "1d8",
+    "cost_sp": 10
+  }
+},
+  {
+    "id": "gen_magic_user_the_thrice_divided_intellect",
+    "name": "The Thrice Divided Intellect",
+    "type": "talent",
+    "set": "Magic User",
+    "description": "You have ADV on saves to resist magical attacks that affect your mind and senses. Sleep & Charm spells do not affect you.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_raconteur_bards_tongue",
+    "name": "Bard’s Tongue",
+    "type": "talent",
+    "set": "Raconteur",
+    "description": "You have ADV when making a reaction roll (pg. 21) for a sentient creature that can understand you.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_raconteur_inspire",
+    "name": "Inspire",
+    "type": "talent",
+    "set": "Raconteur",
+    "description": "Use your action to grant a willing creature +1d4 to their next save or attack roll.",
+    "repeatable": false
+  },
+{
+  "id": "gen_thief_always_armed",
+  "name": "Always Armed",
+  "type": "talent",
+  "set": "Thief",
+  "description": "Even when you have been disarmed, you still have a dagger hidden on you.",
+  "repeatable": false,
+  "hiddenItemGrant": {
+    "name": "Hidden Dagger",
+    "type": "Weapon",
+    "damage": "1d4",
+    "range": "Close",
+    "slots": 0,
+    "cost_sp": 0,
+    "details": "Concealed on your person. Always available even when disarmed."
+  }
+},
+
+{
+    "id": "gen_thief_always_prepared",
+    "name": "Always Prepared",
+    "type": "talent",
+    "set": "Thief",
+    "description": "In town, you may buy an Unlabelled Package (1 use, 20sp, 1 slot). When the package is unwrapped in play, you declare what it contains, as long as the contents were available in town. Small items that can be bundled together (ex. 3 oil flasks) will be of a quantity sufficient to fill 1 Item Slot. You can have up to two Unlabelled Packages at a time.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_backstab",
+    "name": "Backstab!",
+    "type": "talent",
+    "set": "Thief",
+    "description": "Whenever you have a situational bonus to an attack roll (surprise, elevation, flanking, etc.) inflict an addition [HL]d6 damage. You must use a melee weapon. You attack with ADV if your target is surprised.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_evasion",
+    "name": "Evasion",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have ADV on DEX saves to avoid traps and attacks that you can see coming. If success would ½ the damage, you instead take no damage. Damage from falls do ½ damage.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_great_escape",
+    "name": "Great Escape",
+    "type": "talent",
+    "set": "Thief",
+    "description": "Once per Long Rest you can automatically escape from something that is restraining you and that you could plausibly escape from. This includes grapples, lynchings, pit traps, and awkward social situations, but not things like sealed coffins or pocket dimensions.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_keen_eyed",
+    "name": "Keen Eyed",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have ADV on rolls to Find Hidden Things.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_lock_snipe",
+    "name": "Lock Snipe",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have ADV on DEX saves to disable traps and pick locks. Both require specialized tools.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_pack_rat",
+    "name": "Pack Rat",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have 3 additional Item Slots.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "extra_item_slots",
+        "mode": "add",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "id": "gen_thief_quick_fingers",
+    "name": "Quick Fingers",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have ADV on DEX saves to pichpocket people. You can steal things directly out of someone's hands with a DEX save (no ADV).",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_roof_rat",
+    "name": "Roof Rat",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You climb just as well without climbing gear as with it. If a climb is possible using gear, you don't need to roll, even if you're free-climbing. If a climb would be nearly impossible you can make a DEX save to attempt it anyway.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_thief_skulker",
+    "name": "Skulker",
+    "type": "talent",
+    "set": "Thief",
+    "description": "You have ADV on saves to Move Silently and Unseen.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_girded_loins",
+    "name": "Girded Loins",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Once per Short Rest, reduce damage from an attack made against you by ½. You and any hirelings have ADV to save vs fear and on morale checks.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_hack_and_slash",
+    "name": "Hack & Slash!",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Your critical success range with melee weapons is 18-20. When you critically succeed on your attack roll you may perform a free combat maneuver (pg. 24) in addition to your attack. The same applies to a critical success on a combat maneuver: you may perform a free attack in addition to the combat maneuver.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_opportunist",
+    "name": "Opportunist",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Once per round, up to [HL] enemies attempting to move in or out of your zone provoke a free attack from you. Other movement (enemies being tripped or knocked prone, wizards waving their hands about to cast spells, enemies interacting with items/objects) in your zone triggers this talent.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_professional_killer",
+    "name": "Professional Killer",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Warfare is your trade. Death is your craft. You gain +2hp per level. You gain an extra melee attack. Casting spells cancels out your extra attack(s), unless the spell lives within a magical weapon you are currently wielding and is triggered by making a weapon attack.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "gen_warrior_riposte",
+    "name": "Riposte",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Once per round when you are struck in melee, make an immediate free attack in return.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_shield_master",
+    "name": "Shield Master",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "When a physical attack or effect allows a save for ½ damage, take no damage if you succeed - your shield absorbs the blow. Shields provide you with +4 AC against ranged attacks, instead of the usual +2 AC.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "ac_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "id": "gen_warrior_truculence",
+    "name": "Truculence",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "You are immune to any spells or effects that would alter your natural disposition, goals, or views, from charm spells to total perspective vortices.",
+    "repeatable": false
+  },
+  {
+    "id": "gen_warrior_veteran",
+    "name": "Veteran",
+    "type": "talent",
+    "set": "Warrior",
+    "description": "Those who fight fair, die first. You gain ADV on all combat maneuvers (pg. 24). You gain +2hp per level.",
+    "repeatable": false,
+    "effects": [
+      {
+        "type": "stat_modifier",
+        "target": "hp_per_level_bonus",
+        "mode": "add",
+        "value": 2
+      }
+    ]
+  }
+]
