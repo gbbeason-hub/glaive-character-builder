@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Lilita+One&family=Rubik+Dirt&display=swap');
+
 /* ==========================================================================
    1. GLOBAL VARIABLES & THEMING
    ========================================================================== */
@@ -212,7 +214,6 @@ textarea:focus {
 /* ==========================================================================
    5. PRINT ENGINE & WEB FONT IMPORTS (@media print)
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Lilita+One&family=Rubik+Dirt&display=swap');
 
 .printable-character-sheet {
   display: none !important;
