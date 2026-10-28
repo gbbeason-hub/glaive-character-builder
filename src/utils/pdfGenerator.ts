@@ -1,5 +1,5 @@
-import { calculateWeaponCombatStats } from './combatCalculations';
-import type { WeaponItem, CharacterStats } from './combatCalculations';
+import { calculateWeaponCombatStats } from '../utils/combatCalculations';
+import type { WeaponItem, CharacterStats } from '../utils/combatCalculations';
 
 export interface CharacterSheetData {
   name: string;
