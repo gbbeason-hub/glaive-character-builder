@@ -74,7 +74,7 @@ export function App() {
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
 
   // Currency States
-  const [silver, setSilver] = useState<number>(50);
+  const [silver, setSilver] = useState<number>(0);
   const [copper, setCopper] = useState<number>(0);
   const [hasRolledSilver, setHasRolledSilver] = useState<boolean>(false);
 
