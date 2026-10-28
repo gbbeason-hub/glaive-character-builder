@@ -278,8 +278,7 @@ textarea:focus {
     break-before: page !important;
   }
 
-
-  /* --- NAME & SILVER HEADER (Single Page Fit) --- */
+  /* --- NAME & SILVER HEADER --- */
   .print-header-row {
     margin-bottom: 12px !important;
     align-items: baseline !important;
@@ -287,6 +286,31 @@ textarea:focus {
   .print-header-row .print-label {
     font-family: 'Lilita One', cursive !important;
     font-size: 16pt !important;
+  }
+
+  /* PC Name text */
+  .print-header-row span:not(.print-label) {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 16pt !important;
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  /* Coins write-in line */
+  .print-silver-width {
+    border-bottom: none !important;
+    width: auto !important;
+    text-align: right;
+  }
+  .print-coin-write-box {
+    display: inline-block;
+    border-bottom: 1.5px solid #000;
+    min-width: 70px;
+    text-align: left;
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 11pt !important;
+    padding-left: 4px;
+    margin-right: 4px;
   }
 
   /* --- CONDITIONS TRACKER --- */
@@ -313,31 +337,6 @@ textarea:focus {
     margin: 0 !important;
   }
 
-  /* PC Name text = Amaranth (as requested), sized cleanly */
-  .print-header-row span:not(.print-label) {
-    font-family: 'Amaranth', sans-serif !important;
-    font-size: 16pt !important;
-    font-weight: 700;
-    margin-left: 8px;
-  }
-
-  /* Coins write-in line */
-  .print-silver-width {
-    border-bottom: none !important;
-    width: auto !important;
-    text-align: right;
-  }
-  .print-coin-write-box {
-    display: inline-block;
-    border-bottom: 1.5px solid #000;
-    min-width: 70px;
-    text-align: left;
-    font-family: 'Amaranth', sans-serif !important;
-    font-size: 11pt !important;
-    padding-left: 4px;
-    margin-right: 4px;
-  }
-
   /* --- STATS: Labels = Rubik Dirt, Values = Lilita One --- */
   .print-stats-grid {
     display: grid;
@@ -353,19 +352,16 @@ textarea:focus {
     align-items: center;
   }
 
-  /* Stat Labels (STR, DEX, HP, Level, etc.) -> Rubik Dirt */
   .print-stat-label-font {
     font-family: 'Rubik Dirt', display, sans-serif !important;
     font-size: 10.5pt !important;
   }
 
-  /* Stat Values (+3, 13, 1, etc.) -> Lilita One */
   .print-stat-value-font {
     font-family: 'Lilita One', cursive !important;
     font-size: 12pt !important;
   }
 
-  /* Attribute Box Styling */
   .print-stat-item.print-attribute-box {
     background-color: #434343 !important;
     border-radius: 4px !important;
@@ -377,7 +373,6 @@ textarea:focus {
     color: #ffffff !important;
   }
 
-  /* Vitals Styling (No background box) */
   .print-stat-item.print-vital-box {
     background-color: transparent !important;
     padding: 2px 4px !important;
@@ -387,7 +382,7 @@ textarea:focus {
     color: #000000 !important;
   }
 
-  /* --- CLEANUP --- */
+  /* --- CLEANUP & UNIFIED TYPOGRAPHY --- */
   .print-trackers-section,
   .print-trackers-section div,
   .print-trackers-section label {
@@ -396,7 +391,6 @@ textarea:focus {
     box-shadow: none !important;
   }
 
-  /* Unified Typography for Traits, Narrative, and Free Gear Blocks */
   .print-traits-grid,
   .print-traits-grid div,
   .print-narrative-block,
@@ -446,8 +440,8 @@ textarea:focus {
 
   .print-talent-row {
     font-family: 'Amaranth', sans-serif !important;
-    font-size: 8.5pt !important;     /* Tweak font size here */
-    line-height: 1.1 !important;     /* Tweak line height here */
+    font-size: 8.5pt !important;
+    line-height: 1.1 !important;
   }
 
   .print-talent-row strong {
@@ -469,7 +463,7 @@ textarea:focus {
     gap: 6px;
     font-family: 'Amaranth', sans-serif !important;
     font-size: 8.5pt !important;
-    height: 24px !important;
+    height: 38px !important;
   }
 
   .print-talent-writein-slot .print-slot-number {
@@ -489,13 +483,13 @@ textarea:focus {
   .print-weapon-card {
     border: none !important;
     border-bottom: 1.5px solid #000 !important;
-    padding: 0 0 3px 0 !important;    /* Reduced top padding to 0 */
-    margin-bottom: 3px !important;    /* Reduced space between cards */
+    padding: 0 0 3px 0 !important;
+    margin-bottom: 3px !important;
   }
 
   .print-weapon-top {
     border-bottom: none !important;
-    margin-bottom: 0px !important;   /* Pulls stat numbers directly under the header line */
+    margin-bottom: 0px !important;
     font-size: 10.5pt !important;
     line-height: 1.1 !important;
   }
@@ -503,7 +497,7 @@ textarea:focus {
   .print-weapon-stats > div > div:first-child {
     font-family: 'Amaranth', sans-serif !important;
     font-weight: 700 !important;
-    font-size: 12pt !important;       /* Clean, compact stat value size */
+    font-size: 12pt !important;
     line-height: 1.1 !important;
   }
 
@@ -513,9 +507,7 @@ textarea:focus {
     font-family: 'Lilita One', cursive !important;
     line-height: 1.0 !important;
   }
-}
 
-/* --- BLANK WRITE-IN WEAPON STYLES --- */
   .blank-weapon-slot .print-writein-line {
     display: inline-block;
     width: 65%;
@@ -528,6 +520,94 @@ textarea:focus {
     height: 14px;
     margin-top: 4px;
   }
+
+  /* --- SPELLS PRINT STYLES --- */
+  .print-spells-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .print-spell-row {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;
+    line-height: 1.2 !important;
+    color: #000 !important;
+  }
+
+  .print-no-spells {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 8px !important;
+  }
+
+  /* --- SPELL WRITE-IN ROWS (1-10) --- */
+  .print-spell-writein-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px !important;
+    margin-top: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .print-spell-writein-slot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;
+    height: 38px !important;
+  }
+
+  .print-spell-writein-slot .print-slot-number {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 8pt !important;
+    width: 14px;
+    text-align: right;
+  }
+
+  /* --- INVENTORY GRID & PENCIL-FRIENDLY LOCKED SLOTS --- */
+  .print-inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px !important;
+    margin-top: 6px !important;
+  }
+
+  .print-inventory-slot {
+    border: 1px solid #000 !important;
+    border-radius: 4px !important;
+    padding: 4px 6px !important;
+    min-height: 24px !important;
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #fff !important;
+    box-sizing: border-box;
+  }
+
+  .print-inventory-slot .print-slot-number {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 8pt !important;
+    width: 14px;
+    text-align: right;
+  }
+
+  /* Locked slots: Dashed border & near-white fill for pencil write-in */
+  .print-inventory-slot.is-locked-slot {
+    border: 1px dashed #777 !important;
+    background-color: #fdfdfd !important;
+  }
+
+  .print-inventory-slot.is-locked-slot .print-slot-number {
+    color: #777 !important;
+  }
+}
 
 
 /* ==========================================================================

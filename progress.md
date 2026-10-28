@@ -213,12 +213,17 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         
 
 - [NEW] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
-    - [NEW] Change to landscape ? 
-    - [NEW] Use the same fonts for the same elements as in the webapp UI
+    - [DONE] Keep portrait 
+    - [DONE] Use the same fonts for the same elements as in the webapp UI
     - [DONE] Conditions, Fatigue, Encumberance: Add to PDF
-    - [NEW] Weapons: no damage coming through for standard weapons
-    - [NEW] Weapons: no bonus shown for standard weapons
+    - [DONE] Weapons: no damage coming through for standard weapons
+    - [DONE] Weapons: no bonus shown for standard weapons
     - [DONE] Weapons: Add range, throwable, subtype keys
+    - [DONE] PDF: remove extra footer & header info
+    - [DONE] Talents: Print & add blank lines
+    - [DONE] Spells: add blank lines
+    - [DONE] Weapons: add empty weapon blocks
+    - [DONE] PDF: Create page 2/back page with spells & inventory
 
 - [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
 

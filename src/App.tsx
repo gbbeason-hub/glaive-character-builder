@@ -1212,24 +1212,34 @@ export function App() {
 
         {/* ==================== PAGE 2 (LOGISTICS & INVENTORY) ==================== */}
         <div className="print-page-break">
-          {/* Header repeat for Page 2 */}
-          
-
           <div className="print-grid">
+            
             {/* PAGE 2 LEFT COLUMN: SPELLS & MAGIC */}
             <div>
               <h4 className="print-section-title">Spells & Magic Items</h4>
-              {activeSpellsList.length === 0 ? (
-                <div className="print-no-weapons">No spells bound.</div>
-              ) : (
-                <div className="print-weapons-list">
-                  {activeSpellsList.map((spell, idx) => (
-                    <div key={idx} className="print-weapon-row">
-                      ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
-                    </div>
-                  ))}
-                </div>
-              )}
+              
+              {/* 1. RENDER ACTIVE BOUND SPELLS FIRST */}
+            {activeSpellsList.length === 0 ? (
+              <div className="print-no-spells">No spells bound.</div>
+            ) : (
+              <div className="print-spells-list">
+                {activeSpellsList.map((spell, idx) => (
+                  <div key={idx} className="print-spell-row">
+                    ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
+                  </div>
+                ))}
+              </div>
+            )}
+
+              {/* 2. RENDER 10 BLANK WRITE-IN SPELL SLOTS BELOW */}
+              <div className="print-spell-writein-grid">
+                {Array.from({ length: 11 }).map((_, i) => (
+                  <div key={i} className="print-spell-writein-slot">
+                    <span className="print-slot-number">{i + 1}</span>
+                    <span className="print-writein-line"></span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* PAGE 2 RIGHT COLUMN: INVENTORY */}
@@ -1241,23 +1251,26 @@ export function App() {
               </div>
 
               <div className="print-inventory-grid">
-                {Array.from({ length: 18 }).map((_, i) => {
-                  const item = inventory[i];
-                  return (
-                    <div
-                      key={i}
-                      className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
-                        i >= maxCarryingCapacity ? 'locked' : ''
-                      }`}
-                    >
-                      <span className="print-slot-number">{i + 1}</span>
-                      <span className={i >= maxCarryingCapacity ? 'strike-through' : ''}>
-                        {item ? `${item.name} (x${item.quantity})` : i >= maxCarryingCapacity ? '[Locked Slot]' : ''}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+  {Array.from({ length: 18 }).map((_, i) => {
+    const slotNumber = i + 1;
+    const item = inventory[i];
+    const isLocked = slotNumber > maxCarryingCapacity;
+
+    return (
+      <div
+        key={i}
+        className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
+          isLocked ? 'is-locked-slot' : ''
+        }`}
+      >
+        <span className="print-slot-number">{slotNumber}</span>
+        <span>
+          {item ? `${item.name} (x${item.quantity})` : ''}
+        </span>
+      </div>
+    );
+  })}
+</div>
             </div>
           </div>
         </div>
