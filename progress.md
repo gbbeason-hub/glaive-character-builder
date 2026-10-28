@@ -83,6 +83,18 @@ The fonts to use in the PDF & web site
 
 ## 🏁 Completed Steps
 
+1. Fix Weapon Calculation Bugs (Immediate Priority) [DONE] 
+Weapons: missing damage & bonus for standard weapons: Fixing how damage strings and stat-based attack bonuses (Strength/Wisdom/Dexterity) populate into standard weapons in state/inventory ensures all inventory items render complete combat data before working on visual templates.
+
+2. Page Orientation & Multi-Page Structural Layout [DONE] 
+Change to Landscape? & Better Looking Front/Back Layout: Deciding on portrait vs. landscape upfront determines your grid dimensions and column structure. Establishing the 2-page (Front/Back) print layout blueprint now dictates where every section lives.
+
+3. Font & Visual Styling Consistency [DONE] 
+Use webapp fonts for PDF elements: Applying @media print CSS rules to import and map your display/body fonts (Lilita One, Amaranth) to the print stylesheet ensures visual harmony between the builder UI and the printed sheet.
+
+4. Print-Only Mechanical Trackers [DONE] 
+Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print blocks/checkboxes for tracking Conditions, Fatigue, and Encumbrance slots on the printed sheet once the main layout is locked down.
+
 - [DONE] Categories of Changes (for talents & backgrounds). 
     - [DONE] HP Changes (e.g., Brick Outhouse, Veteran, Professional Killer)
     - [DONE] AC Changes (e.g., Stone Skin, Two-Weapon Fighter, Shield Master)
@@ -192,27 +204,7 @@ The fonts to use in the PDF & web site
         - [DONE] Add download JSON
         - [DONE] Remove Base64 encoding for plain JSON
         - [DONE] Button consistency
-
-
-## 🏁 Next Target Steps
-
-
-- [NEW] Phase 17 Pregen All: One button to randomize everything!
-
-1. Fix Weapon Calculation Bugs (Immediate Priority) [DONE] 
-Weapons: missing damage & bonus for standard weapons: Fixing how damage strings and stat-based attack bonuses (Strength/Wisdom/Dexterity) populate into standard weapons in state/inventory ensures all inventory items render complete combat data before working on visual templates.
-
-2. Page Orientation & Multi-Page Structural Layout
-Change to Landscape? & Better Looking Front/Back Layout: Deciding on portrait vs. landscape upfront determines your grid dimensions and column structure. Establishing the 2-page (Front/Back) print layout blueprint now dictates where every section lives.
-
-3. Font & Visual Styling Consistency
-Use webapp fonts for PDF elements: Applying @media print CSS rules to import and map your display/body fonts (Lilita One, Amaranth) to the print stylesheet ensures visual harmony between the builder UI and the printed sheet.
-
-4. Print-Only Mechanical Trackers [DONE] 
-Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print blocks/checkboxes for tracking Conditions, Fatigue, and Encumbrance slots on the printed sheet once the main layout is locked down.
-        
-
-- [NEW] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
+- [DONE] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
     - [DONE] Keep portrait 
     - [DONE] Use the same fonts for the same elements as in the webapp UI
     - [DONE] Conditions, Fatigue, Encumberance: Add to PDF
@@ -224,6 +216,12 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [DONE] Spells: add blank lines
     - [DONE] Weapons: add empty weapon blocks
     - [DONE] PDF: Create page 2/back page with spells & inventory
+    - [DONE] Inventory: Replace grey "locked" inventory cells with dotted borders.
+
+## 🏁 Next Target Steps
+
+
+- [NEW] Task 17 Pregen All: One button to randomize everything!
 
 - [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
 
@@ -261,3 +259,6 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - [ ] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
         - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
+
+
+- [NEW] Task 27 Art: Select art to add page 1 based on Scott's art for ancestries
