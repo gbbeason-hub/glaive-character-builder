@@ -15,7 +15,9 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             <h3>📖 Glaive Character Builder Help</h3>
             <button type="button" onClick={onClose} className="modal-close-btn">×</button>
           </div>
-         
+         <div className="modal-stats-bar">
+            <span><b>Build:</b> October 28, 2026</span>
+          </div>
         </div>
 
         <div className="modal-item-list help-modal-body">
