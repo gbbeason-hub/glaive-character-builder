@@ -272,6 +272,7 @@ textarea:focus {
     margin: 0.25in;
   }
 
+
   /* --- NAME & SILVER HEADER (Single Page Fit) --- */
   .print-header-row {
     margin-bottom: 12px !important;
@@ -427,6 +428,55 @@ textarea:focus {
   .print-freegear-block strong {
     font-family: 'Lilita One', cursive !important;
     font-size: 10.5pt !important;
+  }
+
+  /* --- TALENTS LIST PRINT STYLES --- */
+  .print-talents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .print-talent-row {
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;     /* Tweak font size here */
+    line-height: 1.1 !important;     /* Tweak line height here */
+  }
+
+  .print-talent-row strong {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 8.5pt !important;
+  }
+
+  /* --- TALENT WRITE-IN ROWS (1-9) --- */
+  .print-talent-writein-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .print-talent-writein-slot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Amaranth', sans-serif !important;
+    font-size: 8.5pt !important;
+    height: 24px !important;
+  }
+
+  .print-talent-writein-slot .print-slot-number {
+    font-family: 'Lilita One', cursive !important;
+    font-size: 8pt !important;
+    width: 12px;
+    text-align: right;
+  }
+
+  .print-writein-line {
+    flex-grow: 1;
+    border-bottom: 1px solid #999 !important;
+    height: 100%;
   }
 
   /* --- WEAPON CARDS COMPACT REFINEMENT --- */

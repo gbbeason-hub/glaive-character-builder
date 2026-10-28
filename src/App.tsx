@@ -732,6 +732,17 @@ export function App() {
     })
     .filter(Boolean) as Spell[];
 
+  // Aggregate Ancestry Talent + Selected Heroic Talents + Background-granted Talents
+  const ancestryTalent = talentsCatalog.find((t) => t.id === selectedAncestryTalentId);
+  const activeTalentObjects = [
+    ancestryTalent,
+    ...allActiveTalentIds
+      .map((tId) => talentsCatalog.find((t) => t.id === tId))
+      .filter(Boolean),
+  ].filter((talent, index, self) => 
+    talent && self.findIndex((t) => t?.id === talent.id) === index
+  );
+
   // ==========================================
   // 7. RENDER INTERFACE STRUCTURAL LAYOUT
   // ==========================================
@@ -1120,6 +1131,9 @@ export function App() {
 
 </div>
 
+       {/* --->  WEAPONS  <--- */}
+
+
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
 {inventory.filter((i) => i.type === 'Weapon').length === 0 ? (
@@ -1159,6 +1173,47 @@ export function App() {
   </div>
 )}
 
+
+            {/* --->  TALENTS  <--- */}
+            <h4 className="print-section-title">Talents & Special Abilities</h4>
+            {activeTalentObjects.length === 0 ? (
+              <div className="print-no-weapons">No talents selected.</div>
+            ) : (
+              <div className="print-talents-list">
+                {activeTalentObjects.map((talent, idx) => (
+                  <div key={idx} className="print-talent-row">
+                    <strong>{talent.name}:</strong> {talent.description || talent.details}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* TALENTS & SPECIAL ABILITIES */}
+            <h4 className="print-section-title">Talents & Special Abilities</h4>
+            {activeTalentObjects.length === 0 ? (
+              <div className="print-no-weapons">No talents selected.</div>
+            ) : (
+              <div className="print-talents-list">
+                {activeTalentObjects.map((talent, idx) => (
+                  <div key={idx} className="print-talent-row">
+                    <strong>{talent.name}:</strong> {talent.description || talent.details}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* WRITE-IN TALENT SLOTS (1 TO 9) */}
+            <div className="print-talent-writein-grid">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className="print-talent-writein-slot">
+                  <span className="print-slot-number">{i + 1}</span>
+                  <span className="print-writein-line"></span>
+                </div>
+              ))}
+            </div>
+
+
+            {/* --->  SPELLS & MAGIC ITEMS  <--- */}
             <h4 className="print-section-title">Spells & Magic Items</h4>
             {activeSpellsList.length === 0 ? (
               <div className="print-no-weapons">No spells bound.</div>
