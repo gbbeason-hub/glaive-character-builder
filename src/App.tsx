@@ -1003,12 +1003,12 @@ export function App() {
               💾 Download Character (.json)
             </button>
             <button 
-  type="button" 
-  onClick={() => window.print()} 
-  className="btn-primary full-width mb-2"
->
-  🖨️ Export PDF / Print Character Sheet
-</button>
+              type="button" 
+              onClick={() => window.print()} 
+              className="btn-primary full-width mb-2"
+            >
+              🖨️ Export PDF / Print Character Sheet
+            </button>
             {exportMessage && <p className="success-message">{exportMessage}</p>}
             <input
               type="text"
@@ -1040,51 +1040,49 @@ export function App() {
 
       {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT */}
       <div className="printable-character-sheet">
+        {/* ==================== PAGE 1 (CORE & COMBAT) ==================== */}
         <div className="print-header-row">
           <div className="print-header-field flex-1">
             <span className="print-label">Name:</span> <span>{characterName}</span>
           </div>
-       
-            <div className="print-header-field print-silver-width">
-              <span className="print-label">Silver:</span>{' '}
-              <span>
-                <span className="print-coin-write-box">{silver}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> sp{' '}
-                <span className="print-coin-write-box">{copper}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> cp
-              </span>
-            </div>
-
+          <div className="print-header-field print-silver-width">
+            <span className="print-label">Silver:</span>{' '}
+            <span>
+              <span className="print-coin-write-box">{silver}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> sp{' '}
+              <span className="print-coin-write-box">{copper}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> cp
+            </span>
+          </div>
         </div>
 
         <div className="print-grid">
+          {/* PAGE 1 LEFT COLUMN */}
           <div>
             <div className="print-stats-grid">
-  <div className="print-stat-item print-attribute-box">
-    <b className="print-stat-label-font">STR:</b> <span className="print-stat-value-font">+{stats.strength}</span>
-  </div>
-  <div className="print-stat-item print-vital-box">
-    <b className="print-stat-label-font">HP:</b> <span className="print-stat-value-font">{hitPoints}</span>
-  </div>
-  <div className="print-stat-item print-attribute-box">
-    <b className="print-stat-label-font">DEX:</b> <span className="print-stat-value-font">+{stats.dexterity}</span>
-  </div>
-  <div className="print-stat-item print-vital-box">
-    <b className="print-stat-label-font">AC:</b> <span className="print-stat-value-font">{armorClass}</span>
-  </div>
-  <div className="print-stat-item print-attribute-box">
-    <b className="print-stat-label-font">WIL:</b> <span className="print-stat-value-font">+{stats.willpower}</span>
-  </div>
-  <div className="print-stat-item print-vital-box">
-    <b className="print-stat-label-font">Level:</b> <span className="print-stat-value-font">{level}</span>
-  </div>
-  <div className="print-stat-item print-attribute-box">
-    <b className="print-stat-label-font">WIS:</b> <span className="print-stat-value-font">+{stats.wisdom}</span>
-  </div>
-  <div className="print-stat-item print-vital-box">
-    <b className="print-stat-label-font">XP:</b> <span className="print-stat-value-font">——</span>
-  </div>
-</div>
-
-
+              <div className="print-stat-item print-attribute-box">
+                <b className="print-stat-label-font">STR:</b> <span className="print-stat-value-font">+{stats.strength}</span>
+              </div>
+              <div className="print-stat-item print-vital-box">
+                <b className="print-stat-label-font">HP:</b> <span className="print-stat-value-font">{hitPoints}</span>
+              </div>
+              <div className="print-stat-item print-attribute-box">
+                <b className="print-stat-label-font">DEX:</b> <span className="print-stat-value-font">+{stats.dexterity}</span>
+              </div>
+              <div className="print-stat-item print-vital-box">
+                <b className="print-stat-label-font">AC:</b> <span className="print-stat-value-font">{armorClass}</span>
+              </div>
+              <div className="print-stat-item print-attribute-box">
+                <b className="print-stat-label-font">WIL:</b> <span className="print-stat-value-font">+{stats.willpower}</span>
+              </div>
+              <div className="print-stat-item print-vital-box">
+                <b className="print-stat-label-font">Level:</b> <span className="print-stat-value-font">{level}</span>
+              </div>
+              <div className="print-stat-item print-attribute-box">
+                <b className="print-stat-label-font">WIS:</b> <span className="print-stat-value-font">+{stats.wisdom}</span>
+              </div>
+              <div className="print-stat-item print-vital-box">
+                <b className="print-stat-label-font">XP:</b> <span className="print-stat-value-font">——</span>
+              </div>
+            </div>
 
             <div className="print-traits-grid">
               <div><strong>Gender:</strong> {traits.gender}</div>
@@ -1103,11 +1101,8 @@ export function App() {
               </div>
             </div>
 
-            
-
             {/* MECHANICAL TRACKERS */}
             <div className="print-trackers-section" style={{ marginTop: '12px' }}>
-              
               <h4 className="print-section-title">Conditions</h4>
               <div className="print-conditions-grid">
                 {conditionsData.map((cond) => (
@@ -1128,65 +1123,66 @@ export function App() {
                 </div>
               </div>
             </div>
+          </div>
 
-</div>
-
-       {/* --->  WEAPONS  <--- */}
-
-
+          {/* PAGE 1 RIGHT COLUMN */}
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
-{inventory.filter((i) => i.type === 'Weapon').length === 0 ? (
-  <div className="print-no-weapons">No weapons equipped. Unarmed Strike: 1d4 damage.</div>
-) : (
-  <div className="print-weapons-list">
-    {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => {
-      // Calculate dynamic attack and damage bonuses based on weapon type & stats!
-      const combatStats = calculateWeaponCombatStats(w, {
-        strength: stats.strength,
-        wisdom: stats.wisdom,
-        dexterity: stats.dexterity,
-      });
+            <div className="print-weapons-list">
+              {/* EQUIPPED WEAPONS */}
+              {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => {
+                const combatStats = calculateWeaponCombatStats(w, {
+                  strength: stats.strength,
+                  wisdom: stats.wisdom,
+                  dexterity: stats.dexterity,
+                });
 
-      return (
-        <div key={idx} className="print-weapon-card">
-          <div className="print-weapon-top">
-            <strong>Weapon:</strong> <span>{w.name} ({w.quantity})</span>
-          </div>
-          <div className="print-weapon-stats">
-            <div>
-              <div>{combatStats.attackBonusDisplay}</div>
-              <div className="print-weapon-stat-label">Attack</div>
-            </div>
-            <div>
-              <div>{combatStats.damageDisplay}</div>
-              <div className="print-weapon-stat-label">Damage</div>
-            </div>
-            <div>
-              <div>{w.range || 'R0'}</div>
-              <div className="print-weapon-stat-label">Range</div>
-            </div>
-          </div>
-        </div>
-      );
-    })}
-  </div>
-)}
-
-
-            {/* --->  TALENTS  <--- */}
-            <h4 className="print-section-title">Talents & Special Abilities</h4>
-            {activeTalentObjects.length === 0 ? (
-              <div className="print-no-weapons">No talents selected.</div>
-            ) : (
-              <div className="print-talents-list">
-                {activeTalentObjects.map((talent, idx) => (
-                  <div key={idx} className="print-talent-row">
-                    <strong>{talent.name}:</strong> {talent.description || talent.details}
+                return (
+                  <div key={idx} className="print-weapon-card">
+                    <div className="print-weapon-top">
+                      <strong>Weapon:</strong> <span>{w.name} {w.quantity > 1 ? `(${w.quantity})` : ''}</span>
+                    </div>
+                    <div className="print-weapon-stats">
+                      <div>
+                        <div>{combatStats.attackBonusDisplay}</div>
+                        <div className="print-weapon-stat-label">Attack</div>
+                      </div>
+                      <div>
+                        <div>{combatStats.damageDisplay}</div>
+                        <div className="print-weapon-stat-label">Damage</div>
+                      </div>
+                      <div>
+                        <div>{w.range || 'R0'}</div>
+                        <div className="print-weapon-stat-label">Range</div>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
+                );
+              })}
+
+              {/* 2 PERMANENT BLANK WRITE-IN WEAPON SLOTS */}
+              {Array.from({ length: 2 }).map((_, idx) => (
+                <div key={`blank-weapon-${idx}`} className="print-weapon-card blank-weapon-slot">
+                  <div className="print-weapon-top">
+                    <strong>Weapon:</strong> <span className="print-writein-line"></span>
+                  </div>
+                  <div className="print-weapon-stats">
+                    <div>
+                      <div className="print-writein-box"></div>
+                      <div className="print-weapon-stat-label">Attack</div>
+                    </div>
+                    <div>
+                      <div className="print-writein-box"></div>
+                      <div className="print-weapon-stat-label">Damage</div>
+                    </div>
+                    <div>
+                      <div className="print-writein-box"></div>
+                      <div className="print-weapon-stat-label">Range</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             {/* TALENTS & SPECIAL ABILITIES */}
             <h4 className="print-section-title">Talents & Special Abilities</h4>
@@ -1211,46 +1207,57 @@ export function App() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
 
+        {/* ==================== PAGE 2 (LOGISTICS & INVENTORY) ==================== */}
+        <div className="print-page-break">
+          {/* Header repeat for Page 2 */}
+          
 
-            {/* --->  SPELLS & MAGIC ITEMS  <--- */}
-            <h4 className="print-section-title">Spells & Magic Items</h4>
-            {activeSpellsList.length === 0 ? (
-              <div className="print-no-weapons">No spells bound.</div>
-            ) : (
-              <div className="print-weapons-list">
-                {activeSpellsList.map((spell, idx) => (
-                  <div key={idx} className="print-weapon-row">
-                    ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <h4 className="print-section-title">Inventory (Capacity: {maxCarryingCapacity} Slots)</h4>
-            
-            <div className="print-freegear-block">
-              <strong>Starting Gear:</strong> {freeGearText}
+          <div className="print-grid">
+            {/* PAGE 2 LEFT COLUMN: SPELLS & MAGIC */}
+            <div>
+              <h4 className="print-section-title">Spells & Magic Items</h4>
+              {activeSpellsList.length === 0 ? (
+                <div className="print-no-weapons">No spells bound.</div>
+              ) : (
+                <div className="print-weapons-list">
+                  {activeSpellsList.map((spell, idx) => (
+                    <div key={idx} className="print-weapon-row">
+                      ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
- 
- 
-            <div className="print-inventory-grid">
-              {Array.from({ length: 18 }).map((_, i) => {
-                const item = inventory[i];
-                return (
-                  <div
-                    key={i}
-                    className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
-                      i >= maxCarryingCapacity ? 'locked' : ''
-                    }`}
-                  >
-                    <span className="print-slot-number">{i + 1}</span>
-                    <span className={i >= maxCarryingCapacity ? 'strike-through' : ''}>
-                      {item ? `${item.name} (x${item.quantity})` : i >= maxCarryingCapacity ? '[Locked Slot]' : ''}
-                    </span>
-                  </div>
-                );
-              })}
+
+            {/* PAGE 2 RIGHT COLUMN: INVENTORY */}
+            <div>
+              <h4 className="print-section-title">Inventory (Capacity: {maxCarryingCapacity} Slots)</h4>
+              
+              <div className="print-freegear-block">
+                <strong>Starting Gear:</strong> {freeGearText}
+              </div>
+
+              <div className="print-inventory-grid">
+                {Array.from({ length: 18 }).map((_, i) => {
+                  const item = inventory[i];
+                  return (
+                    <div
+                      key={i}
+                      className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
+                        i >= maxCarryingCapacity ? 'locked' : ''
+                      }`}
+                    >
+                      <span className="print-slot-number">{i + 1}</span>
+                      <span className={i >= maxCarryingCapacity ? 'strike-through' : ''}>
+                        {item ? `${item.name} (x${item.quantity})` : i >= maxCarryingCapacity ? '[Locked Slot]' : ''}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

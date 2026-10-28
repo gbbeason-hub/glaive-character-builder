@@ -272,6 +272,12 @@ textarea:focus {
     margin: 0.25in;
   }
 
+  /* --- PAGE BREAK ARCHITECTURE --- */
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
 
   /* --- NAME & SILVER HEADER (Single Page Fit) --- */
   .print-header-row {
@@ -508,6 +514,20 @@ textarea:focus {
     line-height: 1.0 !important;
   }
 }
+
+/* --- BLANK WRITE-IN WEAPON STYLES --- */
+  .blank-weapon-slot .print-writein-line {
+    display: inline-block;
+    width: 65%;
+    border-bottom: 1px solid #999 !important;
+    height: 12px;
+  }
+
+  .blank-weapon-slot .print-writein-box {
+    border-bottom: 1px solid #999 !important;
+    height: 14px;
+    margin-top: 4px;
+  }
 
 
 /* ==========================================================================
