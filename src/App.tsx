@@ -11,6 +11,7 @@ import type { Spell, ContainerSlot } from './SpellsCard';
 import { CompanionsCard } from './CompanionsCard';
 import type { CompanionSlot } from './CompanionsCard';
 import { calculateWeaponCombatStats } from './utils/combatCalculations';
+import { HelpModal } from './HelpModal';
 
 // Direct ES Module Imports matching your original variable names
 import conditionsData from './data/conditions.json';
@@ -77,6 +78,11 @@ export function App() {
   const [characterName, setCharacterName] = useState('Glaive Hero');
   const [level, setLevel] = useState(1);
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
+
+
+  // Help window
+  // Inside App state:
+  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
 
   // Currency States
   const [silver, setSilver] = useState<number>(0);
@@ -716,7 +722,19 @@ export function App() {
   return (
     <div className="app-container">
       <div className="builder-interface-view">
-        <h1 className="main-title">Glaive v3 Character Builder</h1>
+
+{/* Main Header with Title and Help Button */}
+    <div className="main-header-row">
+      <h1 className="main-title">Glaive v3 Character Builder</h1>
+      <button 
+        type="button" 
+        onClick={() => setIsHelpOpen(true)} 
+        title="Help & Rules"
+        className="help-btn"
+      >
+        ?
+      </button>
+    </div>
 
         <div className="card-stack">
           {/* Profile Header Details */}
@@ -1005,6 +1023,12 @@ export function App() {
         onSellItem={handleSellItem}
       />
 
+      {/* Reusable Help Modal */}
+      <HelpModal 
+        isOpen={isHelpOpen} 
+        onClose={() => setIsHelpOpen(false)} 
+      />
+      
       {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT */}
       <div className="printable-character-sheet">
         {/* ==================== PAGE 1 (CORE & COMBAT) ==================== */}
