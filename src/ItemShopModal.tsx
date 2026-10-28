@@ -3,8 +3,8 @@
 // ==========================================
 import React, { useState, useEffect } from 'react';
 import type { InventoryItem } from './SilverAndGearCard';
-import rawCatalogItems from '../public/items.json';
-import nameData from '../public/names.json'; // Adjust path if names.json lives elsewhere
+import rawCatalogItems from './data/items.json';
+import nameData from './data/names.json'; // Adjust path if names.json lives elsewhere
 
 export interface CatalogItem {
   id: string;

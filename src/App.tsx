@@ -11,7 +11,17 @@ import type { Spell, ContainerSlot } from './SpellsCard';
 import { CompanionsCard } from './CompanionsCard';
 import type { CompanionSlot } from './CompanionsCard';
 import { calculateWeaponCombatStats } from './utils/combatCalculations';
-import conditionsData from '../public/conditions.json';
+
+// Direct ES Module Imports matching your original variable names
+import conditionsData from './data/conditions.json';
+import traitDatabase from './data/traits.json';
+import nameDatabase from './data/names.json';
+import backgroundDatabase from './data/backgrounds.json';
+import ancestriesCatalog from './data/ancestries.json';
+import talentsCatalog from './data/talents.json';
+import mutationsCatalog from './data/mutations.json';
+import spellsCatalog from './data/spells.json';
+import itemsCatalog from './data/items.json';
 
 // ==========================================
 // 1. DATA SCHEMA TYPES & INTERFACES
@@ -53,11 +63,6 @@ interface BackgroundEntry {
   notes?: string;
 }
 
-interface NameDatabase {
-  names: string[];
-  sobriquets: string[];
-}
-
 const attributeDescriptions: Record<keyof Abilities, string> = {
   strength: 'Melee attacks, physical saves, & bonus to most weapon damage',
   dexterity: 'delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
@@ -89,10 +94,6 @@ export function App() {
   const [importString, setImportString] = useState('');
   const [exportMessage, setExportMessage] = useState('');
 
-  const [traitDatabase, setTraitDatabase] = useState<any>(null);
-  const [nameDatabase, setNameDatabase] = useState<NameDatabase | null>(null);
-
-
   const [traits, setTraits] = useState<CharacterTraits>({
     gender: 'Masculine',
     hair: 'Bald',
@@ -105,14 +106,10 @@ export function App() {
   const [bondPcName, setBondPcName] = useState<string>('');
 
   // Backgrounds
-  const [backgroundDatabase, setBackgroundDatabase] = useState<BackgroundEntry[] | null>(null);
   const [background, setBackground] = useState<string>('');
   const [prevBackground, setPrevBackground] = useState<string>(''); 
 
   // Ancestries & Talents
-  const [ancestriesCatalog, setAncestriesCatalog] = useState<any[]>([]);
-  const [talentsCatalog, setTalentsCatalog] = useState<any[]>([]);
-  const [itemsCatalog, setItemsCatalog] = useState<CatalogItem[]>([]);
   const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
   const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
 
@@ -120,11 +117,9 @@ export function App() {
   const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
 
   // Mutations State
-  const [mutationsCatalog, setMutationsCatalog] = useState<any[]>([]);
   const [selectedMutations, setSelectedMutations] = useState<string[]>([]);
 
   // Spells State
-  const [spellsCatalog, setSpellsCatalog] = useState<Spell[]>([]);
   const [assignedSpells, setAssignedSpells] = useState<Record<string, number>>({});
 
   // Companions State
@@ -148,33 +143,6 @@ export function App() {
   }, [selectedAncestryId, level]);
 
   // ==========================================
-  // 3. ASYNCHRONOUS DATABASE FETCH
-  // ==========================================
-  useEffect(() => {
-    Promise.all([
-      fetch('/traits.json').then((res) => res.json()),
-      fetch('/backgrounds.json').then((res) => res.json()),
-      fetch('/ancestries.json').then((res) => res.json()),
-      fetch('/talents.json').then((res) => res.json()),
-      fetch('/names.json').then((res) => res.json()),
-      fetch('/mutations.json').then((res) => res.json()),
-      fetch('/spells.json').then((res) => res.json()),
-      fetch('/items.json').then((res) => res.json()),
-    ])
-      .then(([traitsData, backgroundData, ancestriesData, talentsData, namesData, mutationsData, spellsData, itemsData]) => {
-        setTraitDatabase(traitsData);
-        setBackgroundDatabase(backgroundData);
-        setAncestriesCatalog(ancestriesData);
-        setTalentsCatalog(talentsData);
-        setNameDatabase(namesData);
-        setMutationsCatalog(mutationsData);
-        setSpellsCatalog(spellsData);
-        setItemsCatalog(itemsData);
-      })
-      .catch((err) => console.error('Error initializing background data layers:', err));
-  }, []);
-
-  // ==========================================
   // 3.1. BACKGROUND AUTO-REWARD HANDLER
   // ==========================================
   useEffect(() => {
@@ -182,7 +150,7 @@ export function App() {
 
     // 1. CLEAN UP PREVIOUS BACKGROUND REWARDS
     if (prevBackground && prevBackground !== background) {
-      const oldBg = backgroundDatabase.find((b) => b.text === prevBackground);
+      const oldBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === prevBackground);
       if (oldBg) {
         // Remove old silver
         if (oldBg.grantedSilver) {
@@ -226,7 +194,7 @@ export function App() {
     setPrevBackground(background);
 
     if (!background) return;
-    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
     if (!currentBg) return;
 
     // 2. GRANT NEW BACKGROUND REWARDS
@@ -243,7 +211,7 @@ export function App() {
 
     if (currentBg.grantedItems && currentBg.grantedItems.length > 0) {
       currentBg.grantedItems.forEach((grant) => {
-        const catalogMatch = itemsCatalog.find((item) => item.id === grant.id);
+        const catalogMatch = (itemsCatalog as CatalogItem[]).find((item) => item.id === grant.id);
 
         setInventory((prev) => {
           const existingIndex = prev.findIndex((i) => i.id === grant.id);
@@ -292,14 +260,14 @@ export function App() {
         });
       });
     }
-  }, [background, backgroundDatabase, itemsCatalog]);
+  }, [background]);
 
   // ==========================================
   // 3.25. ACTIVE TALENTS AGGREGATOR
   // ==========================================
   const backgroundGrantedTalentIds: string[] = [];
   if (backgroundDatabase && background) {
-    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
     if (currentBg && currentBg.grantedTalentIds) {
       backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
     }
@@ -317,7 +285,7 @@ export function App() {
     let total = 0;
 
     allActiveTalentIds.forEach((talentId) => {
-      const talentObj = talentsCatalog.find((t) => t.id === talentId);
+      const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
       if (talentObj && talentObj.effects) {
         talentObj.effects.forEach((eff: any) => {
           if (eff.target === targetName && eff.mode === 'add') {
@@ -338,7 +306,7 @@ export function App() {
   // ==========================================
   const grantedContainers: ContainerSlot[] = [];
   allActiveTalentIds.forEach((talentId, talentIndex) => {
-    const talentObj = talentsCatalog.find((t) => t.id === talentId);
+    const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
     if (talentObj && talentObj.containerGrant) {
       const grant = talentObj.containerGrant;
       for (let c = 0; c < grant.count; c++) {
@@ -363,7 +331,7 @@ export function App() {
         if (container.itemSlots === 0) return;
 
         const assignedSpellId = assignedSpells[container.slotId];
-        const spell = spellsCatalog.find((s) => s.id === assignedSpellId);
+        const spell = (spellsCatalog as Spell[]).find((s) => s.id === assignedSpellId);
         const spellName = spell ? spell.name : 'Empty';
         
         const itemName = container.weaponProfile 
@@ -387,7 +355,7 @@ export function App() {
 
       return [...nonContainerItems, ...containerItems];
     });
-  }, [selectedTalents, background, assignedSpells, spellsCatalog, talentsCatalog]);
+  }, [selectedTalents, background, assignedSpells]);
 
   // ==========================================
   // 4.6. GENERIC HIDDEN ITEM / WEAPON SYNC
@@ -398,7 +366,7 @@ export function App() {
       const dynamicHiddenGrants: InventoryItem[] = [];
 
       allActiveTalentIds.forEach((talentId, index) => {
-        const talentObj = talentsCatalog.find((t) => t.id === talentId);
+        const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
         if (talentObj && (talentObj as any).hiddenItemGrant) {
           const grant = (talentObj as any).hiddenItemGrant;
           dynamicHiddenGrants.push({
@@ -418,14 +386,14 @@ export function App() {
 
       return [...filteredInventory, ...dynamicHiddenGrants];
     });
-  }, [selectedTalents, background, talentsCatalog]);
+  }, [selectedTalents, background]);
 
   // ==========================================
   // 4.5. COMPANIONS SYNC
   // ==========================================
   const grantedCompanions: CompanionSlot[] = [];
   allActiveTalentIds.forEach((talentId, index) => {
-    const talentObj = talentsCatalog.find((t) => t.id === talentId);
+    const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
     if (talentObj && (talentObj as any).companionGrant) {
       const grant = (talentObj as any).companionGrant;
       grantedCompanions.push({
@@ -437,7 +405,7 @@ export function App() {
   });
 
   if (backgroundDatabase && background) {
-    const currentBg = backgroundDatabase.find((b) => b.text === background);
+    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
     if (currentBg && currentBg.grantedCompanions) {
       currentBg.grantedCompanions.forEach((grant, idx) => {
         grantedCompanions.push({
@@ -538,7 +506,6 @@ export function App() {
             cost_cp: catalogItem.cost_cp,
             details: catalogItem.details,
             quantity: 1,
-            // PRESERVE WEAPON PROPERTIES FROM CATALOG:
             damage: (catalogItem as any).damage,
             subtype: (catalogItem as any).subtype,
             range: (catalogItem as any).range,
@@ -621,13 +588,13 @@ export function App() {
   const rollCharacterBackground = () => {
     if (!backgroundDatabase) return;
     const roll = Math.floor(Math.random() * 100) + 1;
-    const match = backgroundDatabase.find((b) => roll >= b.min && roll <= b.max);
+    const match = (backgroundDatabase as BackgroundEntry[]).find((b) => roll >= b.min && roll <= b.max);
     if (match) setBackground(match.text);
   };
 
   const handleAncestryChange = (ancestryId: string) => {
     setSelectedAncestryId(ancestryId);
-    const foundAncestry = ancestriesCatalog.find((a) => a.id === ancestryId);
+    const foundAncestry = (ancestriesCatalog as any[]).find((a) => a.id === ancestryId);
     if (foundAncestry && foundAncestry.fixedTalentIds?.length > 0) {
       setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
     } else {
@@ -728,16 +695,16 @@ export function App() {
   const activeSpellsList = grantedContainers
     .map((container) => {
       const spellId = assignedSpells[container.slotId];
-      return spellsCatalog.find((s) => s.id === spellId);
+      return (spellsCatalog as Spell[]).find((s) => s.id === spellId);
     })
     .filter(Boolean) as Spell[];
 
   // Aggregate Ancestry Talent + Selected Heroic Talents + Background-granted Talents
-  const ancestryTalent = talentsCatalog.find((t) => t.id === selectedAncestryTalentId);
+  const ancestryTalent = (talentsCatalog as any[]).find((t) => t.id === selectedAncestryTalentId);
   const activeTalentObjects = [
     ancestryTalent,
     ...allActiveTalentIds
-      .map((tId) => talentsCatalog.find((t) => t.id === tId))
+      .map((tId) => (talentsCatalog as any[]).find((t) => t.id === tId))
       .filter(Boolean),
   ].filter((talent, index, self) => 
     talent && self.findIndex((t) => t?.id === talent.id) === index
@@ -792,7 +759,7 @@ export function App() {
             >
               <option value="">-- Select a Background --</option>
               {backgroundDatabase &&
-                backgroundDatabase.map((b, idx) => (
+                (backgroundDatabase as BackgroundEntry[]).map((b, idx) => (
                   <option key={idx} value={b.text}>
                     {b.name}
                   </option>
@@ -847,7 +814,7 @@ export function App() {
           {/* 3. Ancestry Card */}
           <AncestryCard
             ancestries={ancestriesCatalog}
-            talents={talentsCatalog}
+            talents={talentsCatalog as any}
             selectedAncestryId={selectedAncestryId}
             selectedAncestryTalentId={selectedAncestryTalentId}
             onAncestryChange={handleAncestryChange}
@@ -856,7 +823,7 @@ export function App() {
 
           {/* 4. Talents Card */}
           <TalentsCard
-            talents={talentsCatalog}
+            talents={talentsCatalog as any}
             selectedTalents={selectedTalents}
             maxTalentSlots={maxTalentSlots}
             onTalentChange={(index, val) => {
@@ -890,8 +857,8 @@ export function App() {
                     onChange={(e) => setTraits((prev) => ({ ...prev, [t]: e.target.value }))}
                     className="form-select-spacing"
                   >
-                    {traitDatabase && traitDatabase[t] ? (
-                      traitDatabase[t].map((val: string, idx: number) => (
+                    {traitDatabase && (traitDatabase as any)[t] ? (
+                      (traitDatabase as any)[t].map((val: string, idx: number) => (
                         <option key={idx} value={val}>
                           {val}
                         </option>
@@ -1251,26 +1218,26 @@ export function App() {
               </div>
 
               <div className="print-inventory-grid">
-  {Array.from({ length: 18 }).map((_, i) => {
-    const slotNumber = i + 1;
-    const item = inventory[i];
-    const isLocked = slotNumber > maxCarryingCapacity;
+                {Array.from({ length: 18 }).map((_, i) => {
+                  const slotNumber = i + 1;
+                  const item = inventory[i];
+                  const isLocked = slotNumber > maxCarryingCapacity;
 
-    return (
-      <div
-        key={i}
-        className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
-          isLocked ? 'is-locked-slot' : ''
-        }`}
-      >
-        <span className="print-slot-number">{slotNumber}</span>
-        <span>
-          {item ? `${item.name} (x${item.quantity})` : ''}
-        </span>
-      </div>
-    );
-  })}
-</div>
+                  return (
+                    <div
+                      key={i}
+                      className={`print-inventory-slot ${i % 2 === 0 ? 'border-right' : ''} ${
+                        isLocked ? 'is-locked-slot' : ''
+                      }`}
+                    >
+                      <span className="print-slot-number">{slotNumber}</span>
+                      <span>
+                        {item ? `${item.name} (x${item.quantity})` : ''}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
