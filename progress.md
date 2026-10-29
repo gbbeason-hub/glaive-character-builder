@@ -222,7 +222,6 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
 
 
 - [NEW] Task 17 Pregen All: One button to randomize everything!
-
 - [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
 
     **Status:** [IN PROGRESS]
@@ -260,5 +259,14 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
 
-
 - [NEW] Task 27 Art: Select art to add page 1 based on Scott's art for ancestries
+- [NEW] Task 28 gitignore: build out
+- [NEW] Task 29 house cleaning: 
+    - [] Codebase: Run `npm run lint` or `npx tsc --noEmit` before commits to catch unused variables, missing types, or unreachable code early.
+     - [] Codebase: Remove Dead Code & Imports: Clean up unused components, commented-out test code, and unreferenced assets from your `src/` or `public/` directories.
+     - [] Dependencies: Prune Unused Packages: Run `npx depcheck` to verify whether any installed NPM packages are no longer being imported in your code
+     - [] Dependencies: Audit Security Vulnerabilities: Run `npm audit` periodically to check for known security issues in downstream dependencies.
+     - [] Dependencies: Clean Up node_modules Noise: Ensure `node_modules/` and build directories like `dist/` are safely ignored by .gitignore so they never leak into your repository commits.
+     - [] : 
+     - [] 
+     - [] 

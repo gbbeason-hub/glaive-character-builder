@@ -37,29 +37,27 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
 
         <div className="help-section">
             <h4>Key Features</h4>
-            <ul>
-                <li>
-                    <b>2-Page Printable Layout:</b> 8.5" x 11" portrait printing with front/back sections:
-                    <ul><li>
+            <p>
+              <b>2-Page Printable Layout:</b> 8.5" x 11" portrait printing with front/back sections:
+            </p>
+                <ul><li>
                         Page 1 (Core & Combat): Stat blocks, conditions tracker, equipped weapon cards, and a 9-row talent write-in table.
                     </li>
                     <li>
                         Page 2 (Logistics & Inventory): Active bound spells list, 10 spell write-in slots, starting gear summary, and an 18-slot inventory grid.
                     </li>
                     </ul>
-                </li>
-                <li>
-                    <b>Pencil-Friendly Progression Design:</b> 
-                    <ul><li>
-                        Unearned/locked inventory slots render with a subtle dashed border. As characters gain Strength or unlock slots, simply outline the dotted slots.
+            <p>
+              <b>Pencil-Friendly Progression:</b>
+            </p>
+                <ul><li>
+                        Unearned/locked inventory slots have a dashed border. As characters gain Strength or unlock slots, simply outline the dotted slots.
                     </li>
                     <li>
-                        Dedicated write-in rows for additional weapons, spells, and talents acquired mid-session.
+                        Dedicated write-in rows for additional weapons, spells, and talents.
                     </li>
                     </ul>
-                </li>
-               
-            </ul>
+            
           </div>
 
 
@@ -77,7 +75,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           <div className="help-section">
             <h4>Carrying Capacity & Burden</h4>
             <p>
-              Your base carrying capacity is 10 plus your Strength modifier (and some talents give extra item slot ). Exceeding your maximum slots results in being <strong>Encumbered</strong> . . . and that means rolling with disadvantage and gaining fatigue each round in a dungeon.
+              Your base carrying capacity is 10 plus your Strength modifier (and some talents give extra item slot ). Exceeding your maximum slots results in being <strong>Encumbered</strong>. And that means rolling with disadvantage and gaining fatigue each round in a dungeon. 
             </p>
           </div>
 
@@ -93,7 +91,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             
             <ul>
                 <li>
-                    <b>Builder vs Online Character Sheet:</b> The focus is on a character builder. It's not intended to be an online character sheet you can use & update as you play at the table. It's meant to be printed. But you can save the JSON for your build, load it, and update it. 
+                    <b>Builder vs Online Character Sheet:</b> The focus is on a character builder. It's not an online character sheet that's saved online so you can use & update as you play at the table. The character sheet meant to be printed. But you can save the JSON for your build, load it, and update it. 
 
                 </li>
                 <li>
