@@ -70,17 +70,18 @@ export function AncestryCard({
 
       <div className="form-group">
         <label className="field-label">Choose Ancestry</label>
-        <select
-          value={selectedAncestryId}
+        <select 
+          value={selectedAncestryId} 
           onChange={(e) => onAncestryChange(e.target.value)}
         >
-          {ancestries.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
+          <option value="" disabled>-- Select an ancestry --</option>
+          {ancestries.map((anc) => (
+            <option key={anc.id} value={anc.id}>
+              {anc.name}
             </option>
           ))}
         </select>
-        <p className="card-description">{currentAncestry?.summaryText}</p>
+        {selectedAncestryId && <p className="card-description">{currentAncestry?.summaryText}</p>}
       </div>
 
       {selectedAncestryId !== 'human' && (
@@ -89,13 +90,14 @@ export function AncestryCard({
           <select
             value={selectedAncestryTalentId}
             onChange={(e) => onAncestryTalentChange(e.target.value)}
+            disabled={!selectedAncestryId}
           >
-            {availableAncestryTalents.length === 0 ? (
-              <option value="">None</option>
+            {!selectedAncestryId ? (
+              <option value="" disabled>-- Select an ancestry first --</option>
             ) : (
-              availableAncestryTalents.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
+              availableAncestryTalents.map((talent: Talent) => (
+                <option key={talent.id} value={talent.id}>
+                  {talent.name}
                 </option>
               ))
             )}

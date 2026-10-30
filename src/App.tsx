@@ -12,6 +12,8 @@ import { CompanionsCard } from './CompanionsCard';
 import type { CompanionSlot } from './CompanionsCard';
 import { calculateWeaponCombatStats } from './utils/combatCalculations';
 import { HelpModal } from './HelpModal';
+import { BackgroundSelectorModal } from './BackgroundSelectorModal';
+import type { BackgroundItem } from './BackgroundSelectorModal';
 
 // Direct ES Module Imports matching your original variable names
 import conditionsData from './data/conditions.json';
@@ -79,6 +81,7 @@ export function App() {
   const [level, setLevel] = useState(1);
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
 
+  
 
   // Help window
   // Inside App state:
@@ -113,12 +116,17 @@ export function App() {
 
   // Backgrounds
   const [background, setBackground] = useState<string>('');
+  const [backgroundName, setBackgroundName] = useState<string>('');
   const [prevBackground, setPrevBackground] = useState<string>(''); 
+  const [customBgFreeGear, setCustomBgFreeGear] = useState<string>('');
+  const [customBgItemIds, setCustomBgItemIds] = useState<string[]>([]);
+  const [customBackgroundObj, setCustomBackgroundObj] = useState<BackgroundItem | null>(null);
+  // Backgrounds Modal State
+  const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState<boolean>(false);
 
   // Ancestries & Talents
-  const [selectedAncestryId, setSelectedAncestryId] = useState<string>('demi_ogre');
-  const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('anc_brick_outhouse');
-
+  const [selectedAncestryId, setSelectedAncestryId] = useState<string>('');
+  const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('');
   const [selectedTalents, setSelectedTalents] = useState<string[]>(['']);
   const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
 
@@ -134,8 +142,8 @@ export function App() {
   // Sync logic: calculates max talent slots based on Ancestry and Level
   useEffect(() => {
     const isHuman = selectedAncestryId === 'human';
-    const baseTalents = isHuman ? 2 : 1;
-    const calculatedMax = Math.min(6, baseTalents + (level - 1));
+    const baseTalents = isHuman ? 2 : (selectedAncestryId ? 1 : 0);
+    const calculatedMax = Math.min(6, Math.max(1, baseTalents + (level - 1)));
 
     setMaxTalentSlots(calculatedMax);
 
@@ -154,9 +162,15 @@ export function App() {
   useEffect(() => {
     if (!backgroundDatabase) return;
 
+    // Helper to find background entry by text/name
+    const findBgObject = (bgText: string) => {
+      if (!bgText) return null;
+      return (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === bgText) || null;
+    };
+
     // 1. CLEAN UP PREVIOUS BACKGROUND REWARDS
     if (prevBackground && prevBackground !== background) {
-      const oldBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === prevBackground);
+      const oldBg = findBgObject(prevBackground);
       if (oldBg) {
         // Remove old silver
         if (oldBg.grantedSilver) {
@@ -200,7 +214,7 @@ export function App() {
     setPrevBackground(background);
 
     if (!background) return;
-    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
+    const currentBg = findBgObject(background);
     if (!currentBg) return;
 
     // 2. GRANT NEW BACKGROUND REWARDS
@@ -271,6 +285,7 @@ export function App() {
   // ==========================================
   // 3.25. ACTIVE TALENTS AGGREGATOR
   // ==========================================
+  // Active Talents Aggregator
   const backgroundGrantedTalentIds: string[] = [];
   if (backgroundDatabase && background) {
     const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
@@ -278,6 +293,7 @@ export function App() {
       backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
     }
   }
+  
 
   const allActiveTalentIds = [
     ...selectedTalents.filter(Boolean),
@@ -421,6 +437,16 @@ export function App() {
         });
       });
     }
+  }
+
+  if (customBackgroundObj && customBackgroundObj.grantedCompanions) {
+    customBackgroundObj.grantedCompanions.forEach((grant, idx) => {
+      grantedCompanions.push({
+        slotId: `custom_bg_companion_${idx}`,
+        sourceTalentName: customBackgroundObj.name || 'Custom Background',
+        companionType: grant.type,
+      });
+    });
   }
 
   // ==========================================
@@ -595,11 +621,18 @@ export function App() {
     if (!backgroundDatabase) return;
     const roll = Math.floor(Math.random() * 100) + 1;
     const match = (backgroundDatabase as BackgroundEntry[]).find((b) => roll >= b.min && roll <= b.max);
-    if (match) setBackground(match.text);
+    if (match) {
+      setBackgroundName(match.name);
+      setBackground(match.text);
+    }
   };
 
   const handleAncestryChange = (ancestryId: string) => {
     setSelectedAncestryId(ancestryId);
+    if (!ancestryId) {
+      setSelectedAncestryTalentId('');
+      return;
+    }
     const foundAncestry = (ancestriesCatalog as any[]).find((a) => a.id === ancestryId);
     if (foundAncestry && foundAncestry.fixedTalentIds?.length > 0) {
       setSelectedAncestryTalentId(foundAncestry.fixedTalentIds[0]);
@@ -706,7 +739,9 @@ export function App() {
     .filter(Boolean) as Spell[];
 
   // Aggregate Ancestry Talent + Selected Heroic Talents + Background-granted Talents
-  const ancestryTalent = (talentsCatalog as any[]).find((t) => t.id === selectedAncestryTalentId);
+  const ancestryTalent = selectedAncestryTalentId 
+    ? (talentsCatalog as any[]).find((t) => t.id === selectedAncestryTalentId) 
+    : null;
   const activeTalentObjects = [
     ancestryTalent,
     ...allActiveTalentIds
@@ -770,20 +805,18 @@ export function App() {
           <div className="card-panel">
             <h3 className="panel-heading">Background</h3>
             <p className="instruction-text">Select or roll your hero's origins and formative experiences:</p>
-            <select
-              value={background}
-              onChange={(e) => setBackground(e.target.value)}
-              className="form-select-spacing"
+            
+            <button
+              type="button"
+              onClick={() => setIsBackgroundModalOpen(true)}
+              className="talent-selector-trigger full-width mb-2"
             >
-              <option value="">-- Select a Background --</option>
-              {backgroundDatabase &&
-                (backgroundDatabase as BackgroundEntry[]).map((b, idx) => (
-                  <option key={idx} value={b.text}>
-                    {b.name}
-                  </option>
-                ))}
-            </select>
+              <span>{backgroundName || '-- Select a Background --'}</span>
+              <span>▼</span>
+            </button>
+
             {background && <div className="description-box">{background}</div>}
+            
             <button type="button" onClick={rollCharacterBackground} className="btn-primary full-width">
               🎲 Roll Character Background
             </button>
@@ -1028,6 +1061,94 @@ export function App() {
         isOpen={isHelpOpen} 
         onClose={() => setIsHelpOpen(false)} 
       />
+
+      {/* Background Selector Modal */}
+      <BackgroundSelectorModal
+        isOpen={isBackgroundModalOpen}
+        activeBackgroundText={background}
+        backgroundsCatalog={backgroundDatabase as BackgroundItem[]}
+        talentsCatalog={talentsCatalog as any}
+        itemsCatalog={itemsCatalog as any}
+        onSelectBackground={(selectedBg) => {
+          setBackgroundName(selectedBg.name);
+          setBackground(selectedBg.text);
+          setCustomBackgroundObj(selectedBg.isCustom ? selectedBg : null);
+
+          // 1. Clean up PREVIOUS custom background rewards (Free Gear & Inventory Items)
+          if (customBgFreeGear) {
+            setFreeGearText(prev => {
+              const escaped = customBgFreeGear.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const regex = new RegExp(`(,\\s*${escaped}|${escaped},\\s*|${escaped})`, 'g');
+              return prev.replace(regex, '').trim();
+            });
+          }
+
+          if (customBgItemIds.length > 0) {
+            setInventory(prevInv => {
+              let updated = [...prevInv];
+              customBgItemIds.forEach(itemId => {
+                const idx = updated.findIndex(i => i.id === itemId);
+                if (idx > -1) {
+                  if (updated[idx].quantity <= 1) {
+                    updated.splice(idx, 1);
+                  } else {
+                    updated[idx] = { ...updated[idx], quantity: updated[idx].quantity - 1 };
+                  }
+                }
+              });
+              return updated;
+            });
+          }
+
+          // 2. Grant NEW custom background rewards & track them
+          if (selectedBg.grantedSilver) {
+            setSilver(prev => prev + selectedBg.grantedSilver!);
+          }
+
+          if (selectedBg.grantedFreeGear) {
+            const newGear = selectedBg.grantedFreeGear;
+            setCustomBgFreeGear(newGear);
+            setFreeGearText(prev => prev ? `${prev}, ${newGear}` : newGear);
+          } else {
+            setCustomBgFreeGear('');
+          }
+
+          if (selectedBg.grantedItems && selectedBg.grantedItems.length > 0) {
+            const newlyGrantedIds: string[] = [];
+            selectedBg.grantedItems.forEach(grant => {
+              newlyGrantedIds.push(grant.id);
+              const catalogMatch = (itemsCatalog as CatalogItem[]).find(i => i.id === grant.id);
+              if (catalogMatch) {
+                setInventory(prevInv => {
+                  const existingIdx = prevInv.findIndex(i => i.id === grant.id);
+                  if (existingIdx > -1) {
+                    const updated = [...prevInv];
+                    updated[existingIdx] = { ...updated[existingIdx], quantity: updated[existingIdx].quantity + grant.quantity };
+                    return updated;
+                  } else {
+                    return [...prevInv, {
+                      id: catalogMatch.id,
+                      name: catalogMatch.name,
+                      type: catalogMatch.type as any,
+                      slots: catalogMatch.slots,
+                      cost_sp: catalogMatch.cost_sp,
+                      cost_cp: catalogMatch.cost_cp,
+                      details: catalogMatch.details,
+                      quantity: grant.quantity,
+                      damage: (catalogMatch as any).damage,
+                      range: (catalogMatch as any).range,
+                    }];
+                  }
+                });
+              }
+            });
+            setCustomBgItemIds(newlyGrantedIds);
+          } else {
+            setCustomBgItemIds([]);
+          }
+        }}
+        onClose={() => setIsBackgroundModalOpen(false)}
+      />
       
       {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT */}
       <div className="printable-character-sheet">
@@ -1177,29 +1298,52 @@ export function App() {
 
             {/* TALENTS & SPECIAL ABILITIES */}
             <h4 className="print-section-title">Talents & Special Abilities</h4>
-            {activeTalentObjects.length === 0 ? (
-              <div className="print-no-weapons">No talents selected.</div>
-            ) : (
-              <div className="print-talents-list">
-                {activeTalentObjects.map((talent, idx) => (
+            <p className="instruction-text" style={{ fontSize: '11px', marginTop: '2px', marginBottom: '6px' }}>
+              Maximum of 6 total talents
+            </p>
+
+            <div className="print-talents-list">
+              {activeTalentObjects.length === 0 ? (
+                <div className="print-no-weapons">No talents selected.</div>
+              ) : (
+                activeTalentObjects.map((talent, idx) => (
                   <div key={idx} className="print-talent-row">
                     <strong>{talent.name}:</strong> {talent.description || talent.details}
                   </div>
-                ))}
+                ))
+              )}
+
+              {/* DYNAMIC WRITE-IN LINES TO REACH A MAX OF 6 */}
+              {Array.from({ length: Math.max(0, 6 - activeTalentObjects.length) }).map((_, i) => {
+                const slotNumber = activeTalentObjects.length + i + 1;
+                return (
+                  <div key={`blank-talent-${i}`} className="print-talent-writein-slot" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span className="print-slot-number">{slotNumber}</span>
+                    <span className="print-writein-line" style={{ flexGrow: 1, borderBottom: '1px solid #000' }}></span>
+                  </div>
+                );
+              })}
+               {/* COMPANIONS, FAMILIARS & PETS */}
+            {grantedCompanions.length > 0 && (
+              <div className="print-companions-section" style={{ marginTop: '12px' }}>
+                <h4 className="print-section-title">Companions, Familiars & Pets</h4>
+                <div className="print-talents-list">
+                  {grantedCompanions.map((comp) => {
+                    const assignedName = companionNames[comp.slotId] || 'Unnamed';
+                    return (
+                      <div key={comp.slotId} className="print-talent-row">
+                        🐾 <strong>{assignedName}</strong> ({comp.companionType}) — <em>Source: {comp.sourceTalentName}</em>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
-
-            {/* WRITE-IN TALENT SLOTS (1 TO 9) */}
-            <div className="print-talent-writein-grid">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="print-talent-writein-slot">
-                  <span className="print-slot-number">{i + 1}</span>
-                  <span className="print-writein-line"></span>
-                </div>
-              ))}
             </div>
           </div>
         </div>
+
+       
 
         {/* ==================== PAGE 2 (LOGISTICS & INVENTORY) ==================== */}
         <div className="print-page-break">

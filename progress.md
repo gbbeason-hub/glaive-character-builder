@@ -15,6 +15,7 @@ To build a lightweight, fully client-side character generator and digital workbo
 * **Decoupled State Management:** Keep dropdown/catalog selection states separate from optional freeform text inputs to prevent redundant UI elements, state collisions, and synchronization bugs.
 * **Dynamic Sync Logic:** Handle real-time dependent calculations (such as carrying capacity, Max HP, AC, and dynamic talent slots based on Level/Ancestry) reactively inside dedicated `useEffect` hooks rather than scattering logic across render cycles.
 * **DRY (Don't Repeat Yourself):** Extract repeated UI patterns or styling blocks (such as item cards, option pickers, or list items) into reusable sub-components or shared utility classes.
+* **UI Architecture Rule:** All component styling must be centralized in `index.css` using standard CSS classes. No inline styles or embedded `<style>` tags are permitted inside components.
 
 ### 🛡️ 3. Defensive Programming & State Safety
 * **Fail Gracefully with Safe Defaults:** Always provide safe fallback values for external data fetches (e.g., `traitsData.gender || []` or optional chaining `backgroundDatabase?.map(...)`) so missing or delayed network data never crashes the app.
@@ -220,7 +221,6 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
 
 ## 🏁 Next Target Steps
 
-
 - [NEW] Task 17 Pregen All: One button to randomize everything!
 - [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
 
@@ -258,10 +258,31 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - [ ] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
         - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
-
-- [NEW] Task 27 Art: Select art to add page 1 based on Scott's art for ancestries
-- [NEW] Task 28 gitignore: build out
-- [NEW] Task 29 house cleaning: 
+- [NEW] Task 27 Talents: Show only ancestry talents for selected ancestry 
+    - Make this a toggle that's on by default
+- [DONE] Task 28 Backgrounds: Move from list to modal
+    - [DONE] JSON: Add category key 
+    - [DONE] Groups: Derive groupings & assign values to each background category
+        - Edge Cases: Cure Seeker, Magic Kink, Runaway Betrothed, Escaped Acolyte
+    - [DONE] Modal: Build modal component
+    - [DONE] Modal: Replace dropdown with modal reference
+    - [] Names: 
+- [NEW] Task 29 Labels: Clean up
+    - [] Inline help text: inconsistent captilization & punctuation 
+    - [] Names: Some include Range (R1) - e.g., Stone Sight, R2
+    - [] Name: Make the input field taller
+    - [] PDF: Encumbered & Fatigue should be same font style as conditions?
+- [NEW] Task 30 Talents: Max of 6. Remove writable fields in PDF?
+- [WIP] Task 31 Custom Features: Allow players to create a custom feature
+    - [] Talents: Guidance/template
+    - [DONE] Background: Guidance/template
+    - [] Bond: Guidance/template
+- [NEW] Task 32 Art: Select art to add page 1 based on Scott's art for ancestries
+- [NEW] Task 33 gitignore: build out
+- [NEW] Task 34 PDF: Clear defaults to print a completely blank character sheet. 
+    - Confirm all fields are shown
+    - Add a link (in Help) to the GDoc version
+- [NEW] Task 35 house cleaning: 
     - [] Codebase: Run `npm run lint` or `npx tsc --noEmit` before commits to catch unused variables, missing types, or unreachable code early.
      - [] Codebase: Remove Dead Code & Imports: Clean up unused components, commented-out test code, and unreferenced assets from your `src/` or `public/` directories.
      - [] Dependencies: Prune Unused Packages: Run `npx depcheck` to verify whether any installed NPM packages are no longer being imported in your code

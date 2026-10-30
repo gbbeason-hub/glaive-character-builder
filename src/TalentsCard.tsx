@@ -65,7 +65,7 @@ export function TalentsCard({
       </div>
 
       <p className="talents-instructions">
-        Select or roll additional heroic talents, veteran tricks, or uncanny aptitudes:
+        Select or roll your adventurer's heroic skills, veteran tricks, or uncanny aptitudes:
       </p>
 
       <div className="talents-slots-stack">
