@@ -26,6 +26,7 @@ interface TalentsCardProps {
   selectedTalentSubOptions?: Record<number, string>;
   onTalentSubOptionChange?: (index: number, subId: string) => void;
   backgroundGrantedTalentIds?: string[];
+  characterAncestryName?: string; // <--- Added prop here
 }
 
 export function TalentsCard({
@@ -36,6 +37,7 @@ export function TalentsCard({
   selectedTalentSubOptions = {},
   onTalentSubOptionChange,
   backgroundGrantedTalentIds = [],
+  characterAncestryName = '', // <--- Destructured with default
 }: TalentsCardProps) {
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
 
@@ -141,6 +143,7 @@ export function TalentsCard({
           talents={talents}
           selectedTalents={selectedTalents}
           currentIndex={activeModalIndex}
+          characterAncestryName={characterAncestryName} // <--- Forwarded to modal
           onSelectTalent={(talentId) => onTalentChange(activeModalIndex, talentId)}
         />
       )}

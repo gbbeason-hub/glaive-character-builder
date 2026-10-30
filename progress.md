@@ -218,6 +218,15 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [DONE] Weapons: add empty weapon blocks
     - [DONE] PDF: Create page 2/back page with spells & inventory
     - [DONE] Inventory: Replace grey "locked" inventory cells with dotted borders.
+- [DONE] Task 28 Backgrounds: Move from list to modal
+    - [DONE] JSON: Add category key 
+    - [DONE] Groups: Derive groupings & assign values to each background category
+        - Edge Cases: Cure Seeker, Magic Kink, Runaway Betrothed, Escaped Acolyte
+    - [DONE] Modal: Build modal component
+    - [DONE] Modal: Replace dropdown with modal reference
+
+- [DONE] Task 30 Talents: Max of 6. Remove writable fields in PDF?
+
 
 ## 🏁 Next Target Steps
 
@@ -260,19 +269,13 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
 - [NEW] Task 27 Talents: Show only ancestry talents for selected ancestry 
     - Make this a toggle that's on by default
-- [DONE] Task 28 Backgrounds: Move from list to modal
-    - [DONE] JSON: Add category key 
-    - [DONE] Groups: Derive groupings & assign values to each background category
-        - Edge Cases: Cure Seeker, Magic Kink, Runaway Betrothed, Escaped Acolyte
-    - [DONE] Modal: Build modal component
-    - [DONE] Modal: Replace dropdown with modal reference
+
     - [] Names: 
 - [NEW] Task 29 Labels: Clean up
     - [] Inline help text: inconsistent captilization & punctuation 
     - [] Names: Some include Range (R1) - e.g., Stone Sight, R2
     - [] Name: Make the input field taller
     - [] PDF: Encumbered & Fatigue should be same font style as conditions?
-- [NEW] Task 30 Talents: Max of 6. Remove writable fields in PDF?
 - [WIP] Task 31 Custom Features: Allow players to create a custom feature
     - [] Talents: Guidance/template
     - [DONE] Background: Guidance/template

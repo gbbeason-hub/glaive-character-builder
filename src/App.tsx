@@ -473,6 +473,10 @@ export function App() {
     ? traitDatabase.bonds.flat() 
     : [];
 
+  // Look up selected ancestry name for filtering talents
+  const selectedAncestryObj = (ancestriesCatalog as any[]).find((a) => a.id === selectedAncestryId);
+  const characterAncestryName = selectedAncestryObj ? selectedAncestryObj.name : '';
+
   // ==========================================
   // 6. HELPER ACTION FUNCTIONS
   // ==========================================
@@ -885,6 +889,7 @@ export function App() {
               });
             }}
             backgroundGrantedTalentIds={backgroundGrantedTalentIds}
+            characterAncestryName={characterAncestryName}
           />
 
           {/* 5. Spells & Magic Containers Module */}
@@ -1323,9 +1328,11 @@ export function App() {
                   </div>
                 );
               })}
-               {/* COMPANIONS, FAMILIARS & PETS */}
+            </div>
+
+            {/* COMPANIONS, FAMILIARS & PETS */}
             {grantedCompanions.length > 0 && (
-              <div className="print-companions-section" style={{ marginTop: '12px' }}>
+              <div className="print-companions-section" style={{ marginTop: '14px' }}>
                 <h4 className="print-section-title">Companions, Familiars & Pets</h4>
                 <div className="print-talents-list">
                   {grantedCompanions.map((comp) => {
@@ -1339,7 +1346,6 @@ export function App() {
                 </div>
               </div>
             )}
-            </div>
           </div>
         </div>
 

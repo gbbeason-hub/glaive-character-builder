@@ -7,6 +7,7 @@ interface TalentSelectorModalProps {
   talents: Talent[];
   selectedTalents: string[];
   currentIndex: number;
+  characterAncestryName?: string;
   onSelectTalent: (talentId: string) => void;
 }
 
@@ -32,11 +33,13 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
   talents,
   selectedTalents,
   currentIndex,
+  characterAncestryName = '',
   onSelectTalent,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<MainTab>('All');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('All');
+  const [restrictToMatchingAncestry, setRestrictToMatchingAncestry] = useState<boolean>(true);
 
   if (!isOpen) return null;
 
@@ -66,7 +69,7 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
     setSelectedSubCategory('All');
   };
 
-  // Filter available talents based on search, main tab, sub-category, and duplication rules
+  // Filter available talents based on search, main tab, sub-category, ancestry restriction, and duplication rules
   const filteredTalents = talents.filter((t) => {
     const currentId = selectedTalents[currentIndex];
     const isAlreadySelectedElsewhere =
@@ -80,8 +83,24 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
     if (activeTab === 'Ancestry' && !isAncestry) return false;
     if (activeTab === 'Heroic' && isAncestry) return false;
 
-    // Sub-Category Filter
-    if (selectedSubCategory !== 'All' && t.set !== selectedSubCategory) return false;
+    // Ancestry Restriction Toggle
+    if (activeTab === 'Ancestry' && restrictToMatchingAncestry) {
+      if (!characterAncestryName) {
+        return false; // If no ancestry selected yet, hide all ancestry talents when restricted
+      }
+      if (t.set.toLowerCase() !== characterAncestryName.toLowerCase()) {
+        return false;
+      }
+    }
+
+    // Sub-Category Filter (only enforced if restriction is OFF or not on Ancestry tab)
+    if (
+      (!restrictToMatchingAncestry || activeTab !== 'Ancestry') &&
+      selectedSubCategory !== 'All' &&
+      t.set !== selectedSubCategory
+    ) {
+      return false;
+    }
 
     // Search Input Filter
     const matchesSearch =
@@ -133,25 +152,68 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
             autoFocus
           />
 
-          <div className="talent-pill-scroll-row">
-            {subCategories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`talent-filter-pill ${selectedSubCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedSubCategory(cat)}
+          {/* Ancestry Talent Restriction Toggle (Ancestry Tab Only) */}
+          {activeTab === 'Ancestry' && (
+            <div
+              className="ancestry-toggle-row"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: '8px',
+                marginBottom: '8px',
+                padding: '6px 10px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '6px',
+                fontSize: '13px',
+              }}
+            >
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                }}
               >
-                {cat}
-              </button>
-            ))}
-          </div>
+                <input
+                  type="checkbox"
+                  checked={restrictToMatchingAncestry}
+                  onChange={(e) => setRestrictToMatchingAncestry(e.target.checked)}
+                  style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                />
+                Restricts talents to selected ancestry
+              </label>
+            </div>
+          )}
+
+          {/* Sub-Category Pills (Hidden when restricting Ancestry tab) */}
+          {(!restrictToMatchingAncestry || activeTab !== 'Ancestry') && (
+            <div className="talent-pill-scroll-row">
+              {subCategories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className={`talent-filter-pill ${
+                    selectedSubCategory === cat ? 'active' : ''
+                  }`}
+                  onClick={() => setSelectedSubCategory(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Scrollable Talent Cards List */}
         <div className="modal-item-list talent-grid-list">
           {filteredTalents.length === 0 ? (
             <p className="empty-inventory-text" style={{ textAlign: 'center', padding: '30px' }}>
-              No matching talents found.
+              {activeTab === 'Ancestry' && restrictToMatchingAncestry && !characterAncestryName
+                ? 'Please select an ancestry first on your character sheet.'
+                : 'No matching talents found.'}
             </p>
           ) : (
             filteredTalents.map((t) => {
