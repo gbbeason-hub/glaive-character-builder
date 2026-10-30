@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TalentSelectorModal } from './TalentSelectorModal';
 import { TalentSubOptionBox } from './TalentSubOptionBox';
+import type { CustomTalent } from './CustomTalentForm';
 
 export interface SubOption {
   id: string;
@@ -23,10 +24,11 @@ interface TalentsCardProps {
   selectedTalents: string[];
   maxTalentSlots: number;
   onTalentChange: (index: number, val: string) => void;
+  onAddCustomTalent?: (customTalent: CustomTalent) => void; // <--- Added prop definition
   selectedTalentSubOptions?: Record<number, string>;
   onTalentSubOptionChange?: (index: number, subId: string) => void;
   backgroundGrantedTalentIds?: string[];
-  characterAncestryName?: string; // <--- Added prop here
+  characterAncestryName?: string;
 }
 
 export function TalentsCard({
@@ -34,10 +36,11 @@ export function TalentsCard({
   selectedTalents,
   maxTalentSlots,
   onTalentChange,
+  onAddCustomTalent, // <--- Destructured
   selectedTalentSubOptions = {},
   onTalentSubOptionChange,
   backgroundGrantedTalentIds = [],
-  characterAncestryName = '', // <--- Destructured with default
+  characterAncestryName = '',
 }: TalentsCardProps) {
   const [activeModalIndex, setActiveModalIndex] = useState<number | null>(null);
 
@@ -143,8 +146,9 @@ export function TalentsCard({
           talents={talents}
           selectedTalents={selectedTalents}
           currentIndex={activeModalIndex}
-          characterAncestryName={characterAncestryName} // <--- Forwarded to modal
+          characterAncestryName={characterAncestryName}
           onSelectTalent={(talentId) => onTalentChange(activeModalIndex, talentId)}
+          onAddCustomTalent={onAddCustomTalent} // <--- Passed down to modal successfully
         />
       )}
     </div>

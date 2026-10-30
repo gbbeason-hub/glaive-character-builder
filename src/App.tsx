@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AncestryCard } from './AncestryCard';
 import { TalentsCard } from './TalentsCard';
 import { SilverAndGearCard } from './SilverAndGearCard';
@@ -14,6 +14,7 @@ import { calculateWeaponCombatStats } from './utils/combatCalculations';
 import { HelpModal } from './HelpModal';
 import { BackgroundSelectorModal } from './BackgroundSelectorModal';
 import type { BackgroundItem } from './BackgroundSelectorModal';
+import type { CustomTalent } from './CustomTalentForm';
 
 // Direct ES Module Imports matching your original variable names
 import conditionsData from './data/conditions.json';
@@ -81,10 +82,7 @@ export function App() {
   const [level, setLevel] = useState(1);
   const [stats, setStats] = useState<Abilities>({ strength: 3, dexterity: 2, willpower: 1, wisdom: 0 });
 
-  
-
   // Help window
-  // Inside App state:
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
 
   // Currency States
@@ -121,7 +119,6 @@ export function App() {
   const [customBgFreeGear, setCustomBgFreeGear] = useState<string>('');
   const [customBgItemIds, setCustomBgItemIds] = useState<string[]>([]);
   const [customBackgroundObj, setCustomBackgroundObj] = useState<BackgroundItem | null>(null);
-  // Backgrounds Modal State
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState<boolean>(false);
 
   // Ancestries & Talents
@@ -129,6 +126,28 @@ export function App() {
   const [selectedAncestryTalentId, setSelectedAncestryTalentId] = useState<string>('');
   const [selectedTalents, setSelectedTalents] = useState<string[]>(['']);
   const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
+  
+  // Custom Talents State Storage
+  const [customTalents, setCustomTalents] = useState<CustomTalent[]>([]);
+
+  // Combined Catalog merging static JSON talents with user-created custom talents
+  const combinedTalentsCatalog = useMemo(() => {
+    return [...(talentsCatalog as any[]), ...customTalents];
+  }, [customTalents]);
+
+  const handleAddCustomTalent = (newCustomTalent: CustomTalent) => {
+    setCustomTalents((prev) => {
+      const existingIndex = prev.findIndex((t) => t.id === newCustomTalent.id);
+      if (existingIndex > -1) {
+        // Replace/update existing custom talent so edits apply instantly!
+        const updated = [...prev];
+        updated[existingIndex] = newCustomTalent;
+        return updated;
+      }
+      // Otherwise append new custom talent
+      return [...prev, newCustomTalent];
+    });
+  };
 
   // Mutations State
   const [selectedMutations, setSelectedMutations] = useState<string[]>([]);
@@ -162,22 +181,18 @@ export function App() {
   useEffect(() => {
     if (!backgroundDatabase) return;
 
-    // Helper to find background entry by text/name
     const findBgObject = (bgText: string) => {
       if (!bgText) return null;
       return (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === bgText) || null;
     };
 
-    // 1. CLEAN UP PREVIOUS BACKGROUND REWARDS
     if (prevBackground && prevBackground !== background) {
       const oldBg = findBgObject(prevBackground);
       if (oldBg) {
-        // Remove old silver
         if (oldBg.grantedSilver) {
           setSilver((prev) => Math.max(0, prev - oldBg.grantedSilver!));
         }
 
-        // Remove old free gear text
         if (oldBg.grantedFreeGear) {
           setFreeGearText((prev) => {
             const escaped = oldBg.grantedFreeGear!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -186,7 +201,6 @@ export function App() {
           });
         }
 
-        // Remove old granted inventory items
         if (oldBg.grantedItems && oldBg.grantedItems.length > 0) {
           setInventory((prevInventory) => {
             let updated = [...prevInventory];
@@ -210,14 +224,12 @@ export function App() {
       }
     }
 
-    // Update the reference tracker
     setPrevBackground(background);
 
     if (!background) return;
     const currentBg = findBgObject(background);
     if (!currentBg) return;
 
-    // 2. GRANT NEW BACKGROUND REWARDS
     if (currentBg.grantedSilver) {
       setSilver((prev) => prev + currentBg.grantedSilver!);
     }
@@ -285,7 +297,6 @@ export function App() {
   // ==========================================
   // 3.25. ACTIVE TALENTS AGGREGATOR
   // ==========================================
-  // Active Talents Aggregator
   const backgroundGrantedTalentIds: string[] = [];
   if (backgroundDatabase && background) {
     const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
@@ -293,7 +304,6 @@ export function App() {
       backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
     }
   }
-  
 
   const allActiveTalentIds = [
     ...selectedTalents.filter(Boolean),
@@ -307,7 +317,7 @@ export function App() {
     let total = 0;
 
     allActiveTalentIds.forEach((talentId) => {
-      const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
+      const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
       if (talentObj && talentObj.effects) {
         talentObj.effects.forEach((eff: any) => {
           if (eff.target === targetName && eff.mode === 'add') {
@@ -322,13 +332,14 @@ export function App() {
 
   const hpPerLevelBonus = getEffectSum('hp_per_level_bonus');
   const extraItemSlotsBonus = getEffectSum('extra_item_slots');
+  const acBonusFromTalents = getEffectSum('ac_bonus');
 
   // ==========================================
   // 4. CONTAINER, SPELLBOOK & DUAL-STATE WEAPON SYNC
   // ==========================================
   const grantedContainers: ContainerSlot[] = [];
   allActiveTalentIds.forEach((talentId, talentIndex) => {
-    const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
+    const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
     if (talentObj && talentObj.containerGrant) {
       const grant = talentObj.containerGrant;
       for (let c = 0; c < grant.count; c++) {
@@ -388,7 +399,7 @@ export function App() {
       const dynamicHiddenGrants: InventoryItem[] = [];
 
       allActiveTalentIds.forEach((talentId, index) => {
-        const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
+        const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
         if (talentObj && (talentObj as any).hiddenItemGrant) {
           const grant = (talentObj as any).hiddenItemGrant;
           dynamicHiddenGrants.push({
@@ -415,7 +426,7 @@ export function App() {
   // ==========================================
   const grantedCompanions: CompanionSlot[] = [];
   allActiveTalentIds.forEach((talentId, index) => {
-    const talentObj = (talentsCatalog as any[]).find((t) => t.id === talentId);
+    const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
     if (talentObj && (talentObj as any).companionGrant) {
       const grant = (talentObj as any).companionGrant;
       grantedCompanions.push({
@@ -462,18 +473,16 @@ export function App() {
   const armorBonus = inventory
     .filter((item) => item.type === 'Armor')
     .reduce((sum, item) => sum + item.quantity * 2, 0);
-  const armorClass = 10 + stats.dexterity + armorBonus;
+  const armorClass = 10 + stats.dexterity + armorBonus + acBonusFromTalents;
 
   const expectedTotalPoints = 6 + (level - 1);
   const spentPoints = stats.strength + stats.dexterity + stats.willpower + stats.wisdom;
   const unspentPoints = expectedTotalPoints - spentPoints;
 
-  // Flattened bonds array for dropdown selection
   const allAvailableBonds = traitDatabase && traitDatabase.bonds 
     ? traitDatabase.bonds.flat() 
     : [];
 
-  // Look up selected ancestry name for filtering talents
   const selectedAncestryObj = (ancestriesCatalog as any[]).find((a) => a.id === selectedAncestryId);
   const characterAncestryName = selectedAncestryObj ? selectedAncestryObj.name : '';
 
@@ -680,6 +689,7 @@ export function App() {
     assignedSpells,
     freeGearText,
     inventory,
+    customTalents,
   });
 
   const exportCharacterClipboard = () => {
@@ -720,6 +730,8 @@ export function App() {
       setBackground(decoded.background || '');
       setFreeGearText(decoded.freeGearText || freeGearText);
 
+      // Restore custom talents first so IDs resolve correctly when selectedTalents sets
+      if (decoded.customTalents) setCustomTalents(decoded.customTalents);
       if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
       if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
       if (decoded.selectedTalents) setSelectedTalents(decoded.selectedTalents);
@@ -744,12 +756,13 @@ export function App() {
 
   // Aggregate Ancestry Talent + Selected Heroic Talents + Background-granted Talents
   const ancestryTalent = selectedAncestryTalentId 
-    ? (talentsCatalog as any[]).find((t) => t.id === selectedAncestryTalentId) 
+    ? combinedTalentsCatalog.find((t) => t.id === selectedAncestryTalentId) 
     : null;
+  
   const activeTalentObjects = [
     ancestryTalent,
     ...allActiveTalentIds
-      .map((tId) => (talentsCatalog as any[]).find((t) => t.id === tId))
+      .map((tId) => combinedTalentsCatalog.find((t) => t.id === tId))
       .filter(Boolean),
   ].filter((talent, index, self) => 
     talent && self.findIndex((t) => t?.id === talent.id) === index
@@ -762,18 +775,18 @@ export function App() {
     <div className="app-container">
       <div className="builder-interface-view">
 
-{/* Main Header with Title and Help Button */}
-    <div className="main-header-row">
-      <h1 className="main-title">Glaive v3 Character Builder</h1>
-      <button 
-        type="button" 
-        onClick={() => setIsHelpOpen(true)} 
-        title="Help & Rules"
-        className="help-btn"
-      >
-        ?
-      </button>
-    </div>
+        {/* Main Header with Title and Help Button */}
+        <div className="main-header-row">
+          <h1 className="main-title">Glaive v3 Character Builder</h1>
+          <button 
+            type="button" 
+            onClick={() => setIsHelpOpen(true)} 
+            title="Help & Rules"
+            className="help-btn"
+          >
+            ?
+          </button>
+        </div>
 
         <div className="card-stack">
           {/* Profile Header Details */}
@@ -869,7 +882,7 @@ export function App() {
           {/* 3. Ancestry Card */}
           <AncestryCard
             ancestries={ancestriesCatalog}
-            talents={talentsCatalog as any}
+            talents={combinedTalentsCatalog as any}
             selectedAncestryId={selectedAncestryId}
             selectedAncestryTalentId={selectedAncestryTalentId}
             onAncestryChange={handleAncestryChange}
@@ -878,7 +891,7 @@ export function App() {
 
           {/* 4. Talents Card */}
           <TalentsCard
-            talents={talentsCatalog as any}
+            talents={combinedTalentsCatalog}
             selectedTalents={selectedTalents}
             maxTalentSlots={maxTalentSlots}
             onTalentChange={(index, val) => {
@@ -888,6 +901,7 @@ export function App() {
                 return next;
               });
             }}
+            onAddCustomTalent={handleAddCustomTalent}
             backgroundGrantedTalentIds={backgroundGrantedTalentIds}
             characterAncestryName={characterAncestryName}
           />
@@ -1072,14 +1086,13 @@ export function App() {
         isOpen={isBackgroundModalOpen}
         activeBackgroundText={background}
         backgroundsCatalog={backgroundDatabase as BackgroundItem[]}
-        talentsCatalog={talentsCatalog as any}
+        talentsCatalog={combinedTalentsCatalog as any}
         itemsCatalog={itemsCatalog as any}
         onSelectBackground={(selectedBg) => {
           setBackgroundName(selectedBg.name);
           setBackground(selectedBg.text);
           setCustomBackgroundObj(selectedBg.isCustom ? selectedBg : null);
 
-          // 1. Clean up PREVIOUS custom background rewards (Free Gear & Inventory Items)
           if (customBgFreeGear) {
             setFreeGearText(prev => {
               const escaped = customBgFreeGear.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1105,7 +1118,6 @@ export function App() {
             });
           }
 
-          // 2. Grant NEW custom background rewards & track them
           if (selectedBg.grantedSilver) {
             setSilver(prev => prev + selectedBg.grantedSilver!);
           }
@@ -1157,7 +1169,6 @@ export function App() {
       
       {/* PRINT/PDF EXPORT LAYOUT BLUEPRINT */}
       <div className="printable-character-sheet">
-        {/* ==================== PAGE 1 (CORE & COMBAT) ==================== */}
         <div className="print-header-row">
           <div className="print-header-field flex-1">
             <span className="print-label">Name:</span> <span>{characterName}</span>
@@ -1172,7 +1183,6 @@ export function App() {
         </div>
 
         <div className="print-grid">
-          {/* PAGE 1 LEFT COLUMN */}
           <div>
             <div className="print-stats-grid">
               <div className="print-stat-item print-attribute-box">
@@ -1218,7 +1228,6 @@ export function App() {
               </div>
             </div>
 
-            {/* MECHANICAL TRACKERS */}
             <div className="print-trackers-section" style={{ marginTop: '12px' }}>
               <h4 className="print-section-title">Conditions</h4>
               <div className="print-conditions-grid">
@@ -1242,11 +1251,9 @@ export function App() {
             </div>
           </div>
 
-          {/* PAGE 1 RIGHT COLUMN */}
           <div>
             <h4 className="print-section-title">Weapons & Combat Attacks</h4>
             <div className="print-weapons-list">
-              {/* EQUIPPED WEAPONS */}
               {inventory.filter((i) => i.type === 'Weapon').map((w, idx) => {
                 const combatStats = calculateWeaponCombatStats(w, {
                   strength: stats.strength,
@@ -1277,7 +1284,6 @@ export function App() {
                 );
               })}
 
-              {/* 2 PERMANENT BLANK WRITE-IN WEAPON SLOTS */}
               {Array.from({ length: 2 }).map((_, idx) => (
                 <div key={`blank-weapon-${idx}`} className="print-weapon-card blank-weapon-slot">
                   <div className="print-weapon-top">
@@ -1301,7 +1307,6 @@ export function App() {
               ))}
             </div>
 
-            {/* TALENTS & SPECIAL ABILITIES */}
             <h4 className="print-section-title">Talents & Special Abilities</h4>
             <p className="instruction-text" style={{ fontSize: '11px', marginTop: '2px', marginBottom: '6px' }}>
               Maximum of 6 total talents
@@ -1318,7 +1323,6 @@ export function App() {
                 ))
               )}
 
-              {/* DYNAMIC WRITE-IN LINES TO REACH A MAX OF 6 */}
               {Array.from({ length: Math.max(0, 6 - activeTalentObjects.length) }).map((_, i) => {
                 const slotNumber = activeTalentObjects.length + i + 1;
                 return (
@@ -1330,7 +1334,6 @@ export function App() {
               })}
             </div>
 
-            {/* COMPANIONS, FAMILIARS & PETS */}
             {grantedCompanions.length > 0 && (
               <div className="print-companions-section" style={{ marginTop: '14px' }}>
                 <h4 className="print-section-title">Companions, Familiars & Pets</h4>
@@ -1349,30 +1352,23 @@ export function App() {
           </div>
         </div>
 
-       
-
-        {/* ==================== PAGE 2 (LOGISTICS & INVENTORY) ==================== */}
         <div className="print-page-break">
           <div className="print-grid">
-            
-            {/* PAGE 2 LEFT COLUMN: SPELLS & MAGIC */}
             <div>
               <h4 className="print-section-title">Spells & Magic Items</h4>
               
-              {/* 1. RENDER ACTIVE BOUND SPELLS FIRST */}
-            {activeSpellsList.length === 0 ? (
-              <div className="print-no-spells">No spells bound.</div>
-            ) : (
-              <div className="print-spells-list">
-                {activeSpellsList.map((spell, idx) => (
-                  <div key={idx} className="print-spell-row">
-                    ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
-                  </div>
-                ))}
-              </div>
-            )}
+              {activeSpellsList.length === 0 ? (
+                <div className="print-no-spells">No spells bound.</div>
+              ) : (
+                <div className="print-spells-list">
+                  {activeSpellsList.map((spell, idx) => (
+                    <div key={idx} className="print-spell-row">
+                      ✨ <strong>{spell.name}</strong> {spell.range ? `(${spell.range})` : ''}: {spell.description}
+                    </div>
+                  ))}
+                </div>
+              )}
 
-              {/* 2. RENDER 10 BLANK WRITE-IN SPELL SLOTS BELOW */}
               <div className="print-spell-writein-grid">
                 {Array.from({ length: 11 }).map((_, i) => (
                   <div key={i} className="print-spell-writein-slot">
@@ -1383,18 +1379,23 @@ export function App() {
               </div>
             </div>
 
-            {/* PAGE 2 RIGHT COLUMN: INVENTORY */}
             <div>
               <h4 className="print-section-title">Inventory (Capacity: {maxCarryingCapacity} Slots)</h4>
               
               <div className="print-freegear-block">
                 <strong>Starting Gear:</strong> {freeGearText}
+                {inventory
+                  .filter((item) => item.slots === 0)
+                  .map((item) => `, ${item.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}`)
+                  .join('')}
               </div>
 
               <div className="print-inventory-grid">
                 {Array.from({ length: 18 }).map((_, i) => {
                   const slotNumber = i + 1;
-                  const item = inventory[i];
+                  // Filter out zero-slot items so they don't consume inventory grid boxes
+                  const printableInventory = inventory.filter((item) => item.slots > 0);
+                  const item = printableInventory[i];
                   const isLocked = slotNumber > maxCarryingCapacity;
 
                   return (

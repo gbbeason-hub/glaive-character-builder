@@ -1,5 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { Talent } from './TalentsCard';
+import { CustomTalentForm } from './CustomTalentForm';
+import type { CustomTalent } from './CustomTalentForm';
 
 interface TalentSelectorModalProps {
   isOpen: boolean;
@@ -9,23 +11,15 @@ interface TalentSelectorModalProps {
   currentIndex: number;
   characterAncestryName?: string;
   onSelectTalent: (talentId: string) => void;
+  onAddCustomTalent?: (customTalent: CustomTalent) => void;
 }
 
-// List of known ancestry set tags to split Ancestry vs Heroic
 const ANCESTRY_SET_NAMES = new Set([
-  'Construct',
-  'Demi-Ogre',
-  'Drake',
-  'Dwarf',
-  'Elf',
-  'Goblin',
-  'Half-Foot',
-  'Infernal',
-  'Kobold',
-  'Orc',
+  'Construct', 'Demi-Ogre', 'Drake', 'Dwarf', 'Elf',
+  'Goblin', 'Half-Foot', 'Infernal', 'Kobold', 'Orc',
 ]);
 
-type MainTab = 'All' | 'Ancestry' | 'Heroic';
+type MainTab = 'All' | 'Ancestry' | 'Heroic' | 'Custom';
 
 export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
   isOpen,
@@ -35,65 +29,79 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
   currentIndex,
   characterAncestryName = '',
   onSelectTalent,
+  onAddCustomTalent,
 }) => {
+  const currentSlotId = selectedTalents[currentIndex] || '';
+  const currentSelectedTalent = talents.find((t) => t.id === currentSlotId) as CustomTalent | undefined;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<MainTab>('All');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('All');
   const [restrictToMatchingAncestry, setRestrictToMatchingAncestry] = useState<boolean>(true);
+  const [editingCustomTalent, setEditingCustomTalent] = useState<CustomTalent | null>(null);
+
+  // Auto-detect if current slot holds a custom talent when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (currentSelectedTalent && currentSelectedTalent.isCustom) {
+        setActiveTab('Custom');
+        setEditingCustomTalent(currentSelectedTalent);
+      } else {
+        setActiveTab('All');
+        setEditingCustomTalent(null);
+      }
+      setSearchTerm('');
+      setSelectedSubCategory('All');
+    }
+  }, [isOpen, currentSlotId]);
 
   if (!isOpen) return null;
 
-  // Dynamically compute sub-pills based on active tab
   const subCategories = useMemo(() => {
     const sets = new Set<string>();
-
     talents.forEach((t) => {
       if (!t.set) return;
       const isAncestry = ANCESTRY_SET_NAMES.has(t.set);
-
-      if (activeTab === 'All') {
-        sets.add(t.set);
-      } else if (activeTab === 'Ancestry' && isAncestry) {
-        sets.add(t.set);
-      } else if (activeTab === 'Heroic' && !isAncestry) {
-        sets.add(t.set);
-      }
+      if (activeTab === 'All') sets.add(t.set);
+      else if (activeTab === 'Ancestry' && isAncestry) sets.add(t.set);
+      else if (activeTab === 'Heroic' && !isAncestry) sets.add(t.set);
     });
-
     return ['All', ...Array.from(sets)];
   }, [talents, activeTab]);
 
-  // Handle main tab switch and reset sub-category filter
   const handleTabChange = (tab: MainTab) => {
     setActiveTab(tab);
     setSelectedSubCategory('All');
+    if (tab === 'Custom' && !currentSelectedTalent?.isCustom) {
+      setEditingCustomTalent(null);
+    }
   };
 
-  // Filter available talents based on search, main tab, sub-category, ancestry restriction, and duplication rules
+  const handleCustomSubmit = (newTalent: CustomTalent) => {
+    if (onAddCustomTalent) {
+      onAddCustomTalent(newTalent);
+    }
+    onSelectTalent(newTalent.id);
+    onClose();
+  };
+
   const filteredTalents = talents.filter((t) => {
-    const currentId = selectedTalents[currentIndex];
+    if (activeTab === 'Custom') return true;
+
     const isAlreadySelectedElsewhere =
       !t.repeatable &&
       selectedTalents.some((id, idx) => idx !== currentIndex && id === t.id);
-    if (isAlreadySelectedElsewhere && t.id !== currentId) return false;
+    if (isAlreadySelectedElsewhere && t.id !== currentSlotId) return false;
 
     const isAncestry = ANCESTRY_SET_NAMES.has(t.set);
-
-    // Main Tab Filter
     if (activeTab === 'Ancestry' && !isAncestry) return false;
     if (activeTab === 'Heroic' && isAncestry) return false;
 
-    // Ancestry Restriction Toggle
     if (activeTab === 'Ancestry' && restrictToMatchingAncestry) {
-      if (!characterAncestryName) {
-        return false; // If no ancestry selected yet, hide all ancestry talents when restricted
-      }
-      if (t.set.toLowerCase() !== characterAncestryName.toLowerCase()) {
-        return false;
-      }
+      if (!characterAncestryName) return false;
+      if (t.set.toLowerCase() !== characterAncestryName.toLowerCase()) return false;
     }
 
-    // Sub-Category Filter (only enforced if restriction is OFF or not on Ancestry tab)
     if (
       (!restrictToMatchingAncestry || activeTab !== 'Ancestry') &&
       selectedSubCategory !== 'All' &&
@@ -102,19 +110,16 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
       return false;
     }
 
-    // Search Input Filter
-    const matchesSearch =
+    return (
       t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.set.toLowerCase().includes(searchTerm.toLowerCase());
-
-    return matchesSearch;
+      t.set.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   });
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card talent-modal-card" onClick={(e) => e.stopPropagation()}>
-        {/* Sticky Header */}
         <div className="modal-header">
           <div className="modal-title-row">
             <h3>SELECT TALENT (Slot {currentIndex + 1})</h3>
@@ -123,126 +128,124 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
             </button>
           </div>
           <div className="modal-stats-bar">
-            <span>Choose from heroic talents, veteran tricks, or uncanny aptitudes</span>
+            <span>Choose from catalog heroic talents or define a custom heroic ability</span>
           </div>
         </div>
 
-        {/* 3-Option Segmented Control Selector */}
         <div className="talent-segmented-control">
-          {(['All', 'Ancestry', 'Heroic'] as MainTab[]).map((tab) => (
+          {(['All', 'Ancestry', 'Heroic', 'Custom'] as MainTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
-              className={`segmented-btn ${activeTab === tab ? 'active' : ''}`}
+              className={`segmented-btn ${activeTab === tab ? 'active' : ''} ${tab === 'Custom' ? 'custom-segmented-btn' : ''}`}
               onClick={() => handleTabChange(tab)}
             >
-              {tab === 'All' ? 'All Talents' : tab}
+              {tab === 'All' ? 'All Talents' : tab === 'Custom' ? '+ Custom' : tab}
             </button>
           ))}
         </div>
 
-        {/* Search Bar & Sub-Category Pills */}
-        <div className="talent-filter-container">
-          <input
-            type="text"
-            placeholder="Search talents by name or effect..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="talent-search-input"
-            autoFocus
-          />
+        {activeTab !== 'Custom' && (
+          <div className="talent-filter-container">
+            <input
+              type="text"
+              placeholder="Search talents by name or effect..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="talent-search-input"
+              autoFocus
+            />
 
-          {/* Ancestry Talent Restriction Toggle (Ancestry Tab Only) */}
-          {activeTab === 'Ancestry' && (
-            <div
-              className="ancestry-toggle-row"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: '8px',
-                marginBottom: '8px',
-                padding: '6px 10px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '6px',
-                fontSize: '13px',
-              }}
-            >
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={restrictToMatchingAncestry}
-                  onChange={(e) => setRestrictToMatchingAncestry(e.target.checked)}
-                  style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-                />
-                Restricts talents to selected ancestry
-              </label>
-            </div>
-          )}
+            {activeTab === 'Ancestry' && (
+              <div className="ancestry-toggle-row">
+                <label className="ancestry-toggle-label">
+                  <input
+                    type="checkbox"
+                    checked={restrictToMatchingAncestry}
+                    onChange={(e) => setRestrictToMatchingAncestry(e.target.checked)}
+                  />
+                  Restricts talents to selected ancestry
+                </label>
+              </div>
+            )}
 
-          {/* Sub-Category Pills (Hidden when restricting Ancestry tab) */}
-          {(!restrictToMatchingAncestry || activeTab !== 'Ancestry') && (
-            <div className="talent-pill-scroll-row">
-              {subCategories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  className={`talent-filter-pill ${
-                    selectedSubCategory === cat ? 'active' : ''
-                  }`}
-                  onClick={() => setSelectedSubCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+            {(!restrictToMatchingAncestry || activeTab !== 'Ancestry') && (
+              <div className="talent-pill-scroll-row">
+                {subCategories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`talent-filter-pill ${selectedSubCategory === cat ? 'active' : ''}`}
+                    onClick={() => setSelectedSubCategory(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Scrollable Talent Cards List */}
         <div className="modal-item-list talent-grid-list">
-          {filteredTalents.length === 0 ? (
-            <p className="empty-inventory-text" style={{ textAlign: 'center', padding: '30px' }}>
-              {activeTab === 'Ancestry' && restrictToMatchingAncestry && !characterAncestryName
-                ? 'Please select an ancestry first on your character sheet.'
-                : 'No matching talents found.'}
-            </p>
-          ) : (
-            filteredTalents.map((t) => {
-              const isSelected = selectedTalents[currentIndex] === t.id;
+          <div style={{ display: activeTab === 'Custom' ? 'block' : 'none' }}>
+            <CustomTalentForm
+              key={editingCustomTalent ? editingCustomTalent.id : 'new'}
+              initialTalent={editingCustomTalent}
+              onCancel={() => {
+                setActiveTab('All');
+                setEditingCustomTalent(null);
+              }}
+              onSubmitCustomTalent={handleCustomSubmit}
+            />
+          </div>
 
-              return (
-                <div
-                  key={t.id}
-                  className={`shop-item-card talent-selection-card ${
-                    isSelected ? 'selected-card' : ''
-                  }`}
-                  onClick={() => {
-                    onSelectTalent(t.id);
-                    onClose();
-                  }}
-                >
-                  <div className="shop-item-top-row">
-                    <div className="item-title-group">
-                      <span className="talent-card-tag">[{t.set}]</span>
-                      <strong className="item-name">{t.name}</strong>
-                      {t.repeatable && <span className="item-card-type-badge">Repeatable</span>}
+          {activeTab !== 'Custom' && (
+            <>
+              {filteredTalents.length === 0 ? (
+                <p className="empty-inventory-text empty-talents-text">
+                  {activeTab === 'Ancestry' && restrictToMatchingAncestry && !characterAncestryName
+                    ? 'Please select an ancestry first on your character sheet.'
+                    : 'No matching talents found.'}
+                </p>
+              ) : (
+                filteredTalents.map((t) => {
+                  const isSelected = selectedTalents[currentIndex] === t.id;
+                  const isCustom = (t as CustomTalent).isCustom;
+
+                  return (
+                    <div
+                      key={t.id}
+                      className={`shop-item-card talent-selection-card ${isSelected ? 'selected-card' : ''}`}
+                      onClick={() => {
+                        if (isCustom) {
+                          setEditingCustomTalent(t as CustomTalent);
+                          setActiveTab('Custom');
+                        } else {
+                          onSelectTalent(t.id);
+                          onClose();
+                        }
+                      }}
+                    >
+                      <div className="shop-item-top-row">
+                        <div className="item-title-group">
+                          <span className="talent-card-tag">[{t.set}]</span>
+                          <strong className="item-name">{t.name}</strong>
+                          {t.repeatable && <span className="item-card-type-badge">Repeatable</span>}
+                          {isCustom && (
+                            <span className="item-card-type-badge custom-badge-tag" title="Click to edit custom talent">
+                              Custom ✏️
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="item-details-column talent-card-desc-wrap">
+                        <span className="talent-card-description-preview">{t.description}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="item-details-column" style={{ marginTop: '6px' }}>
-                    <span className="talent-card-description-preview">{t.description}</span>
-                  </div>
-                </div>
-              );
-            })
+                  );
+                })
+              )}
+            </>
           )}
         </div>
       </div>

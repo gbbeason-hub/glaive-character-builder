@@ -208,7 +208,7 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
 - [DONE] Phase 25 PDF cleanup: Better looking front & back layout for character sheet
     - [DONE] Keep portrait 
     - [DONE] Use the same fonts for the same elements as in the webapp UI
-    - [DONE] Conditions, Fatigue, Encumberance: Add to PDF
+    - [DONE] Conditions, Fatigue, Encumbrance: Add to PDF
     - [DONE] Weapons: no damage coming through for standard weapons
     - [DONE] Weapons: no bonus shown for standard weapons
     - [DONE] Weapons: Add range, throwable, subtype keys
@@ -218,6 +218,8 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [DONE] Weapons: add empty weapon blocks
     - [DONE] PDF: Create page 2/back page with spells & inventory
     - [DONE] Inventory: Replace grey "locked" inventory cells with dotted borders.
+- [DONE] Task 27 Talents: Show only ancestry talents for selected ancestry 
+    - Make this a toggle that's on by default
 - [DONE] Task 28 Backgrounds: Move from list to modal
     - [DONE] JSON: Add category key 
     - [DONE] Groups: Derive groupings & assign values to each background category
@@ -267,8 +269,7 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - [ ] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
         - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
-- [NEW] Task 27 Talents: Show only ancestry talents for selected ancestry 
-    - Make this a toggle that's on by default
+
 
     - [] Names: 
 - [NEW] Task 29 Labels: Clean up
