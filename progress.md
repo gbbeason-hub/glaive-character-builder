@@ -110,11 +110,11 @@ To build a lightweight, fully client-side character generator and digital workbo
 - **Catalog & Database Wiring:** Integrated `items.json` lookups with inline item fallbacks to push background-granted equipment directly into the character's active inventory.
 - **Companion Sync Integration:** Tied background-granted companions and talent-granted companion slots into the active companion state and sheet rendering.
 
-## 🗡️ Schema-Driven Hidden Item Grants (`hiddenItemGrant`)
+## 🗡️ Schema-Driven Hidden Item Grants (`hiddenItemGrant`) & Gear Sync
 - **Data-Driven Architecture**: Refactored talent item grants to use a generic, schema-driven `hiddenItemGrant` object in `talents.json` (such as for the Thief's **Always Armed** talent) rather than hardcoding talent IDs in application logic.
 - **Zero-Slot Encumbrance**: Granted hidden items automatically set `slots: 0` so they occupy no inventory capacity while remaining visible in the character's active inventory.
 - **Full Weapon Integration & Dynamic PDF Rendering**: When `type: "Weapon"` is declared with `damage` and `range` attributes, the item automatically registers under the PDF's **Weapons & Combat Attacks** block with complete stat breakdowns. Attack bonuses are left unforced so they naturally reflect the character's relevant ability modifiers.
-- **Reactive Lifecycle Management**: An automated `useEffect` hook in `App.tsx` dynamically adds and removes hidden items whenever talents are selected or deselected.
+- **Reactive Lifecycle Management & Text Scrubbing**: An automated `useEffect` hook in `App.tsx` dynamically adds and removes hidden items whenever talents are selected or deselected. Simultaneously, it uses regex matching to automatically scrub stale item names from the `freeGearText` string state so no "ghost items" linger in the UI text box or PDF print output when a talent is modified or unequipped.
 
 ## PDF Resources
 The fonts to use in the PDF & web site
@@ -336,25 +336,3 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
      - [] : 
      - [] 
      - [] 
-
-
-## Current Issue with Custom Talents
-I am working on a React + TypeScript application for a tabletop character sheet builder (Glaive v3). I need to fix a specific state synchronization bug between custom talents, character inventory, and the PDF print output.
-
-### 1. App Architecture & State Mechanics
-- `CustomTalentForm.tsx`: A modal/form where users create or edit custom talents. Talents can have various mechanical effects, including granting items:
-  - `hiddenItemGrant`: Free-form text for zero-slot/trinket items (e.g. "Hidden Dagger").
-  - `catalogItemGrant`: Selection of a specific item from `itemsCatalog` by ID.
-- `App.tsx`: Manages overall character state, including `customTalents` (array of `CustomTalent`), `inventory` (array of `InventoryItem`), and `allActiveTalentIds` (derived array of string IDs for all selected/active talents).
-- `inventory` synchronization: A `useEffect` in `App.tsx` listens for changes to active talents and dynamically injects items granted by those talents into `inventory` (tagged with IDs like `talent_hidden_...` or `talent_catalog_...`).
-- PDF Print Output: Rebuilds a "Starting Gear" line by collecting 0-slot items from `inventory` and combining them with `freeGearText`.
-
-### 2. The Bug I Need to Fix
-When a user creates a custom talent with a free item grant, the item correctly appears in the character's inventory and on the PDF starting gear line. 
-
-HOWEVER, when the user edits that custom talent to change its mechanical effect (e.g., to HP bonus or "None") or clears out the item text/selection:
-1. The old item grant properties (`hiddenItemGrant` or `catalogItemGrant`) must be completely stripped from the saved talent object.
-2. The inventory sync logic in `App.tsx` must immediately purge the old item from `inventory` so it disappears from the PDF starting gear line without leaving "ghost" items behind.
-
-### 3. Current Files
-I will paste the current versions of `CustomTalentForm.tsx` and `App.tsx` in my next message (or right below). Please review them carefully and help me implement a clean, minimal fix without altering unrelated feature logic.
