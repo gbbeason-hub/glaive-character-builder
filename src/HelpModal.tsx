@@ -134,6 +134,12 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                   <b>Custom Bonds</b> - Select + Custom from the list of bonds. 
                 </li>
               </ul>
+              <li>
+                Fixed issues & inconsistencies with labels, inline help text, & PDF labels. 
+              </li>
+              <li>
+                Added text to define Fatigue & Encumbered states.
+              </li>
             </ul>
           </div>
         </div>
