@@ -163,11 +163,42 @@ export function App() {
   // Companions State
   const [companionNames, setCompanionNames] = useState<Record<string, string>>({});
 
-  // Sync logic: calculates max talent slots based on Ancestry and Level
+  // ==========================================
+  // 2.5. ACTIVE TALENTS AGGREGATOR
+  // ==========================================
+  const backgroundGrantedTalentIds: string[] = [];
+  if (backgroundDatabase && background) {
+    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
+    if (currentBg && currentBg.grantedTalentIds) {
+      backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
+    }
+  }
+  
+  // Include talents from custom backgrounds
+  if (customBackgroundObj && customBackgroundObj.grantedTalentIds) {
+    backgroundGrantedTalentIds.push(...customBackgroundObj.grantedTalentIds);
+  }
+
+  const allActiveTalentIds = useMemo(() => {
+    return Array.from(
+      new Set([
+        selectedAncestryTalentId,
+        ...selectedTalents.filter(Boolean),
+        ...backgroundGrantedTalentIds,
+      ])
+    ).filter(Boolean);
+  }, [selectedAncestryTalentId, selectedTalents, backgroundGrantedTalentIds]);
+
+  // Sync logic: calculates max talent slots based on Ancestry, Level, and Background grants
   useEffect(() => {
     const isHuman = selectedAncestryId === 'human';
     const baseTalents = isHuman ? 2 : (selectedAncestryId ? 1 : 0);
-    const calculatedMax = Math.min(6, Math.max(1, baseTalents + (level - 1)));
+    
+    // Count how many talents are granted directly by the selected background
+    const bgGrantedCount = backgroundGrantedTalentIds.length;
+
+    // Expand allowed slots to accommodate background talent while capping total at 6
+    const calculatedMax = Math.min(6, Math.max(1, baseTalents + (level - 1) + bgGrantedCount));
 
     setMaxTalentSlots(calculatedMax);
 
@@ -178,7 +209,7 @@ export function App() {
         return prev.slice(0, calculatedMax);
       }
     });
-  }, [selectedAncestryId, level]);
+  }, [selectedAncestryId, level, backgroundGrantedTalentIds.length]);
 
   // ==========================================
   // 3.1. BACKGROUND AUTO-REWARD HANDLER
@@ -299,26 +330,7 @@ export function App() {
     }
   }, [background]);
 
-  // ==========================================
-  // 3.25. ACTIVE TALENTS AGGREGATOR
-  // ==========================================
-  const backgroundGrantedTalentIds: string[] = [];
-  if (backgroundDatabase && background) {
-    const currentBg = (backgroundDatabase as BackgroundEntry[]).find((b) => b.text === background);
-    if (currentBg && currentBg.grantedTalentIds) {
-      backgroundGrantedTalentIds.push(...currentBg.grantedTalentIds);
-    }
-  }
-
-  const allActiveTalentIds = useMemo(() => {
-    return Array.from(
-      new Set([
-        selectedAncestryTalentId,
-        ...selectedTalents.filter(Boolean),
-        ...backgroundGrantedTalentIds,
-      ])
-    ).filter(Boolean);
-  }, [selectedAncestryTalentId, selectedTalents, backgroundGrantedTalentIds]);
+  
 
   // ==========================================
   // 3.5. TALENT EFFECTS HELPER
