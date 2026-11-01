@@ -18,6 +18,7 @@ export interface BackgroundItem {
 export interface TalentCatalogItem {
   id: string;
   name: string;
+  type?: string;
   description?: string;
 }
 
@@ -97,6 +98,11 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
 
   const handleApplyCustom = () => {
     if (!name.trim()) {
+      setShowValidation(true);
+      return;
+    }
+
+    if (benefitType === 'companion' && !companionType.trim()) {
       setShowValidation(true);
       return;
     }
@@ -319,10 +325,12 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
                     onChange={e => setSelectedTalentId(e.target.value)}
                   >
                     <option value="">-- Choose a Talent --</option>
-                    {talentsCatalog.map(talent => (
-                      <option key={talent.id} value={talent.id}>
-                        {talent.name}
-                      </option>
+                    {talentsCatalog
+                      .filter(talent => talent.type !== 'ancestry')
+                      .map(talent => (
+                        <option key={talent.id} value={talent.id}>
+                          {talent.name}
+                        </option>
                     ))}
                   </select>
                 </div>
@@ -330,7 +338,8 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
 
               {benefitType === 'companion' && (
                 <div className="form-group sub-input-group">
-                  <label className="field-label" htmlFor="custom-companion-input">Companion Type or Description</label>
+                  <label className="field-label" htmlFor="custom-companion-input">Companion Type or Description <span className="required-star">*</span>
+                  </label>
                   <input
                     id="custom-companion-input"
                     type="text"
