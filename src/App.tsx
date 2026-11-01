@@ -68,10 +68,10 @@ interface BackgroundEntry {
 }
 
 const attributeDescriptions: Record<keyof Abilities, string> = {
-  strength: 'Melee attacks, physical saves, & bonus to most weapon damage',
-  dexterity: 'delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
-  willpower: 'resolve, stubbornness, mental endurance, & use to wield & resist magic.',
-  wisdom: 'ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.',
+  strength: 'Melee attacks, physical saves, & bonus to most weapon damage.',
+  dexterity: 'Delicate tasks, moving silently, saves for poise, speed, or grace, bonus to AC.',
+  willpower: 'Resolve, stubbornness, mental endurance, & use to wield & resist magic.',
+  wisdom: 'Ranged attacks, knowledge, insight, saves for intuition, obscure knowledge, or keen eyes.',
 };
 
 export function App() {
@@ -907,7 +907,7 @@ export function App() {
                   type="text"
                   value={characterName}
                   onChange={(e) => setCharacterName(e.target.value)}
-                  className="mb-2"
+                  className="input-tall mb-2"
                 />
                 <button type="button" onClick={rollRandomName} className="btn-primary full-width">
                   🎲 Roll Name
@@ -1382,7 +1382,7 @@ export function App() {
               </div>
             </div>
 
-            <div className="print-trackers-section" style={{ marginTop: '12px' }}>
+            <div className="print-trackers-section print-trackers-container">
               <h4 className="print-section-title">Conditions</h4>
               <div className="print-conditions-grid">
                 {conditionsData.map((cond) => (
@@ -1393,13 +1393,22 @@ export function App() {
               </div>
 
               <h4 className="print-section-title">Fatigue & Status</h4>
-              <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
-                <div style={{ flex: 1, border: '1px solid #000', padding: '6px', fontSize: '12px' }}>
-                  <strong>Fatigue Level:</strong> <span style={{ display: 'inline-block', width: '30px', borderBottom: '1px solid #000', textAlign: 'center' }}></span>
+              <div className="print-status-row">
+                {/* Box 1: Fatigue Level */}
+                <div className="print-status-box">
+                  <div className="print-status-label-row">
+                    <strong>Fatigue Level:</strong> <span className="print-fatigue-line"></span>
+                  </div>
+                  <span className="print-status-help-text">x2 slots & -1 to all rolls (stacking).</span>
                 </div>
-                <div style={{ flex: 1, border: '1px solid #000', padding: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <input type="checkbox" style={{ width: '13px', height: '13px', margin: 0 }} />
-                  <strong>Encumbered</strong>
+
+                {/* Box 2: Encumbered */}
+                <div className="print-status-box">
+                  <div className="print-status-label-row">
+                    <input type="checkbox" className="print-status-checkbox" />
+                    <strong>Encumbered</strong>
+                  </div>
+                  <span className="print-status-help-text">DISADV on all rolls. +1 Fatigue per dungeon turn.</span>
                 </div>
               </div>
             </div>

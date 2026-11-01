@@ -387,7 +387,7 @@ export const CustomTalentForm: React.FC<CustomTalentFormProps> = ({
               checked={mechanicalEffect === 'item'}
               onChange={() => setMechanicalEffect('item')}
             />
-            <strong>Hidden / Zero-Slot Item</strong>
+            <strong>Free Gear / Item</strong>
           </label>
           {mechanicalEffect === 'item' && (
             <div className="sub-input-group" style={{ marginTop: '12px', paddingLeft: '0' }}>

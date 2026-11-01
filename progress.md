@@ -268,6 +268,11 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [DONE] Modal: Replace dropdown with modal reference
 
 - [DONE] Task 30 Talents: Max of 6. Remove writable fields in PDF?
+- [DONE] Task 31 Custom Features: Allow players to create a custom feature
+    - [DONE] Talents: Guidance/template. Custom talent & custom archetype
+    - [DONE] Background: Guidance/template
+    - [DONE] Ancestry: Guidance/template. Custom ancestry. Custom default ancestry talent. 
+    - [DONE] Bond: Guidance. 
 
 
 ## 🏁 Next Target Steps
@@ -312,16 +317,13 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
 
 
     - [] Names: 
-- [NEW] Task 29 Labels: Clean up
-    - [] Inline help text: inconsistent captilization & punctuation 
+- [WIP] Task 29 Labels: Clean up
+    - [DONE] Inline help text: inconsistent captilization & punctuation 
     - [] Names: Some include Range (R1) - e.g., Stone Sight, R2
-    - [] Name: Make the input field taller
+    - [DONE] Name: Make the input field taller
     - [] PDF: Encumbered & Fatigue should be same font style as conditions?
-- [WIP] Task 31 Custom Features: Allow players to create a custom feature
-    - [DONE] Talents: Guidance/template. Custom talent & custom archetype
-    - [DONE] Background: Guidance/template
-    - [DONE] Ancestry: Guidance/template. Custom ancestry. Custom default ancestry talent. 
-    - [DONE] Bond: Guidance. 
+    - [] Bonds: Listed in non-alpha order
+
 - [NEW] Task 32 Art: Select art to add page 1 based on Scott's art for ancestries
 - [NEW] Task 33 gitignore: build out
 - [NEW] Task 34 PDF: Clear defaults to print a completely blank character sheet. 

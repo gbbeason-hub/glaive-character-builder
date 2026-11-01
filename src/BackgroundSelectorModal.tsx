@@ -144,7 +144,7 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
             <h3>Select Background</h3>
             <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">✕</button>
           </div>
-          <p className="shopkeeper-flavor-text">Choose a narrative origin story or define your own</p>
+          <p className="shopkeeper-flavor-text">Choose a narrative origin story or define your own.</p>
         </header>
 
         <div className="category-pills-row">
