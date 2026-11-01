@@ -42,12 +42,52 @@ To build a lightweight, fully client-side character generator and digital workbo
 - Framework: React (v18+) + TypeScript (`src/App.tsx`, `src/ItemCard.tsx`).
 - Environment: Local Vite development server running cleanly on localhost:5173.
 
+## Project File Definitions (TypeScript / TSX)
+
+### Core Application Structure
+* **`App.tsx`**: The main application container and state root. Manages character data, attributes, inventory, active talents, spell assignments, currency, and the print/PDF export layout.
+* **`main.tsx`**: Application entry point that renders the root `<App/>` component into the DOM.
+
+### Character Creation & Traits Modules
+* **`AncestryCard.tsx`**: Renders the ancestry selection card, handles random rolls, custom ancestry triggers, and links to ancestry-specific talents.
+* **`AncestryCustomInputs.tsx`**: Provides input fields for defining a custom ancestry name and descriptive summary.
+* **`AncestryTalentModal.tsx`**: Modal wrapper containing the form used to create or edit custom ancestry talents.
+* **`CompanionsCard.tsx`**: Manages and displays loyal animal companions or summoned entities granted by talents or background options.
+
+
+### Talents & Customization
+* **`TalentsCard.tsx`**: Renders the stack of heroic talent slots, handles random rolling, displays talent descriptions, and manages background-granted talents.
+* **`TalentSelectorModal.tsx`**: Modal dialog allowing users to browse, filter, search, and select heroic or ancestry talents from catalogs, or switch to the custom talent builder.
+* **`CustomTalentForm.tsx`**: Form component for creating and editing custom talents, including defining custom mechanical effects (HP, AC, item slots, containers, or item grants).
+* **`TalentSubOptionBox.tsx`**: Handles nested sub-options for specific talents that require secondary choices.
+
+
+### Inventory, Gear & Shop
+* **`SilverAndGearCard.tsx`**: Manages the character's currency (silver and copper), starting silver rolls, free gear text, carrying capacity, and inventory items.
+* **`ItemShopModal.tsx`**: Modal marketplace allowing characters to buy and sell weapons, armor, equipment, and magic items based on available wealth and inventory slots.
+* **`ItemCard.tsx`**: Reusable card component displaying individual item details, stats, slot weights, and action buttons within shop listings.
+
+### Magic & Backgrounds
+* **`SpellsCard.tsx`**: Manages spell containers (spellbooks, holy relics, familiar slots) and allows players to bind spells based on Willpower.
+* **`BackgroundSelectorModal.tsx`**: Modal dialog categorized by origin themes (underworld, rural, noble, etc.) enabling players to select standard backgrounds or build custom ones with unique benefits.
+
+### Utilities & Modals
+* **`HelpModal.tsx`**: Informational modal providing rules references, carrying capacity details, scope limitations, and a "What's New" changelog.
+* **`utils/combatCalculations.ts`**: Helper logic containing interfaces and functions for calculating weapon attack bonuses, damage dice, and range traits based on character attributes.
+* **`utils/pdfGenerator.ts`**: Helper module responsible for filtering inventory items, mapping weapons, and preparing structured data tables for PDF character sheet generation.
+
+
 ## 🗃️ Active Flat Databases
-1. `public/items.json`: Completed master item array containing categorized Weapon (`w_`), Armor (`a_`), Ammunition, and Gear (`g_`) datasets with exact slot weights and silver piece costs.
-2. `public/traits.json`: 1d6 and 1d20 array tables handling text descriptors for Gender, Hair, Looks, Skin, and Speech. Includes a 6x6 multidimensional array matrix for Social Bonds.
-3. `public/backgrounds.json`: Compact d100 database mapping narrative origin strings utilizing explicit mathematical `min` and `max` numeric boundaries.
-4. `public/ancestries.json`: Master ancestry definitions (Construct, Demi-Ogre, Drake, Dwarf, Elf, Goblin, Half-Foot, Human, Infernal, Kobold, Orc) with associated inherent talents.
-5. `public/talents.json`: Archetype and Ancestry talent list complete with mechanical rules text.
+1. `data/ancestries.json`: Standard ancestry definitions (Construct, Demi-Ogre, Drake, Dwarf, Elf, Goblin, Half-Foot, Human, Infernal, Kobold, Orc) with associated inherent talents.
+2. `data/backgrounds.json`: Compact d100 database mapping narrative origin strings utilizing explicit mathematical `min` and `max` numeric boundaries.
+3. `data/conditions.json`: 
+4. `data/items.json`: Standard item array containing categorized Weapon (`w_`), Armor (`a_`), Ammunition, and Gear (`g_`) datasets with exact slot weights and silver piece costs.
+5. `data/mutations.json`: 
+6. `data/names.json`: Standard list of names and sobriquets to use when creating PC names.
+7. `data/spell_mutations.json`: Standard list of positive spell mutations that occur while crafting spells.
+8. `data/spells.json`: Standard spell definitions with range attribute.
+9. `data/talents.json`: Archetype and Ancestry talent list complete with mechanical rules text.
+10. `data/traits.json`: 1d6 and 1d20 array tables handling text descriptors for Gender, Hair, Looks, Skin, and Speech. Includes a 6x6 multidimensional array matrix for Social Bonds. 
 
 ## 📐 Implemented Rule Equations (Derived Real-Time Stats)
 - Max Attribute Dropdowns: Dynamically capped via `Math.min(5, level + 2)`.
@@ -278,9 +318,10 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [] Name: Make the input field taller
     - [] PDF: Encumbered & Fatigue should be same font style as conditions?
 - [WIP] Task 31 Custom Features: Allow players to create a custom feature
-    - [] Talents: Guidance/template
+    - [DONE] Talents: Guidance/template. Custom talent & custom archetype
     - [DONE] Background: Guidance/template
-    - [] Bond: Guidance/template
+    - [DONE] Ancestry: Guidance/template. Custom ancestry. Custom default ancestry talent. 
+    - [DONE] Bond: Guidance. 
 - [NEW] Task 32 Art: Select art to add page 1 based on Scott's art for ancestries
 - [NEW] Task 33 gitignore: build out
 - [NEW] Task 34 PDF: Clear defaults to print a completely blank character sheet. 
@@ -295,3 +336,25 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
      - [] : 
      - [] 
      - [] 
+
+
+## Current Issue with Custom Talents
+I am working on a React + TypeScript application for a tabletop character sheet builder (Glaive v3). I need to fix a specific state synchronization bug between custom talents, character inventory, and the PDF print output.
+
+### 1. App Architecture & State Mechanics
+- `CustomTalentForm.tsx`: A modal/form where users create or edit custom talents. Talents can have various mechanical effects, including granting items:
+  - `hiddenItemGrant`: Free-form text for zero-slot/trinket items (e.g. "Hidden Dagger").
+  - `catalogItemGrant`: Selection of a specific item from `itemsCatalog` by ID.
+- `App.tsx`: Manages overall character state, including `customTalents` (array of `CustomTalent`), `inventory` (array of `InventoryItem`), and `allActiveTalentIds` (derived array of string IDs for all selected/active talents).
+- `inventory` synchronization: A `useEffect` in `App.tsx` listens for changes to active talents and dynamically injects items granted by those talents into `inventory` (tagged with IDs like `talent_hidden_...` or `talent_catalog_...`).
+- PDF Print Output: Rebuilds a "Starting Gear" line by collecting 0-slot items from `inventory` and combining them with `freeGearText`.
+
+### 2. The Bug I Need to Fix
+When a user creates a custom talent with a free item grant, the item correctly appears in the character's inventory and on the PDF starting gear line. 
+
+HOWEVER, when the user edits that custom talent to change its mechanical effect (e.g., to HP bonus or "None") or clears out the item text/selection:
+1. The old item grant properties (`hiddenItemGrant` or `catalogItemGrant`) must be completely stripped from the saved talent object.
+2. The inventory sync logic in `App.tsx` must immediately purge the old item from `inventory` so it disappears from the PDF starting gear line without leaving "ghost" items behind.
+
+### 3. Current Files
+I will paste the current versions of `CustomTalentForm.tsx` and `App.tsx` in my next message (or right below). Please review them carefully and help me implement a clean, minimal fix without altering unrelated feature logic.

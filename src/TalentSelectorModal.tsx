@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import type { Talent } from './TalentsCard';
 import { CustomTalentForm } from './CustomTalentForm';
 import type { CustomTalent } from './CustomTalentForm';
+import type { ItemCatalogEntry } from './BackgroundSelectorModal';
 
 interface TalentSelectorModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface TalentSelectorModalProps {
   selectedTalents: string[];
   currentIndex: number;
   characterAncestryName?: string;
+  itemsCatalog?: ItemCatalogEntry[];
   onSelectTalent: (talentId: string) => void;
   onAddCustomTalent?: (customTalent: CustomTalent) => void;
 }
@@ -28,6 +30,7 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
   selectedTalents,
   currentIndex,
   characterAncestryName = '',
+  itemsCatalog = [],
   onSelectTalent,
   onAddCustomTalent,
 }) => {
@@ -191,6 +194,8 @@ export const TalentSelectorModal: React.FC<TalentSelectorModalProps> = ({
             <CustomTalentForm
               key={editingCustomTalent ? editingCustomTalent.id : 'new'}
               initialTalent={editingCustomTalent}
+              itemsCatalog={itemsCatalog}
+              forcedAncestryName={characterAncestryName}
               onCancel={() => {
                 setActiveTab('All');
                 setEditingCustomTalent(null);

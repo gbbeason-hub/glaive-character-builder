@@ -109,8 +109,10 @@ export function App() {
     speech: 'Formal',
   });
 
+  // Bonds
   const [bond, setBond] = useState<string>('');
   const [bondPcName, setBondPcName] = useState<string>('');
+  const [isCustomBond, setIsCustomBond] = useState<boolean>(false);
 
   // Backgrounds
   const [background, setBackground] = useState<string>('');
@@ -127,6 +129,9 @@ export function App() {
   const [selectedTalents, setSelectedTalents] = useState<string[]>(['']);
   const [maxTalentSlots, setMaxTalentSlots] = useState<number>(1);
   
+  // Custom Ancestry State Storage
+  const [customAncestryName, setCustomAncestryName] = useState<string>('');
+  const [customAncestrySummary, setCustomAncestrySummary] = useState<string>('');  
   // Custom Talents State Storage
   const [customTalents, setCustomTalents] = useState<CustomTalent[]>([]);
 
@@ -305,10 +310,15 @@ export function App() {
     }
   }
 
-  const allActiveTalentIds = [
-    ...selectedTalents.filter(Boolean),
-    ...backgroundGrantedTalentIds,
-  ];
+  const allActiveTalentIds = useMemo(() => {
+    return Array.from(
+      new Set([
+        selectedAncestryTalentId,
+        ...selectedTalents.filter(Boolean),
+        ...backgroundGrantedTalentIds,
+      ])
+    ).filter(Boolean);
+  }, [selectedAncestryTalentId, selectedTalents, backgroundGrantedTalentIds]);
 
   // ==========================================
   // 3.5. TALENT EFFECTS HELPER
@@ -390,36 +400,7 @@ export function App() {
     });
   }, [selectedTalents, background, assignedSpells]);
 
-  // ==========================================
-  // 4.6. GENERIC HIDDEN ITEM / WEAPON SYNC
-  // ==========================================
-  useEffect(() => {
-    setInventory((prev) => {
-      const filteredInventory = prev.filter((item) => !item.id.startsWith('talent_hidden_'));
-      const dynamicHiddenGrants: InventoryItem[] = [];
 
-      allActiveTalentIds.forEach((talentId, index) => {
-        const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
-        if (talentObj && (talentObj as any).hiddenItemGrant) {
-          const grant = (talentObj as any).hiddenItemGrant;
-          dynamicHiddenGrants.push({
-            id: `talent_hidden_${index}_${talentId}`,
-            name: grant.name,
-            type: grant.type || 'Equipment',
-            slots: grant.slots ?? 0,
-            cost_sp: grant.cost_sp ?? 0,
-            cost_cp: grant.cost_cp ?? 0,
-            details: grant.details || '',
-            quantity: 1,
-            damage: grant.damage,
-            range: grant.range,
-          });
-        }
-      });
-
-      return [...filteredInventory, ...dynamicHiddenGrants];
-    });
-  }, [selectedTalents, background]);
 
   // ==========================================
   // 4.5. COMPANIONS SYNC
@@ -461,6 +442,78 @@ export function App() {
   }
 
   // ==========================================
+  // 4.6. GENERIC HIDDEN ITEM / WEAPON SYNC
+  // ==========================================
+  useEffect(() => {
+    const grantedTalentItems: Array<{
+      id: string;
+      name: string;
+      type: string;
+      slots: number;
+      cost_sp: number;
+      cost_cp: number;
+      details: string;
+      damage?: string;
+      range?: string;
+      quantity: number;
+    }> = [];
+
+    allActiveTalentIds.forEach((talentId, index) => {
+      const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
+      if (!talentObj) return;
+
+      // 1. Handle Free-Form Hidden Item Grant
+      if ((talentObj as any).hiddenItemGrant) {
+        const grant = (talentObj as any).hiddenItemGrant;
+        if (grant.name && grant.name.trim()) {
+          grantedTalentItems.push({
+            id: `talent_hidden_${index}_${talentId}`,
+            name: grant.name.trim(),
+            type: grant.type || 'Equipment',
+            slots: grant.slots ?? 0,
+            cost_sp: grant.cost_sp ?? 0,
+            cost_cp: grant.cost_cp ?? 0,
+            details: grant.details || '',
+            quantity: 1,
+            damage: grant.damage,
+            range: grant.range,
+          });
+        }
+      }
+
+      // 2. Handle Catalog Item Grant (Dropdown selection)
+      if ((talentObj as any).catalogItemGrant) {
+        const grant = (talentObj as any).catalogItemGrant;
+        const catalogMatch = (itemsCatalog as CatalogItem[]).find((i) => i.id === grant.id);
+        if (catalogMatch) {
+          grantedTalentItems.push({
+            id: `talent_catalog_${index}_${talentId}_${catalogMatch.id}`,
+            name: catalogMatch.name,
+            type: catalogMatch.type || 'Equipment',
+            slots: catalogMatch.slots ?? 0,
+            cost_sp: catalogMatch.cost_sp ?? 0,
+            cost_cp: catalogMatch.cost_cp ?? 0,
+            details: catalogMatch.details || 'Granted by custom talent.',
+            quantity: grant.quantity || 1,
+            damage: (catalogMatch as any).damage,
+            range: (catalogMatch as any).range,
+          });
+        }
+      }
+    });
+
+    setInventory((prev) => {
+      // Strip out ALL previous talent-granted items from inventory completely
+      const nonTalentItems = prev.filter(
+        (i) => !i.id.startsWith('talent_hidden_') && !i.id.startsWith('talent_catalog_')
+      );
+      
+      // Rebuild inventory fresh with only currently valid items from active talents
+      return [...nonTalentItems, ...grantedTalentItems];
+    });
+  }, [allActiveTalentIds, customTalents, itemsCatalog]);
+
+  // ==========================================
   // 5. SYNCHRONOUS REAL-TIME EQUATIONS
   // ==========================================
   const maxStatBonus = Math.min(5, level + 2);
@@ -483,8 +536,11 @@ export function App() {
     ? traitDatabase.bonds.flat() 
     : [];
 
+
   const selectedAncestryObj = (ancestriesCatalog as any[]).find((a) => a.id === selectedAncestryId);
-  const characterAncestryName = selectedAncestryObj ? selectedAncestryObj.name : '';
+  const characterAncestryName = selectedAncestryId === 'custom_ancestry_option' 
+    ? customAncestryName 
+    : (selectedAncestryObj ? selectedAncestryObj.name : '');
 
   // ==========================================
   // 6. HELPER ACTION FUNCTIONS
@@ -625,6 +681,7 @@ export function App() {
 
   const rollCharacterBond = () => {
     if (!traitDatabase || !traitDatabase.bonds) return;
+    setIsCustomBond(false);
     const row = traitDatabase.bonds[Math.floor(Math.random() * traitDatabase.bonds.length)];
     const randomBond = row[Math.floor(Math.random() * row.length)];
     setBond(randomBond);
@@ -681,9 +738,12 @@ export function App() {
     traits,
     bond,
     bondPcName,
+    isCustomBond,
     background,
     selectedAncestryId,
     selectedAncestryTalentId,
+    customAncestryName,
+    customAncestrySummary,
     selectedTalents,
     selectedMutations,
     assignedSpells,
@@ -734,10 +794,19 @@ export function App() {
       if (decoded.customTalents) setCustomTalents(decoded.customTalents);
       if (decoded.selectedAncestryId) setSelectedAncestryId(decoded.selectedAncestryId);
       if (decoded.selectedAncestryTalentId) setSelectedAncestryTalentId(decoded.selectedAncestryTalentId);
+      if (decoded.customAncestryName) setCustomAncestryName(decoded.customAncestryName);
+      if (decoded.customAncestrySummary) setCustomAncestrySummary(decoded.customAncestrySummary);
       if (decoded.selectedTalents) setSelectedTalents(decoded.selectedTalents);
       if (decoded.selectedMutations) setSelectedMutations(decoded.selectedMutations);
       if (decoded.assignedSpells) setAssignedSpells(decoded.assignedSpells);
       if (decoded.inventory) setInventory(decoded.inventory);
+      if (decoded.bond) setBond(decoded.bond);
+      if (decoded.bondPcName) setBondPcName(decoded.bondPcName);
+      if (decoded.isCustomBond !== undefined) setIsCustomBond(decoded.isCustomBond);
+
+      if (decoded.customAncestryName) setCustomAncestryName(decoded.customAncestryName);
+      if (decoded.customAncestrySummary) setCustomAncestrySummary(decoded.customAncestrySummary);
+      
 
       setImportString('');
       setExportMessage('Character successfully loaded!');
@@ -887,6 +956,12 @@ export function App() {
             selectedAncestryTalentId={selectedAncestryTalentId}
             onAncestryChange={handleAncestryChange}
             onAncestryTalentChange={setSelectedAncestryTalentId}
+            customAncestryName={customAncestryName}
+            onCustomAncestryNameChange={setCustomAncestryName}
+            customAncestrySummary={customAncestrySummary}
+            onCustomAncestrySummaryChange={setCustomAncestrySummary}
+            onAddCustomTalent={handleAddCustomTalent}
+            itemsCatalog={itemsCatalog}
           />
 
           {/* 4. Talents Card */}
@@ -904,6 +979,7 @@ export function App() {
             onAddCustomTalent={handleAddCustomTalent}
             backgroundGrantedTalentIds={backgroundGrantedTalentIds}
             characterAncestryName={characterAncestryName}
+            itemsCatalog={itemsCatalog}
           />
 
           {/* 5. Spells & Magic Containers Module */}
@@ -949,26 +1025,62 @@ export function App() {
           <div className="card-panel">
             <h3 className="panel-heading">Bond</h3>
             <p className="instruction-text">Relationship with PC to your left:</p>
-            <div className="bond-input-row mb-2">
+            <div className="bond-input-row mb-2" style={{ display: 'flex', gap: '8px' }}>
               <input
                 type="text"
                 placeholder="PC Name"
                 value={bondPcName}
                 onChange={(e) => setBondPcName(e.target.value)}
                 className="bond-pc-input"
+                style={{ flex: '1' }}
               />
-              <select
-                value={bond}
-                onChange={(e) => setBond(e.target.value)}
-                className="bond-select-input"
-              >
-                <option value="">-- Select a Bond --</option>
-                {allAvailableBonds.map((bText: string, idx: number) => (
-                  <option key={idx} value={bText}>
-                    {bText}
-                  </option>
-                ))}
-              </select>
+
+              {isCustomBond ? (
+                <div style={{ flex: '2', display: 'flex', gap: '4px' }}>
+                  <input
+                    type="text"
+                    placeholder="Type custom bond description..."
+                    value={bond}
+                    onChange={(e) => setBond(e.target.value)}
+                    className="bond-pc-input"
+                    style={{ flex: '1' }}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => {
+                      setIsCustomBond(false);
+                      setBond('');
+                    }}
+                    title="Back to preset list"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <select
+                  value={allAvailableBonds.includes(bond) ? bond : (isCustomBond ? 'CUSTOM_OPTION' : '')}
+                  onChange={(e) => {
+                    if (e.target.value === 'CUSTOM_OPTION') {
+                      setIsCustomBond(true);
+                      setBond('');
+                    } else {
+                      setBond(e.target.value);
+                    }
+                  }}
+                  className="bond-select-input"
+                  style={{ flex: '2' }}
+                >
+                  <option value="">-- Select a Bond --</option>
+                  <option value="CUSTOM_OPTION">+ Custom Bond...</option>
+                  {allAvailableBonds.map((bText: string, idx: number) => (
+                    <option key={idx} value={bText}>
+                      {bText}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <button type="button" onClick={rollCharacterBond} className="btn-primary full-width">
               🎲 Roll Character Bond
@@ -1221,6 +1333,9 @@ export function App() {
 
             <div className="print-narrative-block">
               <div className="mb-2">
+                <strong>Ancestry:</strong> {characterAncestryName || 'Human'}
+              </div>
+              <div className="mb-2">
                 <strong>Bond {bondPcName ? `with ${bondPcName}` : ''}:</strong> {bond}
               </div>
               <div>
@@ -1383,12 +1498,21 @@ export function App() {
               <h4 className="print-section-title">Inventory (Capacity: {maxCarryingCapacity} Slots)</h4>
               
               <div className="print-freegear-block">
-                <strong>Starting Gear:</strong> {freeGearText}
-                {inventory
-                  .filter((item) => item.slots === 0)
-                  .map((item) => `, ${item.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}`)
-                  .join('')}
-              </div>
+  <strong>Starting Gear:</strong> {
+    (() => {
+      // Collect 0-slot item names from inventory
+      const zeroSlotNames = inventory
+        .filter((item) => item.slots === 0)
+        .map((item) => item.name);
+
+      // Combine freeGearText items and zero-slot items, then filter through a Set to ensure 100% uniqueness
+      const baseGearItems = freeGearText ? freeGearText.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const allUniqueGear = Array.from(new Set([...baseGearItems, ...zeroSlotNames]));
+
+      return allUniqueGear.join(', ');
+    })()
+  }
+</div>
 
               <div className="print-inventory-grid">
                 {Array.from({ length: 18 }).map((_, i) => {

@@ -32,6 +32,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             <p>
                 <br/>Create Glaive characters online and generate a print-ready 8.5" x 11" PDF character sheet for tabletop play.
             </p>  
+            <p>For summaries of improvements & fixes, see <a href="#updates">What’s New</a>.</p>
             
           </div>  
 
@@ -105,7 +106,45 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           </div>
           
 
+          <div className="help-section">
+            <h4 id="updates">What’s New</h4>
+            <h5>Nov 15, 2026</h5>
+            <ul>
+              <li>
+                <b>Background now has a dialog!</b> The dropdown list was long and tedious. I used thematic groups to organize them. 
+              </li>
+              <li>
+                <b>Talents are limited to 6.</b> In the PDF, the number of blank talent lines are dynamically determined based on how many talents you select in the Builder, and they're capped to be no more than a total of 6 talents. 
+              </li>
+              <li><b>You can now create custom features!</b> They're only saved for your browser session and not to the standard lists. They're included in the copied or downloaded JSON so you can load them with the character. 
+                <br/>
+                <br/>For giving benefits, the custom talents and backgrounds follow the patterns of the standard ones -- bonuses to HP, AC, slots, inventory, and companions. Use the description for gameplay benefits, such as advantage on checks or saves in specific conditions.
+              </li>
+              <ul>
+                <li>
+                  <b>Custom Talents</b> - In the Select Talent dialog, click <b>+ Custom</b> to create a new talent. 
+                </li>
+                <li>
+                  <b>Custom Ancestries</b> - Add both a custom ancestry with description and a custom starting talent for the ancestry. Select + Custom from the list of ancestries. In the Select Talent (Ancestry) dialog, click <b>+ Custom</b> to create a new talent. 
+                </li>
+                <li>
+                  <b>Custom Backgrounds</b> - In the Select Background dialog, click <b>+ Custom</b> to create a new talent. 
+                </li>
+                <li>
+                  <b>Custom Bonds</b> - Select + Custom from the list of bonds. 
+                </li>
+              </ul>
+            </ul>
+          </div>
         </div>
+
+
+        <div className="help-section">
+
+        </div>
+
+        
+
 
         <div className="modal-footer-row">
           <button type="button" onClick={onClose} className="btn-primary">

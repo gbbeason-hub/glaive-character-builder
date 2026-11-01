@@ -1,4 +1,9 @@
+import { useState, useEffect } from 'react';
 import { TalentSubOptionBox } from './TalentSubOptionBox';
+import { AncestryCustomInputs } from './AncestryCustomInputs';
+import { AncestryTalentModal } from './AncestryTalentModal';
+import type { CustomTalent } from './CustomTalentForm';
+import type { ItemCatalogEntry } from './BackgroundSelectorModal';
 
 export interface SubOption {
   id: string;
@@ -12,6 +17,7 @@ export interface Ancestry {
   fixedTalentIds: string[];
   bonusTalentCount: number;
   summaryText: string;
+  isCustom?: boolean;
 }
 
 export interface Talent {
@@ -20,13 +26,9 @@ export interface Talent {
   type: string;
   set: string;
   description: string;
+  isCustom?: boolean;
   subOptions?: SubOption[];
-  effects?: Array<{
-    type: string;
-    target: string;
-    mode: string;
-    value: number | string;
-  }>;
+  effects?: Array<{ type: string; target: string; mode: string; value: number | string }>;
 }
 
 interface AncestryCardProps {
@@ -38,6 +40,12 @@ interface AncestryCardProps {
   onAncestryChange: (ancestryId: string) => void;
   onAncestryTalentChange: (talentId: string) => void;
   onSubOptionChange?: (subOptionId: string) => void;
+  customAncestryName: string;
+  onCustomAncestryNameChange: (name: string) => void;
+  customAncestrySummary: string;
+  onCustomAncestrySummaryChange: (summary: string) => void;
+  onAddCustomTalent?: (customTalent: CustomTalent) => void;
+  itemsCatalog?: ItemCatalogEntry[];
 }
 
 export function AncestryCard({
@@ -49,19 +57,29 @@ export function AncestryCard({
   onAncestryChange,
   onAncestryTalentChange,
   onSubOptionChange,
+  customAncestryName,
+  onCustomAncestryNameChange,
+  customAncestrySummary,
+  onCustomAncestrySummaryChange,
+  onAddCustomTalent,
+  itemsCatalog = [],
 }: AncestryCardProps) {
-  const currentAncestry = ancestries.find((a) => a.id === selectedAncestryId) || ancestries[0];
-  const currentTalent = talents.find((t) => t.id === selectedAncestryTalentId);
+  const [isCustomAncestry, setIsCustomAncestry] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const availableAncestryTalents = talents.filter(
-    (t) => t.set?.toLowerCase() === currentAncestry?.name?.toLowerCase()
-  );
+  useEffect(() => {
+    if (selectedAncestryId === 'custom_ancestry_option') setIsCustomAncestry(true);
+  }, [selectedAncestryId]);
+
+  const currentAncestry = ancestries.find((a) => a.id === selectedAncestryId);
+  const effectiveAncestryName = isCustomAncestry ? customAncestryName : (currentAncestry?.name || '');
+  const currentTalent = talents.find((t) => t.id === selectedAncestryTalentId);
 
   const handleRollAncestry = () => {
     if (!ancestries.length) return;
-    const randomIndex = Math.floor(Math.random() * ancestries.length);
-    const randomAncestry = ancestries[randomIndex];
-    onAncestryChange(randomAncestry.id);
+    setIsCustomAncestry(false);
+    const standardAncestries = ancestries.filter((a) => a.id !== 'custom_ancestry_option');
+    onAncestryChange(standardAncestries[Math.floor(Math.random() * standardAncestries.length)].id);
   };
 
   return (
@@ -70,45 +88,60 @@ export function AncestryCard({
 
       <div className="form-group">
         <label className="field-label">Choose Ancestry</label>
-        <select 
-          value={selectedAncestryId} 
-          onChange={(e) => onAncestryChange(e.target.value)}
-        >
-          <option value="" disabled>-- Select an ancestry --</option>
-          {ancestries.map((anc) => (
-            <option key={anc.id} value={anc.id}>
-              {anc.name}
-            </option>
-          ))}
-        </select>
-        {selectedAncestryId && <p className="card-description">{currentAncestry?.summaryText}</p>}
+        {isCustomAncestry ? (
+          <AncestryCustomInputs
+            customAncestryName={customAncestryName}
+            onCustomAncestryNameChange={onCustomAncestryNameChange}
+            customAncestrySummary={customAncestrySummary}
+            onCustomAncestrySummaryChange={onCustomAncestrySummaryChange}
+            onReset={() => {
+              setIsCustomAncestry(false);
+              onAncestryChange('');
+              onCustomAncestryNameChange('');
+            }}
+          />
+        ) : (
+          <select 
+            value={selectedAncestryId} 
+            onChange={(e) => {
+              if (e.target.value === 'CUSTOM_OPTION') {
+                setIsCustomAncestry(true);
+                onAncestryChange('custom_ancestry_option');
+              } else {
+                onAncestryChange(e.target.value);
+              }
+            }}
+          >
+            <option value="" disabled>-- Select an ancestry --</option>
+            <option value="CUSTOM_OPTION">+ Custom Ancestry...</option>
+            {ancestries.map((anc) => (
+              <option key={anc.id} value={anc.id}>{anc.name}</option>
+            ))}
+          </select>
+        )}
+
+        <p className="card-description">
+          {isCustomAncestry ? customAncestrySummary : currentAncestry?.summaryText}
+        </p>
       </div>
 
-      {selectedAncestryId !== 'human' && (
+      {selectedAncestryId !== 'human' && selectedAncestryId !== '' && (
         <div className="form-group">
           <label className="field-label">Ancestry Talent</label>
-          <select
-            value={selectedAncestryTalentId}
-            onChange={(e) => onAncestryTalentChange(e.target.value)}
-            disabled={!selectedAncestryId}
+          
+          <button
+            type="button"
+            className={`talent-selector-trigger full-width mb-2 ${currentTalent ? 'has-selection' : ''}`}
+            onClick={() => setIsModalOpen(true)}
           >
-            {!selectedAncestryId ? (
-              <option value="" disabled>-- Select an ancestry first --</option>
-            ) : (
-              availableAncestryTalents.map((talent: Talent) => (
-                <option key={talent.id} value={talent.id}>
-                  {talent.name}
-                </option>
-              ))
-            )}
-          </select>
-          <p className="card-description">
-            {currentTalent ? currentTalent.description : 'No talent selected.'}
-          </p>
+            <span>{currentTalent ? currentTalent.name : '-- Select ancestry talent --'}</span>
+            <span>▼</span>
+          </button>
+
+          <p className="card-description">{currentTalent ? currentTalent.description : 'No talent selected.'}</p>
         </div>
       )}
 
-      {/* Reusable Sub-Option Component */}
       {selectedAncestryId !== 'human' && currentTalent && (
         <TalentSubOptionBox
           talent={currentTalent}
@@ -122,6 +155,16 @@ export function AncestryCard({
           🎲 Roll Ancestry
         </button>
       </div>
+
+      <AncestryTalentModal
+        isOpen={isModalOpen}
+        ancestryName={effectiveAncestryName}
+        initialTalent={currentTalent?.isCustom ? (currentTalent as CustomTalent) : null}
+        itemsCatalog={itemsCatalog}
+        onClose={() => setIsModalOpen(false)}
+        onAddCustomTalent={onAddCustomTalent}
+        onAncestryTalentChange={onAncestryTalentChange}
+      />
     </div>
   );
 }

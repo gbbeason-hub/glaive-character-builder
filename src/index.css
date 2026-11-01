@@ -2065,6 +2065,25 @@ textarea:focus {
 }
 
 /* ==========================================
+   ANCESTRY CUSTOMIZATION STYLES
+   ========================================== */
+.ancestry-custom-inputs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ancestry-custom-row {
+  display: flex;
+  gap: 6px;
+}
+
+.ancestry-name-input {
+  flex: 1;
+}
+
+
+/* ==========================================
    CUSTOM TALENT MODAL & FORM STYLES
    ========================================== */
 .segmented-btn.custom-segmented-btn {
@@ -2176,6 +2195,22 @@ textarea:focus {
 
 .talent-card-desc-wrap {
   margin-top: 6px;
+}
+
+/* Ensure the talent modal card restricts maximum height and acts as a flex column */
+.talent-modal-card {
+  max-width: 620px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Scrollable form body inside the modal */
+.talent-modal-card .modal-body-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
 }
 
 
