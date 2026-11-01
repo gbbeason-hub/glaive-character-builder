@@ -112,16 +112,31 @@ export const CustomTalentForm: React.FC<CustomTalentFormProps> = ({
       isCustom: true,
     };
 
-    // Apply ONLY the active mechanical effect, ensuring unselected ones are completely excluded
+    // Apply ONLY the active mechanical effect, explicitly clearing out unselected grant types
     if (mechanicalEffect === 'hp') {
       newTalent.effects = [{ type: 'stat_modifier', target: 'hp_per_level_bonus', mode: 'add', value: hpBonusValue }];
+      delete newTalent.containerGrant;
+      delete newTalent.hiddenItemGrant;
+      delete newTalent.catalogItemGrant;
     } else if (mechanicalEffect === 'slots') {
       newTalent.effects = [{ type: 'stat_modifier', target: 'extra_item_slots', mode: 'add', value: itemSlotValue }];
+      delete newTalent.containerGrant;
+      delete newTalent.hiddenItemGrant;
+      delete newTalent.catalogItemGrant;
     } else if (mechanicalEffect === 'ac') {
       newTalent.effects = [{ type: 'stat_modifier', target: 'ac_bonus', mode: 'add', value: acBonusValue }];
+      delete newTalent.containerGrant;
+      delete newTalent.hiddenItemGrant;
+      delete newTalent.catalogItemGrant;
     } else if (mechanicalEffect === 'container') {
       newTalent.containerGrant = { type: containerType, count: 1, itemSlots: 1 };
+      delete newTalent.effects;
+      delete newTalent.hiddenItemGrant;
+      delete newTalent.catalogItemGrant;
     } else if (mechanicalEffect === 'item') {
+      delete newTalent.effects;
+      delete newTalent.containerGrant;
+
       if (selectedCatalogItemId) {
         newTalent.catalogItemGrant = { id: selectedCatalogItemId, quantity: 1 };
         delete newTalent.hiddenItemGrant;
@@ -136,10 +151,15 @@ export const CustomTalentForm: React.FC<CustomTalentFormProps> = ({
         };
         delete newTalent.catalogItemGrant;
       } else {
-        // If the user selected the item radio button but cleared both fields, strip both grants
         delete newTalent.hiddenItemGrant;
         delete newTalent.catalogItemGrant;
       }
+    } else {
+      // If 'none' or any other state is chosen, strip all mechanical effect and item grants completely
+      delete newTalent.effects;
+      delete newTalent.containerGrant;
+      delete newTalent.hiddenItemGrant;
+      delete newTalent.catalogItemGrant;
     }
 
     onSubmitCustomTalent(newTalent);

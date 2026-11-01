@@ -458,6 +458,8 @@ export function App() {
       quantity: number;
     }> = [];
 
+    const currentTalentItemNames = new Set<string>();
+
     allActiveTalentIds.forEach((talentId, index) => {
       const talentObj = combinedTalentsCatalog.find((t) => t.id === talentId);
       if (!talentObj) return;
@@ -466,9 +468,11 @@ export function App() {
       if ((talentObj as any).hiddenItemGrant) {
         const grant = (talentObj as any).hiddenItemGrant;
         if (grant.name && grant.name.trim()) {
+          const itemName = grant.name.trim();
+          currentTalentItemNames.add(itemName);
           grantedTalentItems.push({
             id: `talent_hidden_${index}_${talentId}`,
-            name: grant.name.trim(),
+            name: itemName,
             type: grant.type || 'Equipment',
             slots: grant.slots ?? 0,
             cost_sp: grant.cost_sp ?? 0,
@@ -486,6 +490,7 @@ export function App() {
         const grant = (talentObj as any).catalogItemGrant;
         const catalogMatch = (itemsCatalog as CatalogItem[]).find((i) => i.id === grant.id);
         if (catalogMatch) {
+          currentTalentItemNames.add(catalogMatch.name);
           grantedTalentItems.push({
             id: `talent_catalog_${index}_${talentId}_${catalogMatch.id}`,
             name: catalogMatch.name,
@@ -500,6 +505,28 @@ export function App() {
           });
         }
       }
+    });
+
+    // Automatically clean up freeGearText by removing any talent item names that are no longer active
+    setFreeGearText((prevText) => {
+      if (!prevText) return prevText;
+      
+      // Extract all potential talent items from existing inventory before updating
+      const oldTalentItemNames = inventory
+        .filter((i) => i.id.startsWith('talent_hidden_') || i.id.startsWith('talent_catalog_'))
+        .map((i) => i.name);
+
+      let updatedText = prevText;
+      oldTalentItemNames.forEach((oldName) => {
+        // If the old item name is no longer granted by any active talent, scrub it from freeGearText
+        if (!currentTalentItemNames.has(oldName)) {
+          const escaped = oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          // Match the name with optional surrounding commas and whitespace
+          const regex = new RegExp(`(,\\s*${escaped}|${escaped},\\s*|${escaped})`, 'g');
+          updatedText = updatedText.replace(regex, '').trim();
+        }
+      });
+      return updatedText;
     });
 
     setInventory((prev) => {
