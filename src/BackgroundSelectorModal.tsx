@@ -73,7 +73,7 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
   const [activeCategory, setActiveCategory] = useState<CategoryTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showValidation, setShowValidation] = useState(false);
-
+  
   // Form State
   const [name, setName] = useState('');
   const [text, setText] = useState('');
@@ -84,6 +84,7 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
   const [selectedTalentId, setSelectedTalentId] = useState<string>('');
   const [companionType, setCompanionType] = useState<string>('');
   const [narrativeBenefit, setNarrativeBenefit] = useState<string>('');
+  const [isTalentPickerOpen, setIsTalentPickerOpen] = useState(false);
 
 
   if (!isOpen) return null;
@@ -318,21 +319,19 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
 
               {benefitType === 'talent' && (
                 <div className="form-group sub-input-group">
-                  <label className="field-label" htmlFor="custom-talent-select">Select Heroic Talent</label>
-                  <select
-                    id="custom-talent-select"
-                    value={selectedTalentId}
-                    onChange={e => setSelectedTalentId(e.target.value)}
+                  <label className="field-label">Selected Heroic Talent</label>
+                  <button
+                    type="button"
+                    className="talent-selector-trigger full-width"
+                    onClick={() => setIsTalentPickerOpen(true)}
                   >
-                    <option value="">-- Choose a Talent --</option>
-                    {talentsCatalog
-                      .filter(talent => talent.type !== 'ancestry')
-                      .map(talent => (
-                        <option key={talent.id} value={talent.id}>
-                          {talent.name}
-                        </option>
-                    ))}
-                  </select>
+                    <span>
+                      {selectedTalentId
+                        ? talentsCatalog.find(t => t.id === selectedTalentId)?.name || 'Selected Talent'
+                        : '-- Click to Browse & Select Talent --'}
+                    </span>
+                    <span>🔍</span>
+                  </button>
                 </div>
               )}
 
@@ -381,6 +380,39 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
           )}
         </div>
       </div>
+      {/* Sub-Modal for Talent Selection */}
+      {isTalentPickerOpen && (
+        <div className="modal-overlay" style={{ zIndex: 1100 }} onClick={() => setIsTalentPickerOpen(false)}>
+          <div className="modal-card talent-modal-card" onClick={e => e.stopPropagation()}>
+            <header className="modal-header">
+              <div className="modal-title-row">
+                <h3>Select Background Talent</h3>
+                <button className="modal-close-btn" onClick={() => setIsTalentPickerOpen(false)}>✕</button>
+              </div>
+              <p className="shopkeeper-flavor-text">Choose an archetype talent to grant with this background</p>
+            </header>
+            <div className="modal-body-content">
+              <div className="background-cards-list">
+                {talentsCatalog
+                  .filter(talent => talent.type !== 'ancestry')
+                  .map(talent => (
+                    <div
+                      key={talent.id}
+                      className={`background-card ${selectedTalentId === talent.id ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedTalentId(talent.id);
+                        setIsTalentPickerOpen(false);
+                      }}
+                    >
+                      <h3 className="card-title">{talent.name}</h3>
+                      <p className="card-text">{talent.description}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
