@@ -369,10 +369,7 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
                     onClose();
                   }}
                 >
-                  <div className="card-header-row">
-                    {bg.min && bg.max && <span className="d100-badge">[{bg.min}–{bg.max}]</span>}
-                    <h3 className="card-title">{bg.name}</h3>
-                  </div>
+                  <h3 className="card-title">{bg.name}</h3>
                   <p className="card-text">{bg.text}</p>
                 </div>
               ))}

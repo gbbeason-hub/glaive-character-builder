@@ -319,9 +319,10 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
     - [] Names: 
 - [WIP] Task 29 Labels: Clean up
     - [DONE] Inline help text: inconsistent captilization & punctuation 
-    - [] Names: Some include Range (R1) - e.g., Stone Sight, R2
+    - [DONE] Names: Some include Range (R1) - e.g., Stone Sight, R2; The Stare, (That's how the rules name them. Keep as is.)
     - [DONE] Name: Make the input field taller
-    - [] PDF: Encumbered & Fatigue should be same font style as conditions?
+    - [DONE] PDF: Encumbered & Fatigue should be same font style as conditions?
+    - [DONE] Background: Remove the dice roll values & left align the background names
     - [] Bonds: Listed in non-alpha order
 
 - [NEW] Task 32 Art: Select art to add page 1 based on Scott's art for ancestries
