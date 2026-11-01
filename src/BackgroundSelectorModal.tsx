@@ -40,6 +40,7 @@ interface BackgroundSelectorModalProps {
 type CategoryTab = 'all' | 'underworld' | 'rural' | 'noble' | 'military' | 'vagabond' | 'custom';
 type BenefitType = 'none' | 'silver' | 'gear' | 'talent' | 'companion';
 
+
 const CATEGORY_LABELS: Record<CategoryTab, string> = {
   all: 'All',
   underworld: 'Underworld',
@@ -199,19 +200,59 @@ export const BackgroundSelectorModal: React.FC<BackgroundSelectorModalProps> = (
                 />
               </div>
 
-              <div className="form-group">
-                <label className="field-label" htmlFor="benefit-type-select">Primary Benefit</label>
-                <select
-                  id="benefit-type-select"
-                  value={benefitType}
-                  onChange={e => setBenefitType(e.target.value as BenefitType)}
-                >
-                  <option value="none">Narrative</option>
-                  <option value="silver">Bonus Silver</option>
-                  <option value="gear">Free Gear / Item</option>
-                  <option value="talent">Talent</option>
-                  <option value="companion">Companion</option>
-                </select>
+              <div className="form-group mechanical-effect-group">
+                <label className="field-label">Primary Benefit</label>
+                <div className="form-textarea mechanical-options-box" style={{ background: '#fff' }}>
+                  <label className="radio-option-label">
+                    <input
+                      type="radio"
+                      name="customBgBenefit"
+                      checked={benefitType === 'none'}
+                      onChange={() => setBenefitType('none')}
+                    />
+                    <span>Narrative</span>
+                  </label>
+
+                  <label className="radio-option-label">
+                    <input
+                      type="radio"
+                      name="customBgBenefit"
+                      checked={benefitType === 'silver'}
+                      onChange={() => setBenefitType('silver')}
+                    />
+                    <span>Bonus Silver</span>
+                  </label>
+
+                  <label className="radio-option-label">
+                    <input
+                      type="radio"
+                      name="customBgBenefit"
+                      checked={benefitType === 'gear'}
+                      onChange={() => setBenefitType('gear')}
+                    />
+                    <span>Free Gear / Item</span>
+                  </label>
+
+                  <label className="radio-option-label">
+                    <input
+                      type="radio"
+                      name="customBgBenefit"
+                      checked={benefitType === 'talent'}
+                      onChange={() => setBenefitType('talent')}
+                    />
+                    <span>Talent</span>
+                  </label>
+
+                  <label className="radio-option-label">
+                    <input
+                      type="radio"
+                      name="customBgBenefit"
+                      checked={benefitType === 'companion'}
+                      onChange={() => setBenefitType('companion')}
+                    />
+                    <span>Companion</span>
+                  </label>
+                </div>
                 <p className="benefit-help-text">{BENEFIT_HELP_TEXT[benefitType]}</p>
               </div>
 
