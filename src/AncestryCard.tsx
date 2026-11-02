@@ -111,6 +111,7 @@ export function AncestryCard({
                 onAncestryChange(e.target.value);
               }
             }}
+          aria-label="Ancestry Selection"
           >
             <option value="" disabled>-- Select an ancestry --</option>
             <option value="CUSTOM_OPTION">+ Custom Ancestry...</option>

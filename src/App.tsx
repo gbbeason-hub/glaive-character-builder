@@ -902,8 +902,9 @@ export function App() {
             <h2 className="panel-heading">Character Details</h2>
             <div className="form-row-two-col">
               <div className="form-group flex-2">
-                <label className="field-label">Name</label>
+                <label htmlFor="character-name" className="field-label">Name</label>
                 <input
+                  id="character-name"
                   type="text"
                   value={characterName}
                   onChange={(e) => setCharacterName(e.target.value)}
@@ -915,7 +916,7 @@ export function App() {
               </div>
               <div className="form-group flex-1">
                 <label className="field-label">PC Level</label>
-                <select value={level} onChange={(e) => setLevel(Number(e.target.value))}>
+                <select value={level} onChange={(e) => setLevel(Number(e.target.value))} aria-label="PC Level">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((lvl) => (
                     <option key={lvl} value={lvl}>
                       Level {lvl}
@@ -972,7 +973,8 @@ export function App() {
                 <div key={s} className="attribute-field">
                   <label className="attribute-label">{s}</label>
                   <span className="attribute-desc">{attributeDescriptions[s]}</span>
-                  <select value={stats[s]} onChange={(e) => handleStatChange(s, Number(e.target.value))}>
+                  <select value={stats[s]} onChange={(e) => handleStatChange(s, Number(e.target.value))}
+                    aria-label="Attribute Bonus">
                     {dynamicAttributeChoices.map((v) => (
                       <option key={v} value={v}>
                         +{v}
@@ -1036,8 +1038,9 @@ export function App() {
             <div className="traits-grid">
               {(Object.keys(traits) as Array<keyof CharacterTraits>).map((t) => (
                 <div key={t} className="form-group">
-                  <label className="field-label uppercase-label">{t}</label>
+                  <label htmlFor={`trait-${t}`} className="field-label uppercase-label">{t}</label>
                   <select
+                    id={`trait-${t}`}
                     value={traits[t]}
                     onChange={(e) => setTraits((prev) => ({ ...prev, [t]: e.target.value }))}
                     className="form-select-spacing"
@@ -1108,6 +1111,7 @@ export function App() {
                       setBond(e.target.value);
                     }
                   }}
+                  aria-label="Bond selection"
                   className="bond-select-input"
                   style={{ flex: '2' }}
                 >

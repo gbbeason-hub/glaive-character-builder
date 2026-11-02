@@ -224,6 +224,9 @@ button, .btn-primary {
   cursor: pointer;
   letter-spacing: 0.5px;
   transition: background-color 0.15s ease-in-out;
+
+  min-height: 40px;
+  min-width: 40px;
 }
 
 button:hover {

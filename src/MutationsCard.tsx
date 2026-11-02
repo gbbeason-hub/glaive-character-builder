@@ -52,6 +52,7 @@ export function MutationsCard({
             onChange={(e) => handleCountChange(Number(e.target.value))}
             className="form-select-spacing"
             style={{ marginBottom: 0 }}
+            aria-label="Number of mutations"
           >
             {[0, 1, 2, 3, 4, 5, 6].map((num) => (
               <option key={num} value={num}>
@@ -86,6 +87,7 @@ export function MutationsCard({
                   value={currentId}
                   onChange={(e) => onMutationChange(index, e.target.value)}
                   className="form-select-spacing"
+                  aria-label="Select mutations"
                   style={{ marginBottom: selected ? '10px' : '0' }}
                 >
                   <option value="">-- Select a Mutation --</option>
