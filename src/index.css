@@ -187,7 +187,8 @@ input::placeholder,
 textarea::placeholder {
   font-family: var(--font-body);
   font-style: normal;
-  color: #718096;
+  color: #374151 !important;
+  opacity: 1;
 }
 
 /* 5) Instructions, Card Subtext, & Trait Descriptions */
@@ -879,7 +880,8 @@ textarea:focus {
   line-height: 1.4;
 }
 
-.talent-selector-trigger {
+.talent-selector-trigger,
+.talent-selector-trigger span {
   width: 100%;
   padding: 10px 12px;
   text-align: left;
@@ -888,7 +890,7 @@ textarea:focus {
   border-radius: 6px;
   font-family: var(--font-body);
   font-size: 14px;
-  color: #718096;
+  color: #374151 !important;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -1094,7 +1096,7 @@ textarea:focus {
 }
 
 .free-gear-header span {
-  color: #718096;
+  color: #374151 !important; 
   font-style: italic;
   font-size: 12px;
 }
@@ -1283,7 +1285,7 @@ textarea:focus {
 .shopkeeper-flavor-text {
   font-size: 12px;
   font-style: italic;
-  color: #718096;
+  color: #374151 !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
