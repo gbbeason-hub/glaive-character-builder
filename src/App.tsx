@@ -899,7 +899,7 @@ export function App() {
         <div className="card-stack">
           {/* Profile Header Details */}
           <div className="card-panel">
-            <h3 className="panel-heading">Character Details</h3>
+            <h2 className="panel-heading">Character Details</h2>
             <div className="form-row-two-col">
               <div className="form-group flex-2">
                 <label className="field-label">Name</label>
@@ -928,7 +928,7 @@ export function App() {
 
           {/* 1. Character Background Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Background</h3>
+            <h2 className="panel-heading">Background</h2>
             <p className="instruction-text">Select or roll your hero's origins and formative experiences:</p>
             
             <button
@@ -950,7 +950,7 @@ export function App() {
           {/* 2. Abilities Card */}
           <div className="card-panel">
             <div className="panel-heading-row">
-              <h3 className="panel-heading">Abilities</h3>
+              <h2 className="panel-heading">Abilities</h2>
               {unspentPoints > 0 && (
                 <span className="level-bonus-badge">
                   {unspentPoints} {unspentPoints === 1 ? 'Point' : 'Points'} Available
@@ -1032,7 +1032,7 @@ export function App() {
 
           {/* 6. Traits Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Traits</h3>
+            <h2 className="panel-heading">Traits</h2>
             <div className="traits-grid">
               {(Object.keys(traits) as Array<keyof CharacterTraits>).map((t) => (
                 <div key={t} className="form-group">
@@ -1062,7 +1062,7 @@ export function App() {
 
           {/* 7. Character Bond Card */}
           <div className="card-panel">
-            <h3 className="panel-heading">Bond</h3>
+            <h2 className="panel-heading">Bond</h2>
             <p className="instruction-text">Relationship with PC to your left:</p>
             <div className="bond-input-row mb-2" style={{ display: 'flex', gap: '8px' }}>
               <input
@@ -1164,7 +1164,7 @@ export function App() {
 
           {/* 10. Character Dynamic Status Dashboard Card */}
           <div className={`card-panel status-card ${totalUsedSlots > maxCarryingCapacity ? 'overencumbered' : ''}`}>
-            <h3 className="panel-heading">Character Status</h3>
+            <h2 className="panel-heading">Character Status</h2>
             <div className="status-grid">
               <div>
                 <strong className="vital-label">Hit Points:</strong> {hitPoints} HP
@@ -1183,7 +1183,7 @@ export function App() {
 
           {/* 11. Save / Load / Export Tools */}
           <div className="card-panel save-load-panel">
-            <h3 className="panel-heading">Save / Load Tools</h3>
+            <h2 className="panel-heading">Save / Load Tools</h2>
             <button type="button" onClick={exportCharacterClipboard} className="btn-primary full-width mb-2">
               📋 Copy JSON to Clipboard
             </button>
