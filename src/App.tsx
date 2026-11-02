@@ -880,7 +880,7 @@ export function App() {
   // 7. RENDER INTERFACE STRUCTURAL LAYOUT
   // ==========================================
   return (
-    <div className="app-container">
+    <main className="app-container">
       <div className="builder-interface-view">
 
         {/* Main Header with Title and Help Button */}
@@ -1589,7 +1589,7 @@ export function App() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
