@@ -69,6 +69,7 @@ export const SilverAndGearCard: React.FC<SilverAndGearCardProps> = ({
                 <button
                   type="button"
                   className="stepper-btn"
+                  aria-label="Decrease silver"
                   onClick={() => onUpdateSilver(Math.max(0, silver - 1))}
                 >
                   -
@@ -77,11 +78,13 @@ export const SilverAndGearCard: React.FC<SilverAndGearCardProps> = ({
                   type="number"
                   className="coin-input"
                   value={silver}
+                  aria-label="Silver pieces"
                   onChange={(e) => onUpdateSilver(parseInt(e.target.value) || 0)}
                 />
                 <button
                   type="button"
                   className="stepper-btn"
+                  aria-label="Increase silver"
                   onClick={() => onUpdateSilver(silver + 1)}
                 >
                   +
@@ -104,6 +107,7 @@ export const SilverAndGearCard: React.FC<SilverAndGearCardProps> = ({
                   type="number"
                   className="coin-input"
                   value={copper}
+                  aria-label="Copper pieces"
                   onChange={(e) => onUpdateCopper(parseInt(e.target.value) || 0)}
                 />
                 <button
@@ -141,6 +145,7 @@ export const SilverAndGearCard: React.FC<SilverAndGearCardProps> = ({
             onChange={(e) => onUpdateFreeGear(e.target.value)}
             placeholder="backpack, flint & steel, worn travel clothing, tiny trinkets"
             rows={3}
+            aria-label="Free gear items"
           />
         </div>
       </div>
