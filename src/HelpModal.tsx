@@ -16,7 +16,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
             <button type="button" onClick={onClose} className="modal-close-btn">×</button>
           </div>
          <div className="modal-stats-bar">
-            <span><b>Build:</b> October 28, 2026</span>
+            <span><b>Build:</b> November 10, 2026</span>
           </div>
         </div>
 
@@ -108,7 +108,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
 
           <div className="help-section">
             <h4 id="updates">What’s New</h4>
-            <h5>Nov 15, 2026</h5>
+            <h5>Nov 10, 2026</h5>
             <ul>
               <li>
                 <b>Background now has a dialog!</b> The dropdown list was long and tedious. I used thematic groups to organize them. 
