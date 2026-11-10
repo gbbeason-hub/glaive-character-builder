@@ -140,6 +140,9 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
               <li>
                 Added text to define Fatigue & Encumbered states.
               </li>
+              <li>
+                Some accessibility improvements though not all. Keyboard-only use isn't fully complete.
+              </li>
             </ul>
           </div>
         </div>

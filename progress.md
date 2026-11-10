@@ -266,7 +266,13 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
         - Edge Cases: Cure Seeker, Magic Kink, Runaway Betrothed, Escaped Acolyte
     - [DONE] Modal: Build modal component
     - [DONE] Modal: Replace dropdown with modal reference
-
+- [DONE] Task 29 Labels: Clean up
+    - [DONE] Inline help text: inconsistent captilization & punctuation 
+    - [DONE] Names: Some include Range (R1) - e.g., Stone Sight, R2; The Stare, (That's how the rules name them. Keep as is.)
+    - [DONE] Name: Make the input field taller
+    - [DONE] PDF: Encumbered & Fatigue should be same font style as conditions?
+    - [DONE] Background: Remove the dice roll values & left align the background names
+    - [LEAVE] Bonds: Listed in non-alpha order
 - [DONE] Task 30 Talents: Max of 6. Remove writable fields in PDF?
 - [DONE] Task 31 Custom Features: Allow players to create a custom feature
     - [DONE] Talents: Guidance/template. Custom talent & custom archetype
@@ -278,52 +284,45 @@ Phase 15 Conditions & Phase 16 Fatigue/Encumbrance: Adding dedicated print block
 ## 🏁 Next Target Steps
 
 - [NEW] Task 17 Pregen All: One button to randomize everything!
-- [NEW] Task 26: App-Wide Accessibility (a11y) Overhaul
-
-    **Status:** [IN PROGRESS]
+- [WIP] Task 26: App-Wide Accessibility (a11y) Overhaul
     **Goal:** Upgrade the Glaive Character Builder to conform to WCAG 2.1 AA standards, ensuring complete screen reader support, keyboard navigation, and high-contrast compliance.
 
-    - [ ] **26.1: Semantic HTML & Document Structure**
-        - [ ] Wrap primary layout regions in appropriate semantic tags (`<header>`, `<main>`, `<nav>`, `<footer>`).
-        - [ ] Review heading hierarchy (`<h1>` through `<h3>`) across all character card components to ensure logical nesting without skipping levels.
+    - [DONE] **26.1: Semantic HTML & Document Structure**
+        - [DONE] Wrap primary layout regions in appropriate semantic tags (`<header>`, `<main>`, `<nav>`, `<footer>`).
+        - [DONE] Review heading hierarchy (`<h1>` through `<h3>`) across all character card components to ensure logical nesting without skipping levels.
 
-    - [ ] **26.2: Modal Dialog Accessibility & Focus Trapping**
-        - [ ] Implement focus trapping for `TalentSelectorModal` and `ItemShopModal` so keyboard navigation (`Tab` / `Shift+Tab`) stays contained inside active modals.
+    - [MUST ] **26.2: Modal Dialog Accessibility & Focus Trapping**
+        - [MUST ] Implement focus trapping for `TalentSelectorModal` and `ItemShopModal` so keyboard navigation (`Tab` / `Shift+Tab`) stays contained inside active modals.
+        - [MUST ] Ensure pressing the `Escape` key reliably closes any active modal overlay.
+        - [MUST ] Add `aria-modal="true"`, `role="dialog"`, and `aria-labelledby` attributes to modal root elements.
+
         - [ ] Auto-focus the primary interactive element (e.g., search input) upon modal open, and restore focus to the triggering element upon close.
-        - [ ] Add `aria-modal="true"`, `role="dialog"`, and `aria-labelledby` attributes to modal root elements.
-        - [ ] Ensure pressing the `Escape` key reliably closes any active modal overlay.
-
-    - [ ] **26.3: Custom Controls & ARIA Attributes**
-        - [ ] Convert the 3-option Segmented Control (`All Talents` | `Ancestry` | `Heroic`) to use proper ARIA tab pattern (`role="tablist"`, `role="tab"`, `aria-selected="true|false"`).
-        - [ ] Add explicit `aria-label` tags to all icon-only buttons (e.g., modal close `✕` buttons, roll buttons, counter increment/decrement controls).
+       
+    - [HIGH ] **26.3: Custom Controls & ARIA Attributes**
+        - [HIGH ] Convert the 3-option Segmented Control (`All Talents` | `Ancestry` | `Heroic`) to use proper ARIA tab pattern (`role="tablist"`, `role="tab"`, `aria-selected="true|false"`).
+        - [HIGH ] Add explicit `aria-label` tags to all icon-only buttons (e.g., modal close `✕` buttons, roll buttons, counter increment/decrement controls).
         - [ ] Ensure all filter pills and dynamic buttons announce active states to screen readers (`aria-pressed` or `aria-selected`).
 
     - [ ] **26.4: Forms & Input Labeling**
-        - [ ] Audit all input fields (Name, Level, Search inputs, Item quantities) to ensure each has a visible `<label>` or an `aria-label` attribute.
+        - [DONE] Audit all input fields (Name, Level, Search inputs, Item quantities) to ensure each has a visible `<label>` or an `aria-label` attribute.
         - [ ] Add `aria-describedby` links where input fields have secondary helper text or error messages.
 
-    - [ ] **26.5: Keyboard Navigation & Focus Indicators**
+    - [MUST ] **26.5: Keyboard Navigation & Focus Indicators**
         - [ ] Ensure all interactive elements have highly visible focus rings using CSS `:focus-visible` token colors.
         - [ ] Verify that non-button clickable `<div>` or `<span>` elements are replaced with native `<button>` tags or provided `tabIndex={0}` and keyboard event handlers (`Enter` / `Space`).
 
-    - [ ] **26.6: Color Contrast & Visual Clarity**
-        - [ ] Audit low-contrast text colors (`#64748b`, `#4a5568`, dynamic tags) against light surface backgrounds to guarantee at least a 4.5:1 contrast ratio.
-        - [ ] Ensure essential UI indicators (selected tabs, active pills, badges) do not rely solely on color to convey state (e.g., include text labels, icons, or visual weight shifts).
+    - [DONE] **26.6: Color Contrast & Visual Clarity**
+        - [DONE] Audit low-contrast text colors (`#64748b`, `#4a5568`, dynamic tags) against light surface backgrounds to guarantee at least a 4.5:1 contrast ratio.
+        - [DONE] Ensure essential UI indicators (selected tabs, active pills, badges) do not rely solely on color to convey state (e.g., include text labels, icons, or visual weight shifts).
 
     - [ ] **26.7: Automated & Manual Testing Verification**
-        - [ ] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
+        - [DONE] Run Lighthouse accessibility audits against `npm run preview` to achieve a 95+ score.
         - [ ] Perform full keyboard-only navigation pass (completing a character build without a mouse).
         - [ ] Verify screen reader compatibility using VoiceOver (macOS) or NVDA (Windows).
 
 
     - [] Names: 
-- [WIP] Task 29 Labels: Clean up
-    - [DONE] Inline help text: inconsistent captilization & punctuation 
-    - [DONE] Names: Some include Range (R1) - e.g., Stone Sight, R2; The Stare, (That's how the rules name them. Keep as is.)
-    - [DONE] Name: Make the input field taller
-    - [DONE] PDF: Encumbered & Fatigue should be same font style as conditions?
-    - [DONE] Background: Remove the dice roll values & left align the background names
-    - [] Bonds: Listed in non-alpha order
+
 
 - [NEW] Task 32 Art: Select art to add page 1 based on Scott's art for ancestries
 - [NEW] Task 33 gitignore: build out
